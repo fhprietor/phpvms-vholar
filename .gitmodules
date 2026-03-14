@@ -1,0 +1,3 @@
+[submodule "modules/DisposableBasic"]
+	path = modules/DisposableBasic
+	url = https://github.com/FatihKoz/DisposableBasic.git
