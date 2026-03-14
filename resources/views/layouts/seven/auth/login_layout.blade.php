@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 
-  <title>@yield('title') - {{ config('app.name') }}</title>
+  <title>@yield('title') - Vholar</title>
   <script>
     // Check for saved user preference, if any, on initial load
     (function() {
@@ -22,13 +22,79 @@
   <meta name="csrf-token" content="{!! csrf_token() !!}">
   {{-- End the required lines block --}}
 
-  <link rel="shortcut icon" type="image/png" href="{{ public_asset('/assets/img/favicon.png') }}" />
+  <!-- Favicon VHolar -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <meta name="theme-color" content="#412c4d">  
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
   <link href="{{ public_asset('/assets/vendor/tomselect/tom-select.bootstrap5.css') }}" rel="stylesheet">
   <style>
+    :root {
+        --vh-primary: #412c4d;
+        --vh-dark: #1e1b24;
+    }
+
+    /* Fondo */
+    body {
+        background: linear-gradient(rgba(30,27,36,0.9), rgba(30,27,36,0.95)),
+                    url('/images/banner.jpg');
+        background-size: cover;
+        background-position: center;
+        color: #e5e5e5;
+    }
+
+    /* Card */
+    .card {
+        background-color: #2a2633;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.05);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Botón */
+    .btn-primary {
+        background-color: #412c4d !important;
+        border-color: #412c4d !important;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+
+    .btn-primary:hover {
+        background-color: #563a63 !important;
+        border-color: #563a63 !important;
+    }
+
+    /* Inputs */
+    .form-control {
+        background-color: #1f1c27 !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        color: #fff !important;
+        border-radius: 8px;
+    }
+
+    .form-control:focus {
+        border-color: #412c4d !important;
+        box-shadow: 0 0 0 0.2rem rgba(65,44,77,0.3) !important;
+    }
+
+    /* Labels */
+    label {
+        color: #bbb;
+    }
+    /* Links login VHolar */
+    .link {
+        color: #c9a6db !important;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .link:hover {
+        color: #ffffff !important;
+        text-decoration: underline;
+    }
+
     .bg-brand {
       background-color: #067EC1;
     }
@@ -47,6 +113,9 @@
     [data-bs-theme="dark"] .logo-dark {
       display: block;
     }
+
+
+
   </style>
   @yield('css')
 </head>

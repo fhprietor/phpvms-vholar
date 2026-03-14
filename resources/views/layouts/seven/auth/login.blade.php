@@ -2,9 +2,10 @@
 @section('title', __('common.login'))
 
 @section('content')
+<div class="vh-login-wrapper d-flex align-items-center justify-content-center">
   <div class="d-flex flex-column justify-content-center align-items-center">
   <div class="logo-container">
-    <img src="{{ public_asset('/assets/img/logo_white.svg') }}" width="320" height="320">
+    <img src="{{ public_asset('/images/logo.png') }}" width="320" height="320">
     </div>
     <div class="card w-100" style="max-width: 400px;">
       <div class="card-body">
@@ -71,4 +72,5 @@
       </div>
     </div>
   </div>
+</div>
 @endsection

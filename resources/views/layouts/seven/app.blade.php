@@ -7,7 +7,20 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
         name='viewport' />
 
-    <title>@yield('title') - {{ config('app.name') }}</title>
+    <title>
+        @hasSection('title')
+            @yield('title') | VHolar Virtual Airlines
+        @else
+            VHolar Virtual Airlines | Comunidad de Simulación Aérea
+        @endif
+    </title>
+    <meta name="description" content="VHOLAR: ¡LA AEROLÍNEA VIRTUAL QUE LO TIENE TODO!. Tendrás acompañamiento de Pilotos reales de nuestros equipos">
+    <meta property="og:title" content="VHolar Virtual Airlines">
+    <meta property="og:description" content="Comunidad profesional de simulación aérea. Únete y vuela con nosotros.">
+    <meta property="og:image" content="{{ url('/images/vholar_logoweb.png') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url('/') }}">
+
     <script>
         // Check for saved user preference, if any, on initial load
         (function() {
@@ -24,7 +37,7 @@
     <meta name="csrf-token" content="{!! csrf_token() !!}">
     {{-- End the required lines block --}}
 
-    <link rel="shortcut icon" type="image/png" href="{{ public_asset('/assets/img/favicon.png') }}" />
+    <link rel="shortcut icon" type="image/png" href="{{ public_asset('/images/favicon.png') }}" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -41,29 +54,166 @@
     @yield('scripts_head')
     {{-- End of the required stuff in the head block --}}
 
-    <style>
-        .nav-link:hover {
-            color: orange !important;
-        }
-
+     <style>
         :root {
             --bs-primary: #067ec1 !important;
-
-
+            --primary-color: #412c4d;
+            --primary-hover: #5e3e73;
+            --bg-dark: #1e1623;
+            --vh-primary: #412c4d;
+            --vh-dark: #1e1b24;
+            --vh-light: #f4f2f6;
+        }
+        /* Fondo general */
+        body {
+            background-color: var(--vh-dark);
+            color: #e5e5e5;
+        }
+        /* Navbar */
+        .navbar {
+            background-color: #412c4d !important;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-top: 6px !important;
+            padding-bottom: 6px !important;
+            min-height: 55px;
+        }
+        /* Logo */
+        .navbar-brand img {
+            height: 38px;
+        }        
+        /* Links navbar */
+        .navbar .nav-link {
+            color: rgba(255,255,255,0.75) !important;
+            padding: 6px 12px !important;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+        }
+        /* Hover elegante */
+        .navbar .nav-link:hover {
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+        /* Línea inferior sutil */
+        .navbar {
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
-        [data-bs-theme=light] {
-            --bs-primary: #067ec1 !important;
+        /* Efecto blur ligero (opcional, moderno) */
+        .navbar {
+            backdrop-filter: blur(6px);
+        }        
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: #ffffff !important;
         }
-
-        .bg-primary {
-            background-color: #067ec1 !important;
-        }
-
+        /* Botón VHolar */
         .btn-primary {
-            background-color: #067ec1 !important;
-            border-color: #067ec1 !important;
+            background-color: #412c4d !important;
+            border-color: #412c4d !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
+
+        .btn-primary:hover {
+            background-color: #563a63 !important;
+            border-color: #563a63 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(65,44,77,0.4);
+        }
+        /* Inputs VHolar */
+        .form-control {
+            background-color: #1f1c27 !important;
+            border: 1px solid rgba(255,255,255,0.08) !important;
+            color: #fff !important;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .form-control:focus {
+            border-color: #412c4d !important;
+            box-shadow: 0 0 0 0.2rem rgba(65,44,77,0.3) !important;
+        }        
+        /* Labels */
+        .form-label,
+        label {
+            color: #bbb !important;
+            font-weight: 500;
+        }
+
+        /* Links */
+        a {
+            color: #c9a6db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ffffff;
+        }
+        /* Card login */
+        .auth-card,
+        .card {
+            background-color: #2a2633 !important;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        } 
+        body.login-page {
+            background: linear-gradient(rgba(30,27,36,0.9), rgba(30,27,36,0.95)),
+                        url('/images/banner.jpg');
+            background-size: cover;
+            background-position: center;
+        }               
+
+        /* Footer */
+        footer {
+            background-color: #16131c;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+                /* Dropdown oscuro VHolar */
+        .dropdown-menu {
+            background-color: #2a2633 !important;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 8px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            backdrop-filter: blur(6px);
+        }
+
+        .dropdown-item {
+            color: #ddd !important;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            background-color: #412c4d !important;
+            color: #ffffff !important;
+        }
+
+        /* Separador */
+        .dropdown-divider {
+            border-color: rgba(255,255,255,0.05);
+        }
+        /* Fix dropdown sobre cards */
+        .navbar {
+            position: relative;
+            z-index: 1050;
+        }
+
+        .dropdown-menu {
+            z-index: 2000 !important;
+            position: absolute;
+        }
+
+
     </style>
 </head>
 

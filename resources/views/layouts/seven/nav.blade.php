@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
         <a class="navbar-brand " href="{{ url('/') }}">
-            <img src="{{ public_asset('/assets/img/logo_blue_bg.svg') }}" width="135px" alt="phpvms Logo" />
+            <img src="{{ public_asset('images/vholar_logoweb.png') }}" width="135px" alt="phpvms Logo" />
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,7 +96,7 @@
                             data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true"
                             aria-expanded="false">
                             @if (Auth::user()->avatar == null)
-                                <img src="{{ Auth::user()->gravatar(38) }}" style="height: 38px; width: 38px;">
+                                <img src="{{ asset('images/logo.png') }}" style="height: 38px; width: 38px;">
                             @else
                                 <img src="{{ Auth::user()->avatar->url }}" style="height: 38px; width: 38px;">
                             @endif

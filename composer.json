@@ -53,7 +53,7 @@
         "laravelcollective/html": "~6.4.0",
         "jeremykendall/php-domain-parser": "~6.3",
         "league/commonmark": "^2.6",
-        "league/csv": "~9.9.0",
+        "league/csv": "*",
         "league/geotools": "~1.1.0",
         "league/iso3166": "~4.2.0",
         "markrogoyski/math-php": "~2.5.0",
