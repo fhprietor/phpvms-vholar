@@ -79,7 +79,7 @@ modules:
     VmsOpenFileManager:
       origin: submodule
       url: https://github.com/fhprietor/vmsOpenFileManager.git
-      commit: 183a5f312e53d4dbbbe8e7942c1c5766b1842f05
+      commit: f174900f9d8a92e4e70ba2ff7149cb3c42ad2995
       branch: main
       module_json_version: null
     TestABC:

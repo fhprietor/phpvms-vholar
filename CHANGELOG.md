@@ -25,10 +25,20 @@ buena parte del codigo propio no estaban en git.
 
 ### Submodulos propios
 - `VmsOpenOps` y `VmsOpenFileManager` se extraen a repos propios
-  (`fhprietor/vmsOpenOps` 587bda0 y `fhprietor/vmsOpenFileManager` 183a5f3) y el
+  (`fhprietor/vmsOpenOps` 587bda0 y `fhprietor/vmsOpenFileManager` f174900) y el
   repo central pasa a pinar el commit. `TestABC` sigue vendorizado (stub).
 - Cada repo de modulo incluye su **README**: funcionalidad, rutas, modelo de
   datos, configuracion, instalacion y deuda tecnica verificada.
+
+### Arreglos en VmsOpenFileManager
+- **Migracion de liveries renumerada** de `000007` a `000004`: la tabla
+  `migrations` ya registraba `000004`, asi que una instalacion limpia ejecutaba
+  `000007` y fallaba con "table already exists".
+- **Control de acceso en las descargas**: `folder()` exige `is_public` y solo
+  lista hijos publicos; `download()` exige fichero `is_active` y carpeta
+  publica; las liveries exigen `is_active` (tambien en `info`). Antes cualquier
+  piloto autenticado podia descargar cualquier fichero o livery por su ID.
+- Los contadores de descargas solo se incrementan cuando la descarga se sirve.
 
 ### Estado de modulos y datos
 - `app/Database/seeds/modules.yml` refleja el estado real de activacion
