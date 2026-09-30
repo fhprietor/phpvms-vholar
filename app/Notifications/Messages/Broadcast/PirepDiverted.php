@@ -36,7 +36,7 @@ class PirepDiverted extends Notification
         $fields = $this->createFields($pirep);
 
         // User avatar, somehow $pirep->user->resolveAvatarUrl() is not being accepted by Discord as thumbnail
-        $user_avatar = $pirep->user->avatar?->url ?? $pirep->user->gravatar(256);
+        $user_avatar = $pirep->user->avatar?->url ?? url('/images/logo.png');
 
         $dm = new DiscordMessage();
 
@@ -48,12 +48,15 @@ class PirepDiverted extends Notification
                 'name' => 'Pilot In Command: '.$pirep->user->ident.' - '.$pirep->user->name_private,
                 'url'  => route('frontend.profile.show', [$pirep->user_id]),
             ])
-            ->fields($fields);
+            ->fields($fields)
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
     }
 
     public function createFields(Pirep $pirep): array
     {
-        $diversion_apt = $pirep->fields->firstWhere('slug', 'diversion-airport')->value;
+        $diversion_apt = $pirep->fields->firstWhere('slug', 'diversion-airport')?->value
+            ?? $pirep->alt_airport_id
+            ?? $pirep->arr_airport_id;
         if (abs($pirep->landing_rate) > 1500) {
             // Possible crash due to the high landing rate
             $diversion_reason = 'Crashed Near '.$diversion_apt;

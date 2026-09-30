@@ -132,6 +132,8 @@ class RouteServiceProvider extends ServiceProvider
                     'except' => ['show'],
                 ]);
 
+                Route::get('pireps/{id}', 'PirepController@show')->name('pireps.show');
+
                 Route::get('profile/acars', 'ProfileController@acars')->name('profile.acars');
                 Route::get('profile/regen_apikey', 'ProfileController@regen_apikey')->name('profile.regen_apikey');
 
@@ -155,7 +157,6 @@ class RouteServiceProvider extends ServiceProvider
             ], function () {
                 Route::get('/', 'HomeController@index')->name('home');
                 Route::get('r/{id}', 'PirepController@show')->name('pirep.show.public');
-                Route::get('pireps/{id}', 'PirepController@show')->name('pireps.show');
 
                 Route::get('users/{id}', 'ProfileController@show')->name('users.show.public');
                 Route::get('pilots/{id}', 'ProfileController@show')->name('pilots.show.public');
@@ -655,6 +656,7 @@ class RouteServiceProvider extends ServiceProvider
 
                 Route::post('pireps/{pirep_id}/acars/events', 'AcarsController@acars_events');
                 Route::post('pireps/{pirep_id}/acars/logs', 'AcarsController@acars_logs');
+                Route::get('pireps/{pirep_id}/acars/logs', 'AcarsController@acars_logs_get');
 
                 // Route::get('settings', 'SettingsController@index');
 

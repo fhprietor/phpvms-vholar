@@ -42,7 +42,7 @@
       <td style="width: 10%; text-align: right;">
         {{ Form::open(['route' => ['admin.aircraft.destroy', $ac->id], 'method' => 'delete']) }}
         <a href="{{ route('admin.aircraft.edit', [$ac->id]) }}" class='btn btn-sm btn-success btn-icon'><i class="fas fa-pencil-alt"></i></a>
-        {{ Form::button('<i class="fa fa-times"></i>', ['type' => 'submit', 'class' => 'btn btn-sm btn-danger btn-icon', 'onclick' => "return confirm('Are you sure?')"]) }}
+        {{ Form::button('<i class="fa fa-times"></i>', ['type' => 'submit', 'class' => 'btn btn-sm btn-danger btn-icon', 'data-vh-confirm' => "¿Estás seguro? Esta acción no se puede deshacer."]) }}
         {{ Form::close() }}
       </td>
     </tr>

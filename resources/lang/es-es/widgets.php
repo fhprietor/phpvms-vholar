@@ -13,6 +13,9 @@ return [
         'distance'    => 'Distancía',
         'noflights'   => 'No hay vuelos',
         'gs'          => 'GS',
+        'pilot'        => 'Piloto',
+        'activeflights' => 'Vuelos Activos',
+        
     ],
 
     'weather' => [
@@ -29,6 +32,7 @@ return [
         'guststo'    => 'Rafagas a',
         'updated'    => 'Actualizado',
         'hrago'      => 'hr transcurrida|hrs transcurridas',
-        'minago'     => 'min transcurrido|mins transcurridos',
+        'minago'      => 'min transcurrido|mins transcurridos',
+        'showdecoded' => 'Mostrar clima decodificado',
     ],
 ];

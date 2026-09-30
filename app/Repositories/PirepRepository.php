@@ -16,6 +16,7 @@ class PirepRepository extends Repository
         'user_id',
         'status',
         'state',
+        'source_name',
     ];
 
     /**

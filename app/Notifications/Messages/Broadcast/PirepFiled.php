@@ -3,6 +3,7 @@
 namespace App\Notifications\Messages\Broadcast;
 
 use App\Contracts\Notification;
+use App\Helpers\FlightAnalysisHelper;
 use App\Models\Pirep;
 use App\Notifications\Channels\Discord\DiscordMessage;
 use App\Support\Units\Time;
@@ -38,21 +39,35 @@ class PirepFiled extends Notification implements ShouldQueue
         $fields = $this->createFields($pirep);
 
         // User avatar, somehow $pirep->user->resolveAvatarUrl() is not being accepted by Discord as thumbnail
-        $user_avatar = !empty($pirep->user->avatar) ? $pirep->user->avatar->url : $pirep->user->gravatar(256);
+        $user_avatar = !empty($pirep->user->avatar) ? $pirep->user->avatar->url : url('/images/logo.png');
+
+        $description = $pirep->user->discord_id ? 'Flight by <@'.$pirep->user->discord_id.'>' : '';
+
+        $logData = FlightAnalysisHelper::parseLogData($pirep);
+        $score   = $logData['score']['value'] ?? null;
+        $bonuses = $logData['bonuses'] ?? [];
+
+        if ($score !== null) {
+            $scoreLine = 'Score: '.$score;
+            foreach ($bonuses as $b) {
+                $scoreLine .= ' | +'.$b['points'].' pts: '.$b['reason'];
+            }
+            $description .= ($description ? PHP_EOL : '').$scoreLine;
+        }
 
         $dm = new DiscordMessage();
 
         return $dm->webhook(setting('notifications.discord_public_webhook_url'))
             ->success()
             ->title($title)
-            ->description($pirep->user->discord_id ? 'Flight by <@'.$pirep->user->discord_id.'>' : '')
+            ->description($description)
             ->thumbnail(['url' => $user_avatar])
-            ->image(['url' => $pirep->airline->logo])
             ->author([
                 'name' => $pirep->user->ident.' - '.$pirep->user->name_private,
                 'url'  => route('frontend.profile.show', [$pirep->user_id]),
             ])
-            ->fields($fields);
+            ->fields($fields)
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
     }
 
     public function createFields(Pirep $pirep): array

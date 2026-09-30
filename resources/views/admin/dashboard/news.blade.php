@@ -89,7 +89,7 @@
                 <button class="btn btn-primary btn-xs text-small" onclick="editNews({{ $item->toJson() }})">Edit</button>
                 {{ Form::open(['route' => 'admin.dashboard.news', 'method' => 'delete', 'class' => 'pjax_news_form']) }}
                 {{ Form::hidden('news_id', $item->id) }}
-                {{ Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs text-small', 'onclick' => "return confirm('Are you sure?')"]) }}
+                {{ Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs text-small', 'data-vh-confirm' => "¿Estás seguro? Esta acción no se puede deshacer."]) }}
                 {{ Form::close() }}
               </td>
             </tr>

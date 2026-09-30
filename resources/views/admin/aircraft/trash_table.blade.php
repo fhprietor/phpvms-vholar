@@ -43,7 +43,7 @@
         {{ Form::open(['route' => ['admin.aircraft.trashbin'], 'method' => 'post']) }}
         {{ Form::hidden('object_id', $ac->id) }}
         {{ Form::button('<i class="fa fa-plus"></i> RESTORE', ['type' => 'submit', 'name' => 'action', 'value' => 'restore', 'class' => 'btn btn-sm btn-success btn-icon']) }}
-        {{ Form::button('<i class="fa fa-times"></i> DELETE', ['type' => 'submit', 'name' => 'action', 'value' => 'delete', 'class' => 'btn btn-sm btn-danger btn-icon', 'onclick' => "return confirm('Are you REALLY sure?')"]) }}
+        {{ Form::button('<i class="fa fa-times"></i> DELETE', ['type' => 'submit', 'name' => 'action', 'value' => 'delete', 'class' => 'btn btn-sm btn-danger btn-icon', 'data-vh-confirm' => "¿Estás seguro? Esta acción es IRREVERSIBLE."]) }}
         {{ Form::close() }}
       </td>
     </tr>

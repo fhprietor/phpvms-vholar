@@ -13,6 +13,8 @@ return [
         'distance'    => 'Distance',
         'noflights'   => 'There are no flights.',
         'gs'          => 'GS',
+        'pilot'        => 'Pilot',
+        'activeflights' => 'Active Flights',
     ],
 
     'weather' => [

@@ -43,9 +43,8 @@
             'method' => 'delete',
             'name' => 'delete_'.$pirep->id,
             'id' => $pirep->id.'_delete',
-            'onclick' => "return confirm('Are you sure?')"
             ]) }}
-        {{ Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger']) }}
+        {{ Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-danger', 'data-vh-confirm' => "¿Eliminar este pirep? Esta acción no se puede deshacer."]) }}
         {{ Form::close() }}
     </td>
   </tr>

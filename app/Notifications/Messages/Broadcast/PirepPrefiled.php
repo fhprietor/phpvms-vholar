@@ -56,9 +56,10 @@ class PirepPrefiled extends Notification implements ShouldQueue
             ->author([
                 'name'     => $pirep->user->ident.' - '.$pirep->user->name_private,
                 'url'      => route('frontend.profile.show', [$pirep->user_id]),
-                'icon_url' => $pirep->user->resolveAvatarUrl(),
+                'icon_url' => !empty($pirep->user->avatar) ? $pirep->user->avatar->url : url('/images/logo.png'),
             ])
-            ->fields($fields);
+            ->fields($fields)
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
     }
 
     public function createFields(Pirep $pirep): array

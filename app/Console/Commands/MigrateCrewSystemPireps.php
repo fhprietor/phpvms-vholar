@@ -12,13 +12,16 @@ use App\Models\Pirep;
 use App\Models\User;
 use App\Repositories\JournalRepository;
 use App\Services\Finance\PirepFinanceService;
+use App\Services\FinanceService;
 use App\Services\UserService;
+use App\Support\Money;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use League\Csv\Reader;
+use Modules\VmsOpenOps\Models\OperationRequest;
 
 class MigrateCrewSystemPireps extends Command
 {
@@ -31,11 +34,12 @@ class MigrateCrewSystemPireps extends Command
     protected $description = 'Replace all pireps with data from a CrewSystem CSV export';
 
     private array $aircraftMap = []; // UPPER(registration) → aircraft.id
-    private array $pilotMap    = []; // UPPER(pilot_id)     → user.id
+    private array $pilotMap    = []; // UPPER(ident)        → user.id
 
     public function handle(
         UserService $userSvc,
-        PirepFinanceService $financeSvc,
+        PirepFinanceService $pirepFinanceSvc,
+        FinanceService $financeSvc,
         JournalRepository $journalRepo
     ): int {
         $file = $this->argument('file');
@@ -44,10 +48,8 @@ class MigrateCrewSystemPireps extends Command
             return 1;
         }
 
-        // Pre-load lookup tables
         Aircraft::all()->each(fn ($a) => $this->aircraftMap[strtoupper($a->registration)] = $a->id);
         User::with('airline')->get()->each(fn ($u) => $this->pilotMap[strtoupper($u->ident)] = $u->id);
-
 
         $csv = Reader::createFromPath($file, 'r');
         $csv->setHeaderOffset(0);
@@ -56,11 +58,15 @@ class MigrateCrewSystemPireps extends Command
         // ─── PHASE 0: VALIDATE ───────────────────────────────────────────
         $this->info('=== Phase 0: Validation ===');
 
-        $pilotStatus    = []; // callsign → bool found
+        $pilotStatus    = [];
         $unmappedPilots = [];
         $outliers       = [];
-        $nullAircraftDryRun = 0;
+        $nullAircraftDryRun   = 0;
         $mappedAircraftDryRun = 0;
+
+        // Per-pilot and per-aircraft sequences for dry-run estimates
+        $pirepsByPilotDry    = []; // userId    → [{dpt, arr, at}]
+        $flightsByAircraftDry = []; // regKey   → [{dpt, arr, at}]
 
         foreach ($records as $i => $row) {
             $row = array_map('trim', $row);
@@ -77,11 +83,7 @@ class MigrateCrewSystemPireps extends Command
             $dist = (float)($row['distance'] ?? 0);
             if ($dist > 50000) {
                 $outliers[] = sprintf('Row %d: %s→%s dist=%.0f NM',
-                    $i + 2,
-                    $row['dep_icao'] ?? '?',
-                    $row['arr_icao'] ?? '?',
-                    $dist
-                );
+                    $i + 2, $row['dep_icao'] ?? '?', $row['arr_icao'] ?? '?', $dist);
             }
 
             $reg = $this->extractRegistration($row['aircraft'] ?? '');
@@ -90,16 +92,30 @@ class MigrateCrewSystemPireps extends Command
             } else {
                 $nullAircraftDryRun++;
             }
+
+            // Collect sequences for estimates (only valid rows)
+            if (isset($this->pilotMap[$cs]) && $dist <= 50000) {
+                try {
+                    $dt     = Carbon::createFromFormat('m/d/Y H:i:s', $row['date']);
+                    $userId = $this->pilotMap[$cs];
+                    $dpt    = strtoupper($row['dep_icao'] ?? '');
+                    $arr    = strtoupper($row['arr_icao'] ?? '');
+
+                    $pirepsByPilotDry[$userId][] = ['dpt' => $dpt, 'arr' => $arr, 'at' => $dt];
+
+                    if ($reg) {
+                        $flightsByAircraftDry[$reg][] = ['dpt' => $dpt, 'arr' => $arr, 'at' => $dt];
+                    }
+                } catch (\Exception) {}
+            }
         }
 
         // Pilot mapping table
         $this->table(['Callsign', 'Status'], array_map(
             fn ($cs, $found) => [$cs, $found ? '✓ found' : '✗ not found'],
-            array_keys($pilotStatus),
-            $pilotStatus
+            array_keys($pilotStatus), $pilotStatus
         ));
 
-        // Aircraft summary
         $total = count($records);
         $this->line(sprintf(
             'Aircraft: %d/%d rows mapped (%.0f%%), %d will use aircraft_id=null',
@@ -115,6 +131,11 @@ class MigrateCrewSystemPireps extends Command
         if ($unmappedPilots) {
             $this->warn('Unmapped pilots (rows will be skipped): ' . implode(', ', array_unique($unmappedPilots)));
         }
+
+        $estJs = $this->countInferredJumpseats($pirepsByPilotDry);
+        $estFr = $this->countInferredFerries($flightsByAircraftDry);
+        $this->line("Historical jumpseats to generate: {$estJs} (× \$50.00 = \$" . number_format($estJs * 50, 2) . ')');
+        $this->line("Historical ferries to generate:   {$estFr} (× \$0.00 — no charge)");
 
         if ($this->option('dry-run')) {
             $this->info('Dry run complete — no changes made.');
@@ -137,32 +158,40 @@ class MigrateCrewSystemPireps extends Command
         DB::table('pirep_comments')->delete();
         DB::table('journal_transactions')->where('ref_model', Pirep::class)->delete();
         DB::table('pireps')->delete();
-        // Remove jumpseat and ferry charges — pricing history doesn't carry over
+        // Remove all jumpseat / ferry journal charges
         DB::table('journal_transactions')
             ->where(fn ($q) => $q->where('memo', 'like', 'Jumpseat%')->orWhere('memo', 'like', 'Ferry%'))
             ->delete();
+        // Remove all operation requests and reset sequence
+        DB::table('vms_open_ops_requests')->delete();
+        DB::statement('ALTER TABLE vms_open_ops_requests AUTO_INCREMENT = 1');
         DB::table('users')->update([
-            'flights'        => 0,
-            'flight_time'    => 0,
+            'flights'         => 0,
+            'flight_time'     => 0,
             'curr_airport_id' => null,
-            'last_pirep_id'  => null,
+            'last_pirep_id'   => null,
         ]);
         DB::table('aircraft')->update(['flight_time' => 0]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         $this->info('Database cleaned.');
 
-        // ─── PHASE 2: IMPORT ─────────────────────────────────────────────
+        // ─── PHASE 2: IMPORT PIREPS ──────────────────────────────────────
         $this->info("=== Phase 2: Importing {$total} rows ===");
 
         $airlineId = Airline::first()?->id ?? 1;
 
-        $imported       = 0;
-        $skipped        = 0;
-        $nullAircraft   = 0;
+        // Pre-load airports for distance calculations (keyed by ICAO id)
+        $airportCoords = DB::table('airports')->get(['id', 'lat', 'lon'])->keyBy('id');
 
-        $latestByPilot    = []; // user_id   → ['pirep_id', 'arr_airport', 'submitted_at']
-        $latestByAircraft = []; // aircraft_id → ['airport_id', 'submitted_at']
+        $imported     = 0;
+        $skipped      = 0;
+        $nullAircraft = 0;
+
+        $pirepsByPilot    = []; // userId     → [{dpt, arr, at}]
+        $flightsByAircraft = []; // aircraftId → [{dpt, arr, at, userId}]
+        $latestByPilot    = []; // userId     → [pirep_id, arr_airport, submitted_at]
+        $latestByAircraft = []; // aircraftId → [airport_id, submitted_at]
 
         $bar = $this->output->createProgressBar($total);
         $bar->start();
@@ -171,46 +200,27 @@ class MigrateCrewSystemPireps extends Command
             $row = array_map('trim', $row);
             $bar->advance();
 
-            // Pilot lookup — skip row if unmapped
             $cs = $this->normalizeCallsign($row['pilot_callsign'] ?? '');
-            if (!isset($this->pilotMap[$cs])) {
-                $skipped++;
-                continue;
-            }
+            if (!isset($this->pilotMap[$cs])) { $skipped++; continue; }
             $userId = $this->pilotMap[$cs];
 
-            // Distance outlier — skip
             $dist = (float)($row['distance'] ?? 0);
-            if ($dist > 50000) {
-                $skipped++;
-                continue;
-            }
+            if ($dist > 50000) { $skipped++; continue; }
 
-            // Date
             try {
                 $date = Carbon::createFromFormat('m/d/Y H:i:s', $row['date']);
-            } catch (\Exception) {
-                $skipped++;
-                continue;
-            }
+            } catch (\Exception) { $skipped++; continue; }
 
-            // Aircraft
             $reg        = $this->extractRegistration($row['aircraft'] ?? '');
-            $aircraftId = ($reg && isset($this->aircraftMap[$reg]))
-                ? $this->aircraftMap[$reg]
-                : null;
-            if ($aircraftId === null) {
-                $nullAircraft++;
-            }
+            $aircraftId = ($reg && isset($this->aircraftMap[$reg])) ? $this->aircraftMap[$reg] : null;
+            if ($aircraftId === null) { $nullAircraft++; }
 
-            // Flight number: strip VHR prefix, keep suffix
-            $rawFlight  = $row['flight_number'] ?? '';
-            $flightNum  = preg_replace('/^VHR/i', '', $rawFlight);
-            $flightNum  = ltrim($flightNum, '0') ?: '0';
-
+            $rawFlight = $row['flight_number'] ?? '';
+            $flightNum = ltrim(preg_replace('/^VHR/i', '', $rawFlight), '0') ?: '0';
             $landingRate = (int)($row['landing_rate'] ?? 0);
-
-            $pirepId = Str::random(16);
+            $pirepId   = Str::random(16);
+            $dptAirport = strtoupper($row['dep_icao'] ?? '');
+            $arrAirport = strtoupper($row['arr_icao'] ?? '');
 
             DB::table('pireps')->insert([
                 'id'                  => $pirepId,
@@ -218,8 +228,8 @@ class MigrateCrewSystemPireps extends Command
                 'airline_id'          => $airlineId,
                 'aircraft_id'         => $aircraftId,
                 'flight_number'       => $flightNum,
-                'dpt_airport_id'      => strtoupper($row['dep_icao'] ?? ''),
-                'arr_airport_id'      => strtoupper($row['arr_icao'] ?? ''),
+                'dpt_airport_id'      => $dptAirport,
+                'arr_airport_id'      => $arrAirport,
                 'flight_time'         => $this->durationToMinutes($row['duration'] ?? '0:0:0'),
                 'planned_flight_time' => $this->durationToMinutes($row['duration'] ?? '0:0:0'),
                 'distance'            => $dist,
@@ -240,23 +250,28 @@ class MigrateCrewSystemPireps extends Command
 
             $imported++;
 
-            // Track most recent pirep per pilot
-            if (!isset($latestByPilot[$userId]) || $date > $latestByPilot[$userId]['submitted_at']) {
-                $latestByPilot[$userId] = [
-                    'pirep_id'     => $pirepId,
-                    'arr_airport'  => strtoupper($row['arr_icao'] ?? ''),
-                    'submitted_at' => $date,
+            // Track sequences for historical operation inference
+            $pirepsByPilot[$userId][] = ['dpt' => $dptAirport, 'arr' => $arrAirport, 'at' => $date];
+
+            if ($aircraftId) {
+                $flightsByAircraft[$aircraftId][] = [
+                    'dpt'    => $dptAirport,
+                    'arr'    => $arrAirport,
+                    'at'     => $date,
+                    'userId' => $userId,
                 ];
             }
 
-            // Track most recent pirep per aircraft
-            if ($aircraftId) {
-                if (!isset($latestByAircraft[$aircraftId]) || $date > $latestByAircraft[$aircraftId]['submitted_at']) {
-                    $latestByAircraft[$aircraftId] = [
-                        'airport_id'   => strtoupper($row['arr_icao'] ?? ''),
-                        'submitted_at' => $date,
-                    ];
-                }
+            // Track most recent pirep per pilot / aircraft
+            if (!isset($latestByPilot[$userId]) || $date > $latestByPilot[$userId]['submitted_at']) {
+                $latestByPilot[$userId] = [
+                    'pirep_id'     => $pirepId,
+                    'arr_airport'  => $arrAirport,
+                    'submitted_at' => $date,
+                ];
+            }
+            if ($aircraftId && (!isset($latestByAircraft[$aircraftId]) || $date > $latestByAircraft[$aircraftId]['submitted_at'])) {
+                $latestByAircraft[$aircraftId] = ['airport_id' => $arrAirport, 'submitted_at' => $date];
             }
         }
 
@@ -264,14 +279,140 @@ class MigrateCrewSystemPireps extends Command
         $this->newLine();
         $this->line("Imported: {$imported} | Skipped: {$skipped} | No aircraft (null): {$nullAircraft}");
 
-        // ─── PHASE 3a: STATS + RANKS ─────────────────────────────────────
-        $this->info('=== Phase 3a: Recalculating user stats and ranks ===');
+        // ─── PHASE 3: HISTORICAL JUMPSEATS ───────────────────────────────
+        $this->info('=== Phase 3: Generating historical jumpseats ($50 each) ===');
+
+        $jumpseats = 0;
+        $jsErrors  = 0;
+        $jsCost    = new Money(5000); // $50.00
+
+        foreach ($pirepsByPilot as $userId => $flights) {
+            usort($flights, fn ($a, $b) => $a['at']->timestamp <=> $b['at']->timestamp);
+
+            $user = User::with('journal')->find($userId);
+            if (!$user || !$user->journal) {
+                continue;
+            }
+
+            $currentAirport = $flights[0]['dpt'];
+
+            foreach ($flights as $flight) {
+                if ($currentAirport && $flight['dpt'] !== $currentAirport) {
+                    try {
+                        $jsAt    = $flight['at']->copy()->subMinutes(1);
+                        $fromKey = substr($currentAirport, 0, 5);
+                        $toKey   = substr($flight['dpt'], 0, 5);
+                        $jsDist  = $this->distanceBetween($airportCoords, $fromKey, $toKey);
+                        $opReq = OperationRequest::create([
+                            'operation_type'  => 'jumpseat',
+                            'user_id'         => $userId,
+                            'from_airport_id' => $fromKey,
+                            'to_airport_id'   => $toKey,
+                            'distance'        => $jsDist,
+                            'cost'            => 5000,
+                            'reason'          => 'Migración histórica CrewSystem',
+                            'type'            => 0,
+                            'status'          => 1,
+                            'approved_at'     => $jsAt,
+                            'created_at'      => $jsAt,
+                            'updated_at'      => now(),
+                        ]);
+
+                        $financeSvc->debitFromJournal(
+                            $user->journal,
+                            $jsCost,
+                            $opReq,
+                            "Jumpseat: {$currentAirport} → {$flight['dpt']}",
+                            null,
+                            null
+                        );
+
+                        $jumpseats++;
+                    } catch (\Throwable $e) {
+                        Log::warning("Jumpseat gen failed for user {$userId}: " . $e->getMessage());
+                        $jsErrors++;
+                    }
+                }
+                $currentAirport = $flight['arr'];
+            }
+        }
+
+        $this->line(sprintf(
+            'Jumpseats created: %d%s',
+            $jumpseats,
+            $jsErrors > 0 ? " ({$jsErrors} errors — see laravel.log)" : ''
+        ));
+
+        // ─── PHASE 4: HISTORICAL FERRIES ─────────────────────────────────
+        $this->info('=== Phase 4: Generating historical ferries ($0 — no charge) ===');
+
+        // Pre-load aircraft models for subfleet_id lookup
+        $aircraftModels = Aircraft::whereIn('id', array_keys($flightsByAircraft))
+            ->get()
+            ->keyBy('id');
+
+        $ferries    = 0;
+        $ferryErrors = 0;
+
+        foreach ($flightsByAircraft as $aircraftId => $flights) {
+            usort($flights, fn ($a, $b) => $a['at']->timestamp <=> $b['at']->timestamp);
+
+            $aircraft = $aircraftModels[$aircraftId] ?? null;
+
+            for ($i = 1; $i < count($flights); $i++) {
+                $prev = $flights[$i - 1];
+                $curr = $flights[$i];
+
+                if ($prev['arr'] === $curr['dpt']) {
+                    continue; // aircraft was already in the right place
+                }
+
+                try {
+                    $frAt    = $curr['at']->copy()->subMinutes(1);
+                    $fromKey = substr($prev['arr'], 0, 5);
+                    $toKey   = substr($curr['dpt'], 0, 5);
+                    $frDist  = $this->distanceBetween($airportCoords, $fromKey, $toKey);
+
+                    OperationRequest::create([
+                        'operation_type'   => 'ferry',
+                        'user_id'          => $curr['userId'],
+                        'from_airport_id'  => $fromKey,
+                        'to_airport_id'    => $toKey,
+                        'aircraft_id'      => $aircraftId,
+                        'subfleet_id'      => $aircraft?->subfleet_id,
+                        'aircraft_distance' => $frDist,
+                        'distance'         => $frDist,
+                        'cost'             => 0,
+                        'reason'           => 'Migración histórica CrewSystem',
+                        'type'             => 0,
+                        'status'           => 1,
+                        'approved_at'      => $frAt,
+                        'created_at'       => $frAt,
+                        'updated_at'       => now(),
+                    ]);
+
+                    $ferries++;
+                } catch (\Throwable $e) {
+                    Log::warning("Ferry gen failed for aircraft {$aircraftId}: " . $e->getMessage());
+                    $ferryErrors++;
+                }
+            }
+        }
+
+        $this->line(sprintf(
+            'Ferries created: %d%s',
+            $ferries,
+            $ferryErrors > 0 ? " ({$ferryErrors} errors — see laravel.log)" : ''
+        ));
+
+        // ─── PHASE 5a: STATS + RANKS ─────────────────────────────────────
+        $this->info('=== Phase 5a: Recalculating user stats and ranks ===');
         $userSvc->recalculateAllUserStats();
         $this->info('Done.');
 
-        // ─── PHASE 3b: FINANCES ──────────────────────────────────────────
+        // ─── PHASE 5b: FINANCES ──────────────────────────────────────────
         if (!$this->option('skip-finance')) {
-            $this->info('=== Phase 3b: Processing finances ===');
+            $this->info('=== Phase 5b: Processing pirep finances ===');
 
             $pireps    = Pirep::with(['user.rank', 'user.journal', 'airline.journal', 'aircraft.subfleet'])->get();
             $finBar    = $this->output->createProgressBar($pireps->count());
@@ -280,7 +421,7 @@ class MigrateCrewSystemPireps extends Command
             $finBar->start();
             foreach ($pireps as $pirep) {
                 try {
-                    $financeSvc->processFinancesForPirep($pirep);
+                    $pirepFinanceSvc->processFinancesForPirep($pirep);
                 } catch (\Throwable $e) {
                     $finErrors++;
                     Log::warning("Finance skipped for pirep {$pirep->id}: " . $e->getMessage());
@@ -294,8 +435,8 @@ class MigrateCrewSystemPireps extends Command
                 $this->warn("{$finErrors} pireps skipped finance (null aircraft or missing data).");
             }
 
-            // ─── PHASE 3d: JOURNAL BALANCES ──────────────────────────────
-            $this->info('=== Phase 3d: Recalculating journal balances ===');
+            // ─── PHASE 5d: JOURNAL BALANCES ──────────────────────────────
+            $this->info('=== Phase 5d: Recalculating journal balances ===');
             User::with('journal')->get()->each(function (User $user) use ($journalRepo) {
                 if ($user->journal) {
                     $journalRepo->recalculateBalance($user->journal);
@@ -308,8 +449,8 @@ class MigrateCrewSystemPireps extends Command
             $this->info('Done.');
         }
 
-        // ─── PHASE 3c: PILOT + AIRCRAFT POSITIONS ────────────────────────
-        $this->info('=== Phase 3c: Setting pilot and aircraft positions ===');
+        // ─── PHASE 5c: PILOT + AIRCRAFT POSITIONS ────────────────────────
+        $this->info('=== Phase 5c: Setting pilot and aircraft positions ===');
 
         foreach ($latestByPilot as $userId => $data) {
             DB::table('users')->where('id', $userId)->update([
@@ -325,9 +466,53 @@ class MigrateCrewSystemPireps extends Command
         }
 
         $this->info('Done.');
-        $this->info("=== Migration complete: {$imported} pireps imported ===");
+        $this->info("=== Migration complete: {$imported} pireps, {$jumpseats} jumpseats, {$ferries} ferries ===");
 
         return 0;
+    }
+
+    private function distanceBetween($airports, string $fromId, string $toId): float
+    {
+        $from = $airports[$fromId] ?? null;
+        $to   = $airports[$toId]   ?? null;
+        if (!$from || !$to) {
+            return 0.0;
+        }
+        $R    = 3440.07;
+        $dLat = deg2rad($to->lat - $from->lat);
+        $dLon = deg2rad($to->lon - $from->lon);
+        $a    = sin($dLat/2)**2 + cos(deg2rad($from->lat)) * cos(deg2rad($to->lat)) * sin($dLon/2)**2;
+        return round($R * 2 * atan2(sqrt($a), sqrt(1-$a)), 2);
+    }
+
+    private function countInferredJumpseats(array $pirepsByPilot): int
+    {
+        $count = 0;
+        foreach ($pirepsByPilot as $flights) {
+            usort($flights, fn ($a, $b) => $a['at']->timestamp <=> $b['at']->timestamp);
+            $current = $flights[0]['dpt'] ?? null;
+            foreach ($flights as $f) {
+                if ($current && $f['dpt'] !== $current) {
+                    $count++;
+                }
+                $current = $f['arr'];
+            }
+        }
+        return $count;
+    }
+
+    private function countInferredFerries(array $flightsByAircraft): int
+    {
+        $count = 0;
+        foreach ($flightsByAircraft as $flights) {
+            usort($flights, fn ($a, $b) => $a['at']->timestamp <=> $b['at']->timestamp);
+            for ($i = 1; $i < count($flights); $i++) {
+                if ($flights[$i - 1]['arr'] !== $flights[$i]['dpt']) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
     }
 
     // Normalizes a pilot callsign: strips extra leading zeros from the numeric suffix.
@@ -344,20 +529,15 @@ class MigrateCrewSystemPireps extends Command
     // Returns null if no recognizable registration is found.
     private function extractRegistration(string $text): ?string
     {
-        // Level 1: standard HKxxxx, HK-xxxx, Nxxxxxx
         if (preg_match('/\b(HK-?\d{4,5}|N\d{3,6}[A-Z]{1,3})\b/i', $text, $m)) {
             return strtoupper(str_replace('-', '', $m[1]));
         }
-        // Level 2: HK with space between prefix and digits (e.g. "HK- 6260")
         if (preg_match('/\bHK-?\s(\d{4,5})\b/i', $text, $m)) {
             return 'HK' . $m[1];
         }
-        // Level 3: implicit fleet number in preset name
-        // Matches: _VHOLAR_6253 | VHOLAR6253 | AVAHK4549 | clicairHK5331
         if (preg_match('/(?:_VHOLAR_|VHOLAR(?=\d)|AVAHK|clicairHK)(\d{4,5})/i', $text, $m)) {
             return 'HK' . $m[1];
         }
-
         return null;
     }
 

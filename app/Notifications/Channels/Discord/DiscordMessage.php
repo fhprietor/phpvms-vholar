@@ -33,6 +33,8 @@ class DiscordMessage
 
     protected $footer;
 
+    protected $footerIconUrl;
+
     protected $color;
 
     protected $author = [];
@@ -119,9 +121,10 @@ class DiscordMessage
         return $this;
     }
 
-    public function footer(string $footer): self
+    public function footer(string $footer, string $iconUrl = null): self
     {
         $this->footer = $footer;
+        $this->footerIconUrl = $iconUrl;
 
         return $this;
     }
@@ -185,9 +188,10 @@ class DiscordMessage
         }
 
         if (!empty($this->footer)) {
-            $embeds['footer'] = [
-                'text' => $this->footer,
-            ];
+            $embeds['footer'] = ['text' => $this->footer];
+            if (!empty($this->footerIconUrl)) {
+                $embeds['footer']['icon_url'] = $this->footerIconUrl;
+            }
         }
 
         return [

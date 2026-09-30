@@ -274,6 +274,50 @@ final class PIREPTest extends TestCase
     }
 
     /**
+     * The PIREP listing can be filtered by the client which produced it
+     */
+    public function test_get_user_pireps_filter_by_source_name(): void
+    {
+        $this->user = User::factory()->create();
+
+        $pirep_vms_1 = Pirep::factory()->create([
+            'user_id'     => $this->user->id,
+            'state'       => PirepState::ACCEPTED,
+            'source_name' => 'vmsOpenAcars/0.9.16',
+        ]);
+
+        $pirep_vms_2 = Pirep::factory()->create([
+            'user_id'     => $this->user->id,
+            'state'       => PirepState::ACCEPTED,
+            'source_name' => 'vmsOpenAcars/0.8.10',
+        ]);
+
+        $pirep_other = Pirep::factory()->create([
+            'user_id'     => $this->user->id,
+            'state'       => PirepState::ACCEPTED,
+            'source_name' => 'CrewSystem',
+        ]);
+
+        // Without a filter all of them are returned
+        $pireps = $this->get('/api/user/pireps')
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertCount(3, collect($pireps['data'])->pluck('id'));
+
+        // Filtering by the client name returns all of its versions
+        $pireps = $this->get('/api/user/pireps?source_name=vmsOpenAcars')
+            ->assertStatus(200)
+            ->json();
+
+        $pirep_ids = collect($pireps['data'])->pluck('id');
+        $this->assertCount(2, $pirep_ids);
+        $this->assertTrue($pirep_ids->contains($pirep_vms_1->id));
+        $this->assertTrue($pirep_ids->contains($pirep_vms_2->id));
+        $this->assertFalse($pirep_ids->contains($pirep_other->id));
+    }
+
+    /**
      * Make sure that a notification has been sent out to admins when a PIREP is submitted
      *
      * @throws \Exception

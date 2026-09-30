@@ -11,7 +11,7 @@
         {{ Form::open(['route' => ['admin.pages.destroy', $page->id], 'method' => 'delete']) }}
         <a href="{{ route('admin.pages.edit', [$page->id]) }}"
            class='btn btn-sm btn-success btn-icon'><i class="fas fa-pencil-alt"></i></a>
-        {{ Form::button('<i class="fa fa-times"></i>', ['type' => 'submit', 'class' => 'btn btn-sm btn-danger btn-icon', 'onclick' => "return confirm('Are you sure?')"]) }}
+        {{ Form::button('<i class="fa fa-times"></i>', ['type' => 'submit', 'class' => 'btn btn-sm btn-danger btn-icon', 'data-vh-confirm' => "¿Estás seguro? Esta acción no se puede deshacer."]) }}
         {{ Form::close() }}
       </td>
     </tr>

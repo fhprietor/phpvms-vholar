@@ -55,6 +55,7 @@ return [
         App\Providers\MeasurementsProvider::class,
         App\Providers\ObserverServiceProviders::class,
         App\Providers\RouteServiceProvider::class,
+        App\Themes\Vholar\ThemeServiceProvider::class,
     ])->toArray(),
 
     'aliases' => \Illuminate\Support\Facades\Facade::defaultAliases()->merge([

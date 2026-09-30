@@ -39,7 +39,7 @@
           {{ Form::button('<i class="fa fa-times"></i>', [
                   'type' => 'submit',
                   'class' => 'btn btn-sm btn-danger btn-icon',
-                  'onclick' => "return confirm('Are you sure you want to delete this award?')"
+                  'data-vh-confirm' => "¿Eliminar este premio? Esta acción no se puede deshacer."
           ]) }}
           {{ Form::close() }}
         </td>

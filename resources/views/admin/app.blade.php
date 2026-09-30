@@ -24,6 +24,8 @@
   <link rel="stylesheet" href="{{ public_mix('/assets/global/css/vendor.css') }}"/>
   <link rel="stylesheet" href="{{ public_mix('/assets/admin/css/vendor.css') }}"/>
   <link rel="stylesheet" href="{{ public_asset('/assets/admin/css/admin.css') }}"/>
+  <link rel="stylesheet" href="{{ public_asset('/assets/admin/css/vholar-admin.css') }}?v=20260918b"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
   <style type="text/css">
     @yield('css')
@@ -94,6 +96,26 @@
     </footer>
   </div>
 </div>
+{{-- Global Vholar confirm modal (Bootstrap 3) --}}
+<div class="modal fade" id="vhConfirmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="vhConfirmTitle">Confirmar acción</h4>
+            </div>
+            <div class="modal-body">
+                <p id="vhConfirmMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="vhConfirmBtn">
+                    <i class="fa fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
@@ -159,5 +181,33 @@
 </script>
 
 @yield('scripts')
+
+<script>
+(function () {
+    var _form = null, _name = null, _value = null;
+
+    $(document).on('click', '[data-vh-confirm]', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        _form  = $(this).closest('form');
+        _name  = $(this).attr('name')  || null;
+        _value = $(this).attr('value') || null;
+        $('#vhConfirmMessage').text($(this).data('vh-confirm') || '¿Estás seguro?');
+        $('#vhConfirmTitle').text($(this).data('vh-confirm-title') || 'Confirmar acción');
+        $('#vhConfirmModal').modal('show');
+    });
+
+    $(document).on('click', '#vhConfirmBtn', function () {
+        $('#vhConfirmModal').modal('hide');
+        if (_form && _form.length) {
+            if (_name) {
+                _form.append('<input type="hidden" name="' + _name + '" value="' + (_value || '') + '">');
+            }
+            _form[0].submit();
+        }
+        _form = null; _name = null; _value = null;
+    });
+})();
+</script>
 
 </html>

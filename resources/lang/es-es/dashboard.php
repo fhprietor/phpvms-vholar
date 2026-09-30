@@ -8,4 +8,7 @@ return [
     'fileonenow'     => 'Archivar uno ahora.',
     'weatherat'      => 'Clima en :ICAO',
     'recentreports'  => 'Informes recientes',
+    'viewall'        => 'Ver todos',
+    'aircraftat'     => 'Aeronaves en :airport',
+    'noaircraftat'   => 'No hay aeronaves estacionadas en :airport',
 ];

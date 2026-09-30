@@ -43,8 +43,8 @@ class SampleServiceProvider extends ServiceProvider
         // Show this link if logged in
         // $this->moduleSvc->addFrontendLink('Sample', '/sample', '', $logged_in=true);
 
-        // Admin links:
-        $this->moduleSvc->addAdminLink('Sample', '/admin/sample', 'pe-7s-tools');
+        // Admin links: (disabled)
+        // $this->moduleSvc->addAdminLink('Sample', '/admin/sample', 'pe-7s-tools');
     }
 
     /**

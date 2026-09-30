@@ -10,6 +10,9 @@ use App\Models\Enums\PirepState;
 use App\Models\Pirep;
 use App\Models\PirepComment;
 use App\Models\User;
+use App\Notifications\Channels\Discord\DiscordMessage;
+use App\Support\HttpClient;
+use App\Support\Units\Time;
 use App\Repositories\AircraftRepository;
 use App\Repositories\AirlineRepository;
 use App\Repositories\AirportRepository;
@@ -19,7 +22,6 @@ use App\Repositories\PirepRepository;
 use App\Repositories\SubfleetRepository;
 use App\Services\PirepService;
 use App\Services\UserService;
-use App\Support\Units\Time;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -352,13 +354,82 @@ class PirepController extends Controller
 
         $pirep = $this->pirepRepo->findWithoutFail($request->id);
         if ($request->isMethod('post')) {
+            // Save comment BEFORE changeState so the notification email includes it
+            $admin_comment = trim($request->post('admin_comment', ''));
+            if ($admin_comment !== '') {
+                (new PirepComment([
+                    'pirep_id' => $pirep->id,
+                    'user_id'  => Auth::id(),
+                    'comment'  => $admin_comment,
+                ]))->save();
+            }
+
             $new_status = (int) $request->post('new_status');
             $pirep = $this->pirepSvc->changeState($pirep, $new_status);
+
+            if (in_array($new_status, [PirepState::ACCEPTED, PirepState::REJECTED], true)) {
+                $this->sendAdminPirepDiscord($pirep->fresh(), $new_status, $admin_comment);
+            }
         }
 
         $pirep->refresh();
 
         return view('admin.pireps.actions', ['pirep' => $pirep, 'on_edit_page' => false]);
+    }
+
+    private function sendAdminPirepDiscord(Pirep $pirep, int $state, string $comment): void
+    {
+        $webhook_url = setting('notifications.discord_public_webhook_url');
+        if (empty($webhook_url)) {
+            return;
+        }
+
+        $isAccepted  = ($state === PirepState::ACCEPTED);
+        $user_avatar = !empty($pirep->user->avatar) ? $pirep->user->avatar->url : url('/images/logo.png');
+        $pilotRef    = $pirep->user->discord_id
+            ? '<@'.$pirep->user->discord_id.'>'
+            : $pirep->user->name_private;
+
+        $title       = 'Vuelo '.$pirep->ident.' '.($isAccepted ? 'Aceptado' : 'Rechazado');
+        $description = $pilotRef.' | '.$pirep->dpt_airport_id.' → '.$pirep->arr_airport_id;
+
+        $fields = [
+            'Equipo'      => $pirep->aircraft->ident,
+            'Tiempo'      => Time::minutesToTimeString($pirep->flight_time),
+        ];
+
+        if ($pirep->score !== null) {
+            $fields['Score'] = $pirep->score.' pts';
+        }
+
+        if ($pirep->landing_rate) {
+            $fields['Landing Rate'] = $pirep->landing_rate.' fpm';
+        }
+
+        if ($comment) {
+            $fields[$isAccepted ? 'Observación' : 'Motivo'] = $comment;
+        }
+
+        $dm = (new DiscordMessage())
+            ->webhook($webhook_url)
+            ->title($title)
+            ->url(route('frontend.pireps.show', [$pirep->id]))
+            ->thumbnail(['url' => $user_avatar])
+            ->description($description)
+            ->author([
+                'name' => $pirep->user->ident.' - '.$pirep->user->name_private,
+                'url'  => route('frontend.profile.show', [$pirep->user_id]),
+            ])
+            ->fields($fields)
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
+
+        $isAccepted ? $dm->success() : $dm->error();
+
+        try {
+            app(HttpClient::class)->post($webhook_url, $dm->toArray());
+        } catch (\Exception $e) {
+            Log::error('Discord admin pirep notification failed: '.$e->getMessage());
+        }
     }
 
     /**

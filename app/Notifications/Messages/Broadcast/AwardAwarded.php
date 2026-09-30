@@ -48,7 +48,7 @@ class AwardAwarded extends Notification implements ShouldQueue
         // User avatar, somehow $pirep->user->resolveAvatarUrl() is not being accepted by Discord as thumbnail
         $user_avatar = !empty($user->avatar)
             ? $user->avatar->url
-            : $user->gravatar(256);
+            : url('/images/logo.png');
 
         $dm = new DiscordMessage();
 
@@ -66,7 +66,8 @@ class AwardAwarded extends Notification implements ShouldQueue
             ->author([
                 'name' => $user->ident.' - '.$user->name_private,
                 'url'  => route('frontend.profile.show', [$user->id]),
-            ]);
+            ])
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
     }
 
     /**

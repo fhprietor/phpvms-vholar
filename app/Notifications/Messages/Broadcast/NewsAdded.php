@@ -40,7 +40,8 @@ class NewsAdded extends Notification implements ShouldQueue
                 'url'      => '',
                 'icon_url' => $news->user->resolveAvatarUrl(),
             ])
-            ->description($markdown);
+            ->description($markdown)
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
     }
 
     /**

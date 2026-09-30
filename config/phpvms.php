@@ -16,6 +16,10 @@ return [
     'installed' => env('PHPVMS_INSTALLED', false),
 
     /*
+     * Active theme for the site
+     */
+    'theme' => 'vholar',
+    /*
      * Avatar resize settings
      * feel free to edit the following lines.
      * Both parameters are in px.

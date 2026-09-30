@@ -1,5 +1,75 @@
 # Changelog
 
+## [Vholar] 2026-05-17 — Discord notifications, ACARS parser fixes & pirep score
+
+### Discord Notifications
+- **Avatar fallback:** all 6 broadcast notifications (`PirepFiled`, `PirepStatusChanged`, `PirepDiverted`, `PirepPrefiled`, `UserRankChanged`, `AwardAwarded`) now use `url('/images/logo.png')` as fallback when the pilot has no avatar, replacing the phpVMS generic Gravatar image.
+- **PirepFiled description:** second line added with `Score: N` and bonuses inline (`| +N pts: reason`) when log data is available.
+- **PirepStatusChanged (LANDED):** second line added with `Landing rate: N fpm | G-Force: N.NNg` when available. Bonuses NOT included — LANDED fires before the full log is written.
+
+### ACARS Log Parser (`FlightAnalysisHelper::parseLogData`)
+- **Bonuses:** new `bonuses` array in result. Regex: `BONIFICACIÓN reason: +N pts` / `BONUS reason: +N pts` (bilingual). Displayed in the Advanced Flight Analysis card as green `+N pts` lines.
+- **Takeoff context without header:** `DESPEGUE DETECTADO` now sets `$context = 'takeoff'` directly, so logs that omit the `DATOS DE DESPEGUE:` section header still parse `Velocidad de Rotación`, `Cabeceo|Alabeo`, `N1`, `Flaps` correctly.
+- **Takeoff context clear:** added `Tren de aterrizaje: UP` (Spanish gear-up) alongside `Gear UP` to end the takeoff context.
+- **QNH delta first-occurrence only:** `qnh_delta` is now set only once (first match), preventing the destination QNH line from overwriting the departure delta.
+- **Penalty guard:** also excludes lines containing `PENALIZACIÓN:` (early Spanish warning lines), not just `PENALTY:`.
+
+### Pirep Detail (`/pireps/{id}`) — Advanced Flight Analysis card
+- **Card visibility:** guard changed from `@if($sc)` to `@if($hasAnalysis)` — card appears when there are penalties or bonuses even if there is no score line.
+- **Score fallback:** when log has no score line, `$pirep->score` from the database is used as fallback (shown without rating label). Priority: log score → DB score → hidden.
+- **Score column conditional:** `col-4` score column only renders when `$sc` is set; otherwise penalties/bonuses take full `col-12`.
+- **Unidentified penalties:** when score comes from DB fallback and log penalties/bonuses don't reconcile mathematically, a `−N pts Penalizaciones no identificadas` line is appended in italics.
+- **Bonuses displayed:** green `+N pts reason` lines shown in a "Bonificaciones" section after penalties.
+
+### Dashboard (`/dashboard`)
+- **Score column** added to "Your last report" recent pireps table: green ≥ 80, yellow ≥ 60, red < 60, `—` when null.
+
+## [Vholar] 2026-05-16 — Pirep detail redesign & bilingual ACARS parser
+
+### Pirep Detail (`/pireps/{id}`) — layout restructure
+- **Auth-protected:** route moved from public group to authenticated group in `RouteServiceProvider.php`; unauthenticated visitors are redirected to login. Short URL `r/{id}` remains public.
+- **Two-column layout:** left `col-8` now stacks (1) flight description card, (2) Advanced Flight Analysis + score/penalties, (3) Takeoff/Landing cards side by side (`col-6`/`col-6`), (4) approach capture bar — all within the same column alongside the right sidebar.
+- **Right sidebar (`col-4`):** removed redundant Score and Landing Rate items (now shown with more detail in left-column analysis cards).
+- **Full-width sections below:** Map → Flight Log → SimBrief OFP → Altitude Profile.
+
+### ACARS log parser — bilingual EN/ES support (`FlightAnalysisHelper::parseLogData`)
+- All regexes updated to match both English and Spanish ACARS client output via alternation.
+- Added Spanish context markers: `DATOS DE DESPEGUE` (= `ACCURATE TAKEOFF DATA`), `DATOS DE ATERRIZAJE` (= `ACCURATE TOUCHDOWN DATA`).
+- Added context end triggers: `Gear UP` closes takeoff context; `PIREP Status: TXI` closes landing context.
+- Takeoff: `DESPEGUE DETECTADO - Vel:` ↔ `TAKEOFF DETECTED.*Speed:`, standalone `Velocidad en Tierra:` for GS, `Cabeceo:/Alabeo:` and `Pitch:/Bank:` for pitch/bank inside context block.
+- Landing: `Aterrizaje registrado:.*Rumbo:.*Cabeceo:.*Alabeo:` ↔ `Landing recorded:.*Heading:.*Pitch:.*Bank:`, `Fuerza G:` ↔ `G-Force:`, `Reversas:` ↔ `Reversers:`, standalone `Velocidad: X kts (IAS) / Y kts (GS)` and `Flaps: X% | Spoilers: Y%`.
+- Approach: `COMPUERTA DE APROXIMACIÓN.*ESTABILIZADA/INESTABLE` ↔ `APPROACH GATE.*STABILIZED/UNSTABILIZED`; `APPROACH CAPTURE: RWY X | AGL X ft | Dist X NM` ↔ `INICIO CAPTURA … PISTA …`.
+- Score: `Score:` ↔ `Puntuación:` — **critical**: score absence suppresses the entire score+penalties card (`@if($sc)`).
+- Network: `Connected on IVAO (VID …)` ↔ `Conectado en IVAO (VID …)`.
+- OAT/Wind: `Viento:` ↔ `Wind:`.
+
+## [Vholar] 2026-05-13 — UI polish & SimBrief Dispatch
+
+### Vholar Theme — Weather widget
+- `widgets/weather.blade.php` replaced with metar-taf.com embed (token `ons7HDjV`, account-specific)
+- ICAO is dynamic: uses `$config['icao']` (the Weather widget class passes params as `$config`, not as individual variables)
+- Scaled 80% via CSS transform inside a `240px × 348px; overflow:hidden` wrapper to fit the dashboard sidebar
+- Embed constraints: `id="metartaf-{token}"` and `target={token}` must match exactly; only the ICAO path segment and `bg_color` param are safely changeable
+
+### Vholar Theme — `/flights` & `/bids`
+- Country flags added to both route-point airports in flight cards (`flights/table.blade.php`)
+- Departure flag: `display:flex; align-items:center; gap:6px` wrapper (left-aligned, flag left of ICAO)
+- Arrival flag: `display:inline-flex; align-items:center; gap:6px; text-align:left` — `inline-flex` floats right via parent `text-align:right` CSS; `text-align:left` on the wrapper neutralises inheritance so ICAO pill sits at the left edge of the text div (adjacent to the flag)
+
+### Vholar Theme — `/dassignments` (frontend pilot view)
+- SCHEDULED label changes to **BLOCK TIMES** for completed assignments where actual block data is available
+- Airport flags: changed from `display:flex` + `vertical-align:middle` to `display:inline-flex; align-items:center; gap:6px` wrapper, same pattern as `/flights`
+
+### SimBrief Direct Dispatch (new shared component)
+- New partial: `resources/views/layouts/vholar/components/simbrief-dispatch-modal.blade.php`
+- Included via `@include('vholar::components.simbrief-dispatch-modal')` in `flights/table.blade.php` and `modules/DisposableSpecial/assignments/index.blade.php`
+- Button `sb-dispatch-btn` appears on `/flights`, `/bids`, `/dassignments` when a bid has a reserved aircraft (`$isBid && $hasReservedAircraft`)
+- Modal fields: Vuelo, Tipo Aeronave, Matrícula, Comandante (all readonly), Salida UTC (now+40 min), Nivel de Vuelo ft (default by aircraft family), Cost Index, Tipo Vuelo, PAX (random by type), Cargo kgs, Pista Salida, Pista Llegada, Ruta
+- "Generar OFP" builds SimBrief custom dispatch URL and opens in new tab, then closes modal
+- Key URL params: `fl` = feet/100 (e.g. 36000 ft → `fl=360`), `origrwy`, `destrwy` (not `deprwy`/`arrrwy`), `extrarmk=OPR/{airline} CS/VHOLAR IVAOVA/{airline}`
+- JS guard `window._sbDispatchInit` prevents double-registration when partial is included on the same page twice
+- Close buttons use explicit `sbModal.hide()` (not `data-bs-dismiss`) to avoid Bootstrap conflict when modal was instantiated manually with `new bootstrap.Modal()`
+
 ## [7.0.0-beta.4](https://github.com/nabeelio/phpvms/tree/7.0.0-beta.4) (2020-05-09)
 
 [Full Changelog](https://github.com/nabeelio/phpvms/compare/7.0.0-beta.3...7.0.0-beta.4)

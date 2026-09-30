@@ -22,7 +22,7 @@
             <a href="{{ route('admin.aircraft.index') }}?subfleet={{$subfleet->id}}" class='btn btn-sm btn-info text-black'>Manage Aircraft</a>
             <a href="{{ route('admin.subfleets.edit', [$subfleet->id]) }}" class='btn btn-sm btn-success text-black'>Edit Subfleet</a>
 
-            {{ Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-sm btn-danger', 'onclick' => "return confirm('Are you sure?')"]) }}
+            {{ Form::button('Delete', ['type' => 'submit', 'class' => 'btn btn-sm btn-danger', 'data-vh-confirm' => "¿Estás seguro? Esta acción no se puede deshacer."]) }}
             {{ Form::close() }}
           </td>
         </tr>

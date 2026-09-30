@@ -41,7 +41,7 @@ Pass in:
           {{ Form::button('<i class="fa fa-times"></i>', [
                 'type' => 'submit',
                 'class' => 'btn btn-sm btn-danger btn-icon',
-                'onclick' => "return confirm('Are you sure?')"])
+                'data-vh-confirm' => "¿Estás seguro? Esta acción no se puede deshacer."])
           }}
           {{ Form::close() }}
         </td>

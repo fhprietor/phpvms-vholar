@@ -324,7 +324,7 @@ class UserService extends Service
             } elseif (!$restrict_rank && $restrict_type) {
                 $restricted_to = $type_sf_array;
             } elseif ($restrict_rank && $restrict_type) {
-                $restricted_to = array_intersect($rank_sf_array, $type_sf_array);
+                $restricted_to = array_unique(array_merge($rank_sf_array, $type_sf_array));
             }
         } else {
             $restrict_rank = false;

@@ -440,3 +440,29 @@ if (!function_exists('decode_days')) {
         return implode(', ', $days);
     }
 }
+
+if (!function_exists('carto_tile_url')) {
+    /**
+     * Build a CARTO basemap tile URL, appending the API key when it's set.
+     *
+     * CARTO raster basemaps (basemaps.cartocdn.com) require a key, otherwise the
+     * tiles are served with an "API key required" watermark. The key is
+     * publishable and domain-restricted, so it's safe to send it to the browser.
+     *
+     * @param  string $style CARTO style, eg. light_all or dark_all
+     * @return string Leaflet tile URL template
+     *
+     * @see https://docs.carto.com/faqs/carto-basemaps
+     */
+    function carto_tile_url(string $style = 'light_all'): string
+    {
+        $url = 'https://{s}.basemaps.cartocdn.com/'.$style.'/{z}/{x}/{y}{r}.png';
+
+        $key = setting('general.carto_api_key');
+        if (filled($key)) {
+            $url .= '?key='.urlencode($key);
+        }
+
+        return $url;
+    }
+}

@@ -110,7 +110,7 @@ class PirepService extends Service
         }
 
         // See if this user is allowed to fly this aircraft
-        if (setting('pireps.restrict_aircraft_to_rank', false)
+        if ((setting('pireps.restrict_aircraft_to_rank', false) || setting('pireps.restrict_aircraft_to_typerating', false))
             && !$this->userSvc->aircraftAllowed($user, $pirep->aircraft_id)) {
             throw new AircraftPermissionDenied($user, $pirep->aircraft);
         }
@@ -687,7 +687,20 @@ class PirepService extends Service
             return;
         }
 
-        $diversion_airport_id = $pirep->fields->where('slug', 'diversion-airport')->first()?->value;
+        // Use the explicit diversion-airport field first.
+        // For ACARS pireps, never infer a diversion from alt_airport_id: vmsOpenAcars always
+        // populates alt_airport_id with the SimBrief ALTN field (flight-plan metadata), not as
+        // a diversion signal. Manual pireps still use alt_airport_id as a fallback.
+        $field_diversion = $pirep->fields->where('slug', 'diversion-airport')->first()?->value;
+        $is_acars = ($pirep->source === PirepSource::ACARS);
+        $alt_as_diversion = (!$is_acars
+            && $pirep->alt_airport_id
+            && $pirep->alt_airport_id !== $pirep->dpt_airport_id
+            && $pirep->alt_airport_id !== $pirep->arr_airport_id)
+            ? $pirep->alt_airport_id
+            : null;
+
+        $diversion_airport_id = $field_diversion ?? $alt_as_diversion;
 
         // Return if no diversion
         if (!$diversion_airport_id) {

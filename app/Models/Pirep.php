@@ -134,6 +134,12 @@ class Pirep extends Model
         'submitted_at',
         'created_at',
         'updated_at',
+        'landing_rate', 'fuel_used', 'passengers', 'cargo',
+        'takeoff_gforce', 'landing_gforce', 'takeoff_pitch',
+        'landing_pitch', 'takeoff_bank', 'landing_bank',
+        'takeoff_speed', 'landing_speed', 'performance_score',
+        'stall_detected', 'crash_detected', 'overspeed_detected',
+        'slew_detected', 'pause_detected', 'flight_log', 'altitude_profile'
     ];
 
     protected $casts = [
@@ -157,6 +163,8 @@ class Pirep extends Model
         'source'              => 'integer',
         'state'               => 'integer',
         'submitted_at'        => CarbonCast::class,
+        'flight_log' => 'array',
+        'altitude_profile' => 'array'
     ];
 
     public static $rules = [

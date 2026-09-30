@@ -12,7 +12,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" id="without_aircraft" class="btn btn-secondary" data-dismiss="modal">Don't book aircraft</button>
-        <button type="button" id="with_aircraft" class="btn btn-primary" data-dismiss="modal">Book aircraft</button>
+        <button type="button" id="with_aircraft" class="btn btn-primary" data-dismiss="modal">Reservar aircraft</button>
       </div>
     </div>
   </div>

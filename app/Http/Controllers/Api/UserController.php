@@ -183,6 +183,14 @@ class UserController extends Controller
             $where[] = ['state', '!=', PirepState::CANCELLED];
         }
 
+        // Filter by the client which produced the PIREP, eg. "vmsOpenAcars" or
+        // "vmsOpenAcars/0.9.16". It's a prefix match so passing the client name
+        // returns every version of it.
+        $source_name = $request->query('source_name');
+        if (is_string($source_name) && trim($source_name) !== '') {
+            $where[] = ['source_name', 'like', trim($source_name).'%'];
+        }
+
         $this->pirepRepo->pushCriteria(new WhereCriteria($request, $where));
 
         $pireps = $this->pirepRepo

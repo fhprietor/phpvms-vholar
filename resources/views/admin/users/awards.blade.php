@@ -9,7 +9,7 @@
               'method' => 'delete', 'class' => 'pjax_form form-inline']) }}
         {{ Form::button('<i class="fa fa-times"></i>', ['type' => 'submit',
                          'class' => 'btn btn-danger btn-small',
-                         'onclick' => "return confirm('Are you sure?')",
+                         'data-vh-confirm' => "¿Estás seguro? Esta acción no se puede deshacer.",
                          ]) }}
         {{ Form::close() }}
       </td>

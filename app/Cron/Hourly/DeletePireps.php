@@ -37,6 +37,11 @@ class DeletePireps extends Listener
      */
     protected function deletePireps(int $expire_time_hours, int $state)
     {
+        // 0 means disabled — admin must delete manually
+        if ($expire_time_hours === 0) {
+            return;
+        }
+
         $dt = Carbon::now('UTC')->subHours($expire_time_hours);
         $pireps = Pirep::where('created_at', '<', $dt)
             ->where(['state' => $state])

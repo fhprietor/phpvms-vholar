@@ -115,6 +115,28 @@ class AcarsController extends Controller
     }
 
     /**
+     * Return the ACARS logs for a PIREP. These are the type=LOG rows (text
+     * messages and events), which don't show up on the map or in the positions.
+     */
+    public function acars_logs_get(string $id, Request $request): AcarsRouteResource
+    {
+        $pirep = $this->pirepRepo->find($id);
+        if (empty($pirep)) {
+            throw new PirepNotFound($id);
+        }
+
+        $acars = Acars::with(['pirep'])
+            ->where([
+                'pirep_id' => $id,
+                'type'     => AcarsType::LOG,
+            ])
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return new AcarsRouteResource($acars);
+    }
+
+    /**
      * Post ACARS updates for a PIREP
      *
      *
@@ -140,7 +162,7 @@ class AcarsController extends Controller
         $positions = $request->post('positions');
         foreach ($positions as $position) {
             $position['pirep_id'] = $id;
-            $position['type'] = AcarsType::FLIGHT_PATH;
+            //$position['type'] = AcarsType::FLIGHT_PATH;
 
             if (isset($position['altitude'])) {
                 if (!isset($position['altitude_agl'])) {

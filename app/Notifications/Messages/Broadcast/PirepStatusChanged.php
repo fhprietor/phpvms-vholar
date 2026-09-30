@@ -3,6 +3,7 @@
 namespace App\Notifications\Messages\Broadcast;
 
 use App\Contracts\Notification;
+use App\Helpers\FlightAnalysisHelper;
 use App\Models\Enums\PirepStatus;
 use App\Models\Pirep;
 use App\Notifications\Channels\Discord\DiscordMessage;
@@ -75,7 +76,7 @@ class PirepStatusChanged extends Notification implements ShouldQueue
         $fields = $this->createFields($pirep);
 
         // User avatar, somehow $pirep->user->resolveAvatarUrl() is not being accepted by Discord as thumbnail
-        $user_avatar = !empty($pirep->user->avatar) ? $pirep->user->avatar->url : $pirep->user->gravatar(256);
+        $user_avatar = !empty($pirep->user->avatar) ? $pirep->user->avatar->url : url('/images/logo.png');
 
         // Proper coloring for the messages
         // Pirep Filed > success, normals > warning, non-normals > error
@@ -89,18 +90,37 @@ class PirepStatusChanged extends Notification implements ShouldQueue
 
         $color = in_array($pirep->status, $danger_types, true) ? 'ED2939' : 'FD6A02';
 
+        $description = $pirep->user->discord_id ? 'Flight by <@'.$pirep->user->discord_id.'>' : '';
+
+        if ($pirep->status === PirepStatus::LANDED) {
+            $logData  = FlightAnalysisHelper::parseLogData($pirep);
+            $lrate    = $pirep->landing_rate ?? ($logData['landing']['vs_fpm'] ?? null);
+            $gforce   = $logData['landing']['gforce'] ?? null;
+            $landingLine = '';
+            if ($lrate !== null) {
+                $landingLine = 'Landing rate: '.$lrate.' fpm';
+            }
+            if ($gforce !== null) {
+                $landingLine .= ($landingLine ? ' | ' : '').'G-Force: '.number_format($gforce, 2).'g';
+            }
+            if ($landingLine) {
+                $description .= ($description ? PHP_EOL : '').$landingLine;
+            }
+        }
+
         $dm = new DiscordMessage();
 
         return $dm->webhook(setting('notifications.discord_public_webhook_url'))
             ->color($color)
             ->title($title)
-            ->description($pirep->user->discord_id ? 'Flight by <@'.$pirep->user->discord_id.'>' : '')
+            ->description($description)
             ->thumbnail(['url' => $user_avatar])
             ->author([
                 'name' => $pirep->user->ident.' - '.$pirep->user->name_private,
                 'url'  => route('frontend.profile.show', [$pirep->user_id]),
             ])
-            ->fields($fields);
+            ->fields($fields)
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
     }
 
     public function createFields(Pirep $pirep): array

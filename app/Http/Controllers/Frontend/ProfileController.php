@@ -10,6 +10,7 @@ use App\Models\UserFieldValue;
 use App\Repositories\AirlineRepository;
 use App\Repositories\AirportRepository;
 use App\Repositories\UserRepository;
+use App\Services\UserService;
 use App\Support\Countries;
 use App\Support\Timezonelist;
 use App\Support\Utils;
@@ -34,7 +35,8 @@ class ProfileController extends Controller
     public function __construct(
         private readonly AirlineRepository $airlineRepo,
         private readonly AirportRepository $airportRepo,
-        private readonly UserRepository $userRepo
+        private readonly UserRepository $userRepo,
+        private readonly UserService $userSvc
     ) {}
 
     /**
@@ -70,8 +72,8 @@ class ProfileController extends Controller
             'fields.field',
             'home_airport',
             'last_pirep',
-            'rank',
-            'typeratings',
+            'rank.subfleets',
+            'typeratings.subfleets',
         ];
         /** @var \App\Models\User $user */
         $user = User::with($with)->where('id', $id)->first();
@@ -84,10 +86,13 @@ class ProfileController extends Controller
 
         $userFields = $this->userRepo->getUserFields($user, true);
 
+        $allowableSubfleets = $this->userSvc->getAllowableSubfleets($user);
+
         return view('profile.index', [
-            'user'       => $user,
-            'userFields' => $userFields,
-            'acars'      => $this->acarsEnabled(),
+            'user'               => $user,
+            'userFields'         => $userFields,
+            'acars'              => $this->acarsEnabled(),
+            'allowableSubfleets' => $allowableSubfleets,
         ]);
     }
 

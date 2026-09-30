@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $with = ['airline', 'current_airport', 'fields.field', 'home_airport', 'rank'];
+        $with = ['airline', 'current_airport', 'fields.field', 'home_airport', 'rank', 'last_pirep'];
         $with_count = ['awards'];
 
         $where = [];
@@ -43,6 +43,8 @@ class UserController extends Controller
             ->with($with)
             ->sortable('id')
             ->paginate();
+
+        $users->loadAvg(['pireps' => fn ($q) => $q->whereNotNull('score')->where('score', '>', 0)], 'score');
 
         return view('users.index', [
             'country' => new ISO3166(),

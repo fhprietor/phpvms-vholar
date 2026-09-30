@@ -50,7 +50,8 @@ class UserRegistered extends Notification implements ShouldQueue
                 'url'      => '',
                 'icon_url' => $this->user->resolveAvatarUrl(),
             ])
-            ->fields([]);
+            ->fields([])
+            ->footer('Vholar Virtual Airlines', url('/images/vholar_logoweb.png'));
     }
 
     /**

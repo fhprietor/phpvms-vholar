@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Contracts\Controller;
+use App\Helpers\FlightAnalysisHelper;
 use App\Http\Requests\CreatePirepRequest;
 use App\Http\Requests\UpdatePirepRequest;
 use App\Models\Enums\PirepFieldSource;
@@ -215,10 +216,15 @@ class PirepController extends Controller
 
         $map_features = $this->geoSvc->pirepGeoJson($pirep);
 
+        $altitudeProfile = FlightAnalysisHelper::getAltitudeProfile($pirep);
+        $logData         = FlightAnalysisHelper::parseLogData($pirep);
+
         return view('pireps.show', [
-            'pirep'        => $pirep,
-            'map_features' => $map_features,
-            'user'         => Auth::user(),
+            'pirep'          => $pirep,
+            'map_features'   => $map_features,
+            'user'           => Auth::user(),
+            'altitudeProfile' => $altitudeProfile,
+            'logData'         => $logData,
         ]);
     }
 
@@ -330,7 +336,7 @@ class PirepController extends Controller
             }
 
             // Can they fly this aircraft?
-            if (setting('pireps.restrict_aircraft_to_rank', false)
+            if ((setting('pireps.restrict_aircraft_to_rank', false) || setting('pireps.restrict_aircraft_to_typerating', false))
                 && !$this->userSvc->aircraftAllowed($user, $pirep->aircraft_id)) {
                 Log::info('Pilot '.$user->id.' not allowed to fly aircraft');
 

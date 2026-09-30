@@ -82,6 +82,20 @@
   options: ''
   type: boolean
   description: If checked, the app's language will be inferred from the browser's preferences
+- key: general.carto_api_key
+  name: 'Carto API Key'
+  group: general
+  value: ''
+  options: ''
+  type: text
+  description: 'API key for the CARTO basemaps (basemaps.cartocdn.com). Without it the tiles show an "API key required" watermark. Free key at https://carto.com/basemaps/apikey/'
+- key: general.navdata_api_key
+  name: 'NavData API Key'
+  group: general
+  value: ''
+  options: ''
+  type: text
+  description: 'API key used for the NavData requests made from phpVMS'
 - key: captcha.enabled
   name: 'hCaptcha Enabled'
   group: captcha

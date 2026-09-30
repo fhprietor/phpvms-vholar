@@ -8,4 +8,7 @@ return [
     'fileonenow'     => 'File one now.',
     'weatherat'      => 'Weather at :ICAO',
     'recentreports'  => 'Recent Reports',
+    'viewall'        => 'View all',
+    'aircraftat'     => 'Aircraft at :airport',
+    'noaircraftat'   => 'No aircraft parked at :airport',
 ];
