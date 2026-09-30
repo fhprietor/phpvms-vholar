@@ -17,6 +17,6 @@
 !/VmsOpenFileManager
 !/TestABC
 
-# Third party modules vendored in this private repo (to be pinned as submodules)
-!/DisposableSpecial
-!/CHJumpSeat
+# DisposableSpecial y CHJumpSeat NO se versionan: sus licencias prohiben
+# redistribuir el codigo. Se instalan aparte y sus parches viven en patches/.
+# DisposableBasic si se versiona, pero como submodulo (apunta a su repo upstream).
