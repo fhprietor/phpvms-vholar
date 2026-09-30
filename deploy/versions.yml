@@ -71,13 +71,17 @@ modules:
       origin: in-repo
       module_json_version: 1.0.2
     VmsOpenOps:
-      origin: in-repo
+      origin: submodule
+      url: https://github.com/fhprietor/vmsOpenOps.git
+      commit: 4154ace76153beb64ec99566ee452ee189c8c1fd
+      branch: main
       module_json_version: null
-      pending: extraer a repo propio y pinar como submodulo
     VmsOpenFileManager:
-      origin: in-repo
+      origin: submodule
+      url: https://github.com/fhprietor/vmsOpenFileManager.git
+      commit: 2fba5f8687299a46301d49f69f06f9c57ca13f20
+      branch: main
       module_json_version: null
-      pending: extraer a repo propio y pinar como submodulo
     TestABC:
       origin: in-repo
       module_json_version: null

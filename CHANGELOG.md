@@ -23,6 +23,11 @@ buena parte del codigo propio no estaban en git.
   responsabilidad. Los parches quedan ademas en `patches/` con su commit base.
 - `DisposableBasic` sigue como submodulo (`f0b03db`, v3.7.4-2-g).
 
+### Submodulos propios
+- `VmsOpenOps` y `VmsOpenFileManager` se extraen a repos propios
+  (`fhprietor/vmsOpenOps` 4154ace y `fhprietor/vmsOpenFileManager` 2fba5f8) y el
+  repo central pasa a pinar el commit. `TestABC` sigue vendorizado (stub).
+
 ### Estado de modulos y datos
 - `app/Database/seeds/modules.yml` refleja el estado real de activacion
   (activador `database`), incluyendo `CHJumpSeat` y `TestABC` como desactivados.

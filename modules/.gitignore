@@ -12,9 +12,12 @@
 !/DisposableBasic
 !/SmartCARS3phpVMS7Api
 
-# VA owned modules (to be extracted to their own repos and pinned as submodules)
+# Modulos propios
+# VmsOpenOps y VmsOpenFileManager son submodulos (fhprietor/vmsOpenOps,
+# fhprietor/vmsOpenFileManager): se listan aqui para que git vea el gitlink.
 !/VmsOpenOps
 !/VmsOpenFileManager
+# TestABC sigue vendorizado (es un stub)
 !/TestABC
 
 # DisposableSpecial y CHJumpSeat: versionados aqui por decision expresa del

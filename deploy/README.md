@@ -11,7 +11,8 @@ El punto de partida y las versiones exactas de cada pieza estan en
 | Parches al core de phpVMS | el propio repo (fork de `phpvms/phpvms`) |
 | Tema `vholar` | `resources/views/layouts/vholar` + `app/Themes/Vholar` |
 | Assets del tema | `public/disposable`, `public/image`, `public/images` |
-| Modulos propios | `modules/VmsOpenOps`, `modules/VmsOpenFileManager`, `modules/TestABC` |
+| Modulos propios (submodulos) | `modules/VmsOpenOps`, `modules/VmsOpenFileManager` |
+| Modulo propio vendorizado (stub) | `modules/TestABC` |
 | Modulos de terceros con parches | `modules/DisposableSpecial`, `modules/CHJumpSeat` |
 | Submodulo de terceros | `modules/DisposableBasic` |
 | Parches de terceros (referencia) | `patches/` (con su base upstream) |
@@ -70,11 +71,29 @@ del repo), asi que ya no son clones actualizables in situ. Para subir de version
    fichero de `patches/` en `versions.yml`.
 5. Regenerar el parche contra la nueva base para dejar constancia.
 
+## Submodulos
+
+| Submodulo | Repo | Para que |
+|---|---|---|
+| `modules/DisposableBasic` | `FatihKoz/DisposableBasic` | tercero, sin cambios propios |
+| `modules/VmsOpenOps` | `fhprietor/vmsOpenOps` | modulo propio |
+| `modules/VmsOpenFileManager` | `fhprietor/vmsOpenFileManager` | modulo propio |
+
+- Traer un clon completo: `git submodule update --init --recursive`.
+- **Cambiar un modulo**: se edita en su repo, se empuja, y aqui se sube el pin
+  (`git add modules/<Modulo> && git commit`). No se edita a mano en el central.
+- **Nota de permisos**: los directorios de modulo pertenecen a `www-data` (los
+  escribe el instalador de la web), asi que git exige `safe.directory`. Si
+  `~/.gitconfig` es escribible:
+  `git config --global --add safe.directory /var/www/phpvms/modules/VmsOpenOps`
+  (idem para el resto). Si no, pasar `-c safe.directory=<ruta>` en cada comando.
+
 ## Pendiente (siguiente iteracion)
 
-1. **Extraer los modulos propios** (`VmsOpenOps`, `VmsOpenFileManager`) a repos
-   propios y pinarlos como submodulos. `TestABC` es un stub: decidir si se
-   mantiene. Requiere crear los repos (no hay `gh` CLI en el servidor).
+1. ~~Extraer los modulos propios (`VmsOpenOps`, `VmsOpenFileManager`) a repos
+   propios y pinarlos como submodulos~~ **Hecho**: viven en
+   `fhprietor/vmsOpenOps` (4154ace) y `fhprietor/vmsOpenFileManager` (2fba5f8).
+   `TestABC` sigue vendorizado por ser un stub: decidir si se mantiene.
 2. ~~Estado de modulos~~ **Hecho**: vive en `app/Database/seeds/modules.yml`
    (activador `database`) y se aplica en `/update`. Quedan dos filas huerfanas
    en la tabla (`VMSAcars`, `TestModule`) que no corresponden a modulos
