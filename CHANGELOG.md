@@ -7,8 +7,8 @@ buena parte del codigo propio no estaban en git.
 
 ### Repositorio
 - `.gitignore`: se versionan el tema `vholar` (`resources/views/layouts/vholar`),
-  los modulos propios (`VmsOpenOps`, `VmsOpenFileManager`, `TestABC`) y se ignora
-  `.vscode/`.
+  los modulos propios (`VmsOpenOps`, `VmsOpenFileManager`, `TestABC`) y los de
+  terceros con parches (`DisposableSpecial`, `CHJumpSeat`); se ignora `.vscode/`.
 - `deploy/versions.yml`: manifiesto que congela base de phpVMS, versiones de
   modulos, parches, settings y pasos de despliegue.
 - `deploy/README.md`: esquema de versionado (tags `vholar-*`) y pendientes.
@@ -17,9 +17,10 @@ buena parte del codigo propio no estaban en git.
   relativo (antes apuntaba a una ruta absoluta y no era portable).
 
 ### Modulos de terceros
-- `DisposableSpecial` y `CHJumpSeat` **fuera del repo**: sus licencias prohiben
-  redistribuir el codigo. Se instalan aparte y sus parches propios quedan en
-  `patches/` con su commit base.
+- `DisposableSpecial` y `CHJumpSeat` se versionan con sus modificaciones locales
+  aplicadas. Sus licencias prohiben redistribuir el codigo: es una **decision
+  expresa del mantenedor** en un repositorio privado, asumiendo la
+  responsabilidad. Los parches quedan ademas en `patches/` con su commit base.
 - `DisposableBasic` sigue como submodulo (`f0b03db`, v3.7.4-2-g).
 
 ### Estado de modulos y datos

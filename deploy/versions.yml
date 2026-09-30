@@ -49,23 +49,24 @@ modules:
       describe: v3.7.4-2-gf0b03db
       module_json_version: 3.7.4
     DisposableSpecial:
-      origin: installed-separately
+      origin: vendored
       upstream: https://github.com/FatihKoz/DisposableSpecial.git
       base_commit: d1d776cea9d4e6453dad99e59b18f3f3a9ddd153
       module_json_version: 3.7.8
       local_patch: patches/DisposableSpecial-d1d776c.patch
-      notice: >
-        NO versionado: su licencia prohibe redistribuir el codigo sin permiso
-        escrito del autor. Se instala aparte y el parche local se reaplica con
-        patches/DisposableSpecial-d1d776c.patch
+      license: >
+        Prohibida la redistribucion sin permiso escrito del autor. Se versiona
+        por decision expresa del mantenedor en un repositorio privado, asumiendo
+        la responsabilidad.
     CHJumpSeat:
-      origin: installed-separately
+      origin: vendored
       upstream: https://github.com/cardinalhorizon/CHJumpSeat.git
       base_commit: 97193a62a2293e444bcc84ef449643d01ef5377e
       local_patch: patches/CHJumpSeat-97193a6.patch
-      notice: >
-        NO versionado: licencia comercial (Cardinal Horizon) que prohibe
-        redistribuir el software y sus modificaciones. Instalacion aparte.
+      license: >
+        Licencia comercial (Cardinal Horizon) que prohibe redistribuir el
+        software y sus modificaciones. Se versiona por decision expresa del
+        mantenedor en un repositorio privado, asumiendo la responsabilidad.
     SmartCARS3phpVMS7Api:
       origin: in-repo
       module_json_version: 1.0.2

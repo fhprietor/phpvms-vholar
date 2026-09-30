@@ -12,8 +12,9 @@ El punto de partida y las versiones exactas de cada pieza estan en
 | Tema `vholar` | `resources/views/layouts/vholar` + `app/Themes/Vholar` |
 | Assets del tema | `public/disposable`, `public/image`, `public/images` |
 | Modulos propios | `modules/VmsOpenOps`, `modules/VmsOpenFileManager`, `modules/TestABC` |
+| Modulos de terceros con parches | `modules/DisposableSpecial`, `modules/CHJumpSeat` |
 | Submodulo de terceros | `modules/DisposableBasic` |
-| Parches de terceros no versionados | `patches/` (con su base upstream) |
+| Parches de terceros (referencia) | `patches/` (con su base upstream) |
 | Documentacion | `CLAUDE.md`, `api_vms.md`, `docs/` |
 | Estado de modulos | `app/Database/seeds/modules.yml` |
 
@@ -41,31 +42,44 @@ Ver la seccion `deploy` de [versions.yml](versions.yml). Resumen:
 5. Visitar `/update` para sincronizar settings, permisos y modulos.
 6. Limpiar caches. Aplicar a mano la lista `modules.enabled` si hace falta.
 
-## Modulos de terceros: que NO se versiona y por que
+## Modulos de terceros con parches locales
 
-`DisposableSpecial` y `CHJumpSeat` **no** estan en este repo aunque se usen:
+`DisposableSpecial` y `CHJumpSeat` **si** se versionan aqui, con sus
+modificaciones locales ya aplicadas. Es una **decision expresa del mantenedor**:
+sus licencias prohiben redistribuir el codigo, pero el repositorio central es
+privado y la responsabilidad se asume. No revertir sin hablarlo antes.
 
 - **DisposableSpecial** (B.Fatih KOZ): "Redistributions NOT allowed WITHOUT
-  written approval of copyright holder". Solo se pueden redistribuir sus vistas
-  blade desde un tema de terceros.
+  written approval of copyright holder".
 - **CHJumpSeat** (Cardinal Horizon): licencia comercial cuyo proposito explicito
   es evitar que el software y sus modificaciones se redistribuyan.
 
-Ambos se instalan aparte (son clones en `modules/`) y sus parches propios se
-guardan en `patches/`. `DisposableBasic` si se versiona, pero como **submodulo**
-que apunta a su repo upstream: no redistribuye nada.
+`DisposableBasic` se versiona como **submodulo** que apunta a su repo upstream:
+no redistribuye nada.
+
+### Actualizar un modulo vendorizado
+
+Al vendorizarlos se retiraron sus `.git` del arbol de trabajo (respaldados fuera
+del repo), asi que ya no son clones actualizables in situ. Para subir de version:
+
+1. Clonar upstream en un directorio temporal: `git clone <upstream> /tmp/mod`.
+2. Ver el diff frente a la base anotada en `deploy/versions.yml`.
+3. Reaplicar el parche propio: `git -C /tmp/mod apply <patches/...patch>` (puede
+   requerir ajustes si upstream cambio esas lineas; revisar a mano).
+4. Copiar el resultado sobre `modules/<Modulo>` y actualizar `base_commit` y el
+   fichero de `patches/` en `versions.yml`.
+5. Regenerar el parche contra la nueva base para dejar constancia.
 
 ## Pendiente (siguiente iteracion)
 
 1. **Extraer los modulos propios** (`VmsOpenOps`, `VmsOpenFileManager`) a repos
    propios y pinarlos como submodulos. `TestABC` es un stub: decidir si se
-   mantiene.
-2. **Pedir aprobacion escrita** a los autores de DisposableSpecial (y valorar el
-   caso de CHJumpSeat) si se quiere versionar su codigo o un fork. Mientras no
-   haya permiso, se quedan fuera y se reaplican los parches.
-3. ~~Versionar el estado de modulos~~ **Hecho**: vive en
-   `app/Database/seeds/modules.yml` (activador `database`) y se aplica en
-   `/update`. Quedan dos filas huerfanas en la tabla (`VMSAcars`, `TestModule`)
-   que no corresponden a modulos instalados; se pueden borrar cuando convenga.
-4. ~~Convertir a migracion el backfill de `pireps.source_name`~~ **Hecho**:
+   mantiene. Requiere crear los repos (no hay `gh` CLI en el servidor).
+2. ~~Estado de modulos~~ **Hecho**: vive en `app/Database/seeds/modules.yml`
+   (activador `database`) y se aplica en `/update`. Quedan dos filas huerfanas
+   en la tabla (`VMSAcars`, `TestModule`) que no corresponden a modulos
+   instalados; se pueden borrar cuando convenga.
+3. ~~Convertir a migracion el backfill de `pireps.source_name`~~ **Hecho**:
    `app/Database/migrations/2026_09_30_120000_backfill_pireps_source_name.php`.
+4. **Reponer los `.git` de los modulos** si se quiere volver a actualizarlos in
+   situ: estan respaldados en `/tmp/phpvms-module-git/` (temporal).
