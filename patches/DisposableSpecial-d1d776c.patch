@@ -1,0 +1,1211 @@
+diff --git a/Http/Controllers/DS_AssignmentController.php b/Http/Controllers/DS_AssignmentController.php
+index aa67dcc..0fd23dd 100644
+--- a/Http/Controllers/DS_AssignmentController.php
++++ b/Http/Controllers/DS_AssignmentController.php
+@@ -120,7 +120,86 @@ class DS_AssignmentController extends Controller
+         ]);
+     }
+ 
++    /**
++     * Vista de administración - Muestra asignaciones de todos los pilotos
++     * Accesible solo para admins via /admin/dassignments
++     */
++public function adminIndex(Request $request)
++{
++    $user = auth()->user();
++    
++    // Verificar si el usuario tiene rol admin en la tabla role_user
++    $isAdmin = DB::table('role_user')
++        ->where('user_id', $user->id)
++        ->whereExists(function($query) {
++            $query->select(DB::raw(1))
++                ->from('roles')
++                ->whereColumn('roles.id', 'role_user.role_id')
++                ->where('roles.name', 'admin');
++        })
++        ->exists();
++    
++    if (!$isAdmin) {
++        abort(403, 'No tienes permiso para ver esta página.');
++    }
++    
++    // Obtener filtros
++    $year = $request->get('year', Carbon::now()->year);
++    $month = $request->get('month', Carbon::now()->month);
++    $user_id = $request->get('user_id');
++    
++    // Construir query
++    $query = DS_Assignment::with([
++        'user.rank', 
++        'flight.airline', 
++        'flight.dpt_airport', 
++        'flight.arr_airport', 
++        'pirep'
++    ])
++    ->where('assignment_year', $year)
++    ->where('assignment_month', $month);
++    
++    if ($user_id) {
++        $query->where('user_id', $user_id);
++    }
++    
++    $assignments = $query->orderBy('user_id')->orderBy('assignment_order')->get();
++    
++    // Agrupar por piloto
++    $grouped_by_pilot = $assignments->groupBy('user_id');
++    
++    // Obtener lista de pilotos activos - CORREGIDO: usar 'name' en lugar de 'name_private'
++    $pilots = User::where('state', 1)->orderBy('name')->get();
++    
++    // Obtener años disponibles en las asignaciones
++    $available_years = DS_Assignment::select('assignment_year')
++        ->distinct()
++        ->orderBy('assignment_year', 'desc')
++        ->pluck('assignment_year');
++    
++    if ($available_years->isEmpty()) {
++        $available_years = collect([Carbon::now()->year]);
++    }
++    
++    $reward_multiplier = DS_Setting('turksim.assignments_multiplier', 10);
++    
++    return view('DSpecial::assignments.admin', [
++        'assignments' => $grouped_by_pilot,
++        'pilots' => $pilots,
++        'selected_year' => $year,
++        'selected_month' => $month,
++        'selected_pilot' => $user_id,
++        'available_years' => $available_years,
++        'months' => [
++            1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
++            5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
++            9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
++        ],
++        'reward_multiplier' => $reward_multiplier,
++    ]);
++}
+     // Manual Trigger Route method
++
+     public function assignments_manual(Request $request)
+     {
+         $curr_page = !empty($request->curr_page) ? $request->curr_page : '/dashboard';
+@@ -134,6 +213,158 @@ class DS_AssignmentController extends Controller
+         return redirect(url($curr_page));
+     }
+ 
++    /**
++     * Editar una asignación individual (cambiar el vuelo)
++     */
++    public function editAssignment(Request $request)
++    {
++        // Verificar permisos de admin usando DB (igual que en adminIndex)
++        $user = auth()->user();
++        $isAdmin = DB::table('role_user')
++            ->where('user_id', $user->id)
++            ->whereExists(function($query) {
++                $query->select(DB::raw(1))
++                    ->from('roles')
++                    ->whereColumn('roles.id', 'role_user.role_id')
++                    ->where('roles.name', 'admin');
++            })
++            ->exists();
++
++        if (!$isAdmin) {
++            abort(403, 'No tienes permiso para realizar esta acción.');
++        }
++
++        $assignmentId = $request->assignment_id;
++        $newFlightId = $request->flight_id;
++
++        $assignment = DS_Assignment::find($assignmentId);
++        if (!$assignment) {
++            flash()->error('Asignación no encontrada');
++            return back();
++        }
++
++        $newFlight = Flight::find($newFlightId);
++        if (!$newFlight) {
++            flash()->error('Vuelo no encontrado');
++            return back();
++        }
++
++        $oldFlightId = $assignment->flight_id;
++        $assignment->flight_id = $newFlightId;
++        $assignment->save();
++
++        flash()->success("Asignación actualizada: Vuelo {$oldFlightId} → {$newFlightId}");
++        return back();
++    }
++    /**
++     * Obtener vuelos disponibles para el selector (AJAX)
++     */
++      public function getAvailableFlights(Request $request)
++      {
++          try {
++              // Log para depuración: ver qué parámetros llegan
++              /*
++              \Log::info('getAvailableFlights - Parámetros recibidos:', [
++                  'q' => $request->get('q'),
++                  'airline_id' => $request->get('airline_id'),
++                  'dep_airport' => $request->get('dep_airport'),
++                  'arr_airport' => $request->get('arr_airport'),
++              ]);
++*/
++              // Verificar permisos de admin (igual que en adminIndex)
++              $user = auth()->user();
++              $isAdmin = DB::table('role_user')
++                  ->where('user_id', $user->id)
++                  ->whereExists(function($query) {
++                      $query->select(DB::raw(1))
++                          ->from('roles')
++                          ->whereColumn('roles.id', 'role_user.role_id')
++                          ->where('roles.name', 'admin');
++                  })
++                  ->exists();
++
++              if (!$isAdmin) {
++                  return response()->json(['error' => 'Unauthorized'], 403);
++              }
++
++              // Obtener parámetros de búsqueda
++              $searchTerm = $request->get('q', '');
++              $airlineId = $request->get('airline_id');
++              $depAirport = $request->get('dep_airport');
++              $arrAirport = $request->get('arr_airport');
++
++              // Consulta base
++              $query = Flight::where('active', 1);
++
++              // Búsqueda por término general (ident o flight_number)
++              if (!empty($searchTerm)) {
++                  $query->where(function($q) use ($searchTerm) {
++                      $q->where('ident', 'LIKE', "%{$searchTerm}%")
++                        ->orWhere('flight_number', 'LIKE', "%{$searchTerm}%");
++                  });
++              }
++
++              // Filtro por aerolínea (puede ser nombre o código)
++              if (!empty($airlineId)) {
++                  // Buscar aerolíneas por nombre o código
++                  $airlineIds = DB::table('airlines')
++                      ->where('name', 'LIKE', "%{$airlineId}%")
++                      ->orWhere('code', 'LIKE', "%{$airlineId}%")
++                      ->orWhere('icao', 'LIKE', "%{$airlineId}%")
++                      ->pluck('id')
++                      ->toArray();
++                  
++                  if (!empty($airlineIds)) {
++                      $query->whereIn('airline_id', $airlineIds);
++                  } else {
++                      // Si no encuentra ninguna aerolínea, forzar resultado vacío
++                      $query->whereRaw('1 = 0');
++                  }
++              }
++
++              // Filtro por aeropuerto de origen (código ICAO)
++              if (!empty($depAirport)) {
++                  $query->where('dpt_airport_id', 'LIKE', "%{$depAirport}%");
++              }
++
++              // Filtro por aeropuerto de destino (código ICAO)
++              if (!empty($arrAirport)) {
++                  $query->where('arr_airport_id', 'LIKE', "%{$arrAirport}%");
++              }
++
++              // Limitar resultados y obtener
++              $flights = $query->with('airline')->limit(50)->get();
++
++              // Formatear resultados
++              $results = [];
++              foreach ($flights as $flight) {
++                  $results[] = [
++                      'id'      => $flight->id,
++                      'ident'   => $flight->ident,
++                      'dep'     => $flight->dpt_airport_id,
++                      'arr'     => $flight->arr_airport_id,
++                      'airline' => optional($flight->airline)->name ?? '',
++                      'text'    => sprintf(
++                          '%s (%s → %s)',
++                          $flight->ident,
++                          $flight->dpt_airport_id,
++                          $flight->arr_airport_id
++                      ),
++                  ];
++              }
++/*
++              \Log::info('getAvailableFlights - Resultados encontrados: ' . count($results));
++*/
++              return response()->json(['results' => $results]);
++
++          } catch (\Exception $e) {
++            /*
++              \Log::error('Error en getAvailableFlights: ' . $e->getMessage());
++              */
++              return response()->json(['error' => 'Error interno del servidor'], 500);
++          }
++      }
++
+     // Trigger Process (used by Cron and Admin Interface)
+     public function TriggerAssignment($user = null, $reset = false)
+     {
+@@ -144,27 +375,27 @@ class DS_AssignmentController extends Controller
+         if (!$user) {
+             if ($reset === true) {
+                 DS_Assignment::where(['assignment_year' => $curr_y, 'assignment_month' => $curr_m])->delete();
+-                Log::info('Disposable Special | ALL Monthly Flight Assignments DELETED for '.$curr_y.'/'.$curr_m);
++                // Log::info('Disposable Special | ALL Monthly Flight Assignments DELETED for '.$curr_y.'/'.$curr_m);
+             }
+             // Assign Flights to all ACTIVE Users
+             $active_users = User::where('state', 1)->orderby('id')->get();
+ 
+             if ($active_users) {
+-                Log::info('Disposable Special | Begin Monthly Flight Assignment process for '.$curr_y.'/'.$curr_m);
++                // Log::info('Disposable Special | Begin Monthly Flight Assignment process for '.$curr_y.'/'.$curr_m);
+                 foreach ($active_users as $user) {
+                     $this->GenerateAssignments($user);
+                 }
+-                Log::info('Disposable Special | Monthly Flight Assignment process completed for '.$curr_y.'/'.$curr_m);
++                // Log::info('Disposable Special | Monthly Flight Assignment process completed for '.$curr_y.'/'.$curr_m);
+             }
+         } elseif ($user) {
+             // Handle a specific User's Assignments
+             if ($reset === true) {
+-                DS_Assignment::where(['user_id' => $user->id, 'assignment_year' => $curr_y, 'assignment_month' => $curr_m])->delete();
+-                Log::info('Disposable Special | Monthly Flight Assignments of '.$user->name_private.' DELETED for '.$curr_y.'/'.$curr_m);
++              $deleted = DS_Assignment::where(['user_id' => $user->id, 'assignment_year' => $curr_y, 'assignment_month' => $curr_m])->delete();
++              // Log::info("Deleted $deleted assignments for user {$user->id}");
+             }
+-            Log::info('Disposable Special | Begin Monthly Flight Assignment of '.$user->name_private.' process for '.$curr_y.'/'.$curr_m);
++            // Log::info('Disposable Special | Begin Monthly Flight Assignment of '.$user->name_private.' process for '.$curr_y.'/'.$curr_m);
+             $this->GenerateAssignments($user);
+-            Log::info('Disposable Special | Monthly Flight Assignment process of '.$user->name_private.' completed for '.$curr_y.'/'.$curr_m);
++            // Log::info('Disposable Special | Monthly Flight Assignment process of '.$user->name_private.' completed for '.$curr_y.'/'.$curr_m);
+         }
+     }
+ 
+@@ -174,13 +405,13 @@ class DS_AssignmentController extends Controller
+         $selected_flights = [];
+ 
+         if (!$user) {
+-            Log::debug('Disposable Special | User Model not provided! Aborting assignment process');
++            // Log::debug('Disposable Special | User Model not provided! Aborting assignment process');
+ 
+             return;
+         }
+ 
+         if ($user->state !== 1) {
+-            Log::debug('Disposable Special | '.$user->name_private.' is not active! Aborting assignment process');
++            // Log::debug('Disposable Special | '.$user->name_private.' is not active! Aborting assignment process');
+ 
+             return;
+         }
+@@ -270,7 +501,7 @@ class DS_AssignmentController extends Controller
+ 
+             if (is_countable($suitable_flights) && count($suitable_flights) === 0) {
+                 // No subfleets found assigned to flights, revert restrictions to false and move on
+-                Log::debug('Disposable Special | No suitable flights found (by prefered icao/rank/rating)! Reverting to less-restricted mode');
++                // Log::debug('Disposable Special | No suitable flights found (by prefered icao/rank/rating)! Reverting to less-restricted mode');
+                 $prefer_icao = false;
+                 $force_rank = false;
+                 $force_rate = false;
+@@ -330,7 +561,7 @@ class DS_AssignmentController extends Controller
+ 
+             // Still no flights, break the operation and return
+             if (!$flights->count() && $pass_airport > 1) {
+-                Log::debug('Disposable Special | No suitable flights found for '.$user->name_private.' aborting process !');
++                // Log::debug('Disposable Special | No suitable flights found for '.$user->name_private.' aborting process !');
+                 break;
+             }
+ 
+@@ -377,7 +608,7 @@ class DS_AssignmentController extends Controller
+         $check = DS_Assignment::where(['user_id' => $user->id, 'assignment_year' => $as_year, 'assignment_month' => $as_month])->get();
+ 
+         if ($check->count() > 0) {
+-            Log::info('Disposable Special | User '.$user->name_private.' already have assignments for '.$as_year.'/'.$as_month.' skipping.');
++            // Log::info('Disposable Special | User '.$user->name_private.' already have assignments for '.$as_year.'/'.$as_month.' skipping.');
+ 
+             return;
+         }
+@@ -393,7 +624,99 @@ class DS_AssignmentController extends Controller
+ 
+             $ta->save();
+ 
+-            Log::info('Disposable Special | '.$as_year.'/'.$as_month.' Flight ('.$order.') '.$flight->id.' assigned to ('.$user->id.') '.$user->name_private);
++            // Log::info('Disposable Special | '.$as_year.'/'.$as_month.' Flight ('.$order.') '.$flight->id.' assigned to ('.$user->id.') '.$user->name_private);
++        }
++    }
++
++      /**
++     * Delete assignment
++     */
++    public function deleteAssignment(Request $request)
++    {
++        // Verificar permisos de admin
++        $user = auth()->user();
++        $isAdmin = DB::table('role_user')
++            ->where('user_id', $user->id)
++            ->whereExists(function($query) {
++                $query->select(DB::raw(1))
++                    ->from('roles')
++                    ->whereColumn('roles.id', 'role_user.role_id')
++                    ->where('roles.name', 'admin');
++            })
++            ->exists();
++        if (!$isAdmin) abort(403);
++
++        $assignmentId = $request->assignment_id;
++        $assignment = DS_Assignment::find($assignmentId);
++        if (!$assignment) {
++            flash()->error('Asignación no encontrada');
++            return back();
+         }
++
++        $assignment->delete();
++        flash()->success('Asignación eliminada correctamente');
++        return back();
+     }
++
++    /**
++     * Add Assignmente
++     */
++    public function addAssignment(Request $request)
++    {
++        // Verificar permisos de admin
++        $user = auth()->user();
++        $isAdmin = DB::table('role_user')
++            ->where('user_id', $user->id)
++            ->whereExists(function($query) {
++                $query->select(DB::raw(1))
++                    ->from('roles')
++                    ->whereColumn('roles.id', 'role_user.role_id')
++                    ->where('roles.name', 'admin');
++            })
++            ->exists();
++        if (!$isAdmin) abort(403);
++
++        $userId = $request->user_id;
++        $year = $request->year;
++        $month = $request->month;
++        $flightId = $request->flight_id;
++
++        if (!$userId || !$year || !$month || !$flightId) {
++            flash()->error('Faltan datos para añadir asignación');
++            return back();
++        }
++
++        // Obtener el último orden de asignación para ese piloto en ese mes
++        $lastOrder = DS_Assignment::where([
++            'user_id' => $userId,
++            'assignment_year' => $year,
++            'assignment_month' => $month,
++        ])->max('assignment_order');
++
++        $newOrder = $lastOrder ? $lastOrder + 1 : 1;
++
++        // Verificar que el vuelo existe y no está ya asignado
++        $exists = DS_Assignment::where([
++            'user_id' => $userId,
++            'assignment_year' => $year,
++            'assignment_month' => $month,
++            'flight_id' => $flightId,
++        ])->exists();
++
++        if ($exists) {
++            flash()->error('Ese vuelo ya está asignado a este piloto en el mismo período');
++            return back();
++        }
++
++        $assignment = new DS_Assignment();
++        $assignment->user_id = $userId;
++        $assignment->assignment_year = $year;
++        $assignment->assignment_month = $month;
++        $assignment->assignment_order = $newOrder;
++        $assignment->flight_id = $flightId;
++        $assignment->save();
++
++        flash()->success("Nueva asignación añadida (orden {$newOrder})");
++        return back();
++    }  
+ }
+diff --git a/Models/DS_Assignment.php b/Models/DS_Assignment.php
+index fc93df8..b77e323 100644
+--- a/Models/DS_Assignment.php
++++ b/Models/DS_Assignment.php
+@@ -58,15 +58,48 @@ class DS_Assignment extends Model
+         return $this->hasOne(Pirep::class, 'id', 'pirep_id');
+     }
+ 
+-    // Completed Attribute
+     public function getCompletedAttribute()
+     {
+         $pirep = Pirep::where([
+             'user_id'   => $this->user_id,
+             'flight_id' => $this->flight_id,
+-            'state'     => PirepState::ACCEPTED,
+-        ])->whereMonth('created_at', $this->assignment_month)->whereYear('submitted_at', $this->assignment_year)->first();
++        ])->whereMonth('created_at', $this->assignment_month)
++          ->whereYear('submitted_at', $this->assignment_year)
++          ->where('state', PirepState::ACCEPTED)
++          ->first();
+ 
+         return isset($pirep) ? true : false;
+     }
++
++
++    public function getPirepStatusAttribute()
++    {
++        // Buscar PIREP sin restricción de mes/año para detectar estado
++        $pirep = Pirep::where([
++            'user_id'   => $this->user_id,
++            'flight_id' => $this->flight_id,
++        ])->orderBy('created_at', 'desc')
++          ->first();
++
++        if (!$pirep) {
++            return 'pending';
++        }
++
++        // Si está en progreso o pausado, mostrar "In Progress"
++        if ($pirep->state == PirepState::IN_PROGRESS || $pirep->state == PirepState::PAUSED) {
++            return 'in_progress';
++        }
++
++        // Si está aceptado, verificar que sea del mes/año correcto
++        if ($pirep->state == PirepState::ACCEPTED) {
++            // Usar submitted_at o created_at según esté disponible
++            $pirepDate = $pirep->submitted_at ?? $pirep->created_at;
++            if ($pirepDate && $pirepDate->month == $this->assignment_month && $pirepDate->year == $this->assignment_year) {
++                return 'completed';
++            }
++        }
++
++        return 'pending';
++    }
++
+ }
+diff --git a/Providers/DS_ServiceProvider.php b/Providers/DS_ServiceProvider.php
+index a3e43d5..504af02 100644
+--- a/Providers/DS_ServiceProvider.php
++++ b/Providers/DS_ServiceProvider.php
+@@ -35,6 +35,8 @@ class DS_ServiceProvider extends ServiceProvider
+     public function registerLinks()
+     {
+         $this->moduleSvc->addAdminLink('Disposable Special', '/admin/dspecial', 'pe-7s-tools');
++        // Enlace directo a asignaciones admin
++        $this->moduleSvc->addAdminLink('Flight Assignments', '/admin/dassignments', 'pe-7s-note');
+     }
+ 
+     // Register routes
+@@ -104,8 +106,17 @@ class DS_ServiceProvider extends ServiceProvider
+         ], function () {
+             Route::get('dspecial', 'DS_AdminController@index')->name('admin')->middleware('ability:admin|admin-access,addons|modules');
+             Route::post('dsettings_store', 'DS_AdminController@update')->name('save_settings')->middleware('ability:admin|admin-access,addons|modules');
++            // Ruta ADMIN para ver asignaciones de TODOS los pilotos
++            Route::get('dassignments', 'DS_AssignmentController@adminIndex')->name('assignments.admin')->middleware('ability:admin|admin-access,users|flights');
+             // Assignment Admin Routes
+             Route::post('dassignments_manual', 'DS_AssignmentController@assignments_manual')->name('assignments_manual')->middleware('ability:admin|admin-access,users|flights');
++            // Assignment edit
++            Route::post('dassignments_edit', 'DS_AssignmentController@editAssignment')->name('assignments.edit');
++            Route::get('dassignments/flights/search', 'DS_AssignmentController@getAvailableFlights')->name('assignments.flights.search');
++            // Assignment delete
++            Route::post('dassignments_delete', 'DS_AssignmentController@deleteAssignment')->name('assignments.delete');
++            // Add Assignment 
++            Route::post('dassignments_add', 'DS_AssignmentController@addAssignment')->name('assignments.add');
+             // Market Admin Routes
+             Route::get('dmarket_admin', 'DS_MarketController@index_admin')->name('market_admin')->middleware('ability:admin|admin-access,addons|modules');
+             Route::post('dmarket_store', 'DS_MarketController@store')->name('market_store')->middleware('ability:admin|admin-access,addons|modules');
+diff --git a/Resources/views/assignments/index.blade.php b/Resources/views/assignments/index.blade.php
+index 84b2774..c395f93 100644
+--- a/Resources/views/assignments/index.blade.php
++++ b/Resources/views/assignments/index.blade.php
+@@ -2,208 +2,517 @@
+ @section('title', 'Flight Assignments')
+ 
+ @section('content')
+-  <div class="row row-cols-lg-2">
+-    {{-- Left Column --}}
++  <div class="row">
++    {{-- Left Column - Tarjetas de asignaciones --}}
+     <div class="col-lg-8">
+-      @if(count($assignments) === 0)
+-        <div class="alert alert-primary p-1 px-2 fw-bold">@lang('DSpecial::common.no_assignments')</div>
+-      @endif
+-      @foreach($assignments as $group => $tas)
+-      <div class="card mb-2">
+-        <div class="card-header p-1">
+-          <h5 class="m-1">
+-            @lang('DSpecial::common.fl_assignments') | {{ Carbon::create()->day(1)->month($group)->format('F') }}
+-            <i class="fas fa-hourglass-half float-end"></i>
+-          </h5>
++@if (count($assignments) > 0)
++    <div class="row mb-3">
++        <div class="col">
++            <div class="card">
++                <div class="card-header py-2 px-3">
++                    <h6 class="m-0">
++                        <i class="bi bi-map me-2"></i>
++                        Mapa de Asignaciones
++                    </h6>
++                </div>
++                <div class="card-body p-1">
++                    <div id="assignmentsMap" style="height: 300px; width: 100%; border-radius: 8px;"></div>
++                </div>
++            </div>
+         </div>
+-        <div class="card-body p-0 text-start table-responsive">
+-          <table class="table table-sm table-striped table-borderless mb-0 text-start text-nowrap align-middle">
+-            <tr>
+-              <th class="text-center">#</th>
+-              <th>@lang('DSpecial::common.flight_no')</th>
+-              <th>@lang('airports.departure')</th>
+-              <th>@lang('airports.arrival')</th>
+-              <th class="text-center">@lang('DSpecial::common.block_time')</th>
+-              <th class="text-center">PIREP</th>
+-              <th class="text-center">&nbsp;</th>
+-            </tr>
+-            @foreach($tas->sortBy('assignment_order', SORT_NATURAL) as $as)
+-              <tr>
+-                <td class="text-center" style="width: 3%">{{ $as->assignment_order }}</td>
+-                <td class="col-1">
+-                  @if($as->flight)
+-                    <a href="{{ route('frontend.flights.show', [$as->flight->id]) }}">
+-                      {{ optional($as->flight->airline)->code.' '.optional($as->flight)->flight_number }}
+-                    </a>
+-                  @endif
+-                </td>
+-                <td>
+-                  @if($as->flight)
+-                    @if(Theme::getSetting('flights_flags'))
+-                      <img class="img-mh25 mx-1" title="{{ strtoupper(optional($as->flight->dpt_airport)->country) }}"
+-                        src="{{ public_asset('/image/flags_new/'.strtolower(optional($as->flight->dpt_airport)->country).'.png') }}" alt=""/>
+-                    @endif
+-                    <a href="{{ route('frontend.airports.show', [$as->flight->dpt_airport_id]) }}" target="_blank">
+-                      {{ optional($as->flight->dpt_airport)->full_name ?? $as->flight->dpt_airport_id}}
+-                      @if(filled(optional($as->flight->dpt_airport)->iata)){{ ' ('.$as->flight->dpt_airport->iata.')'}}@endif
+-                    </a>
+-                  @endif
+-                </td>
+-                <td>
+-                  @if($as->flight)
+-                    @if(Theme::getSetting('flights_flags'))
+-                      <img class="img-mh25 mx-1" title="{{ strtoupper(optional($as->flight->arr_airport)->country) }}"
+-                        src="{{ public_asset('/image/flags_new/'.strtolower(optional($as->flight->arr_airport)->country).'.png') }}" alt=""/>
+-                    @endif
+-                    <a href="{{ route('frontend.airports.show', [$as->flight->arr_airport_id]) }}" target="_blank">
+-                      {{ optional($as->flight->arr_airport)->full_name ?? $as->flight->arr_airport_id}}
+-                      @if(filled(optional($as->flight->arr_airport)->iata)){{ ' ('.$as->flight->arr_airport->iata.')'}}@endif
+-                    </a>
+-                  @endif
+-                </td>
+-                <td class="text-center">
+-                  @if($as->flight)
+-                    @minutestotime($as->flight->flight_time)
+-                  @endif
+-                </td>
+-                <td class="text-center">
+-                  @if($as->completed)
+-                    @if(filled($as->pirep_id))
+-                      <a href="{{ route('frontend.pireps.show', [$as->pirep_id]) }}"><i class="fas fa-check-circle text-success"></i></a>
+-                    @else
+-                      <i class="fas fa-check-circle text-success"></i>
++    </div>
++    
++    {{-- Cargar scripts de Leaflet directamente --}}
++    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
++    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
++    <script src="https://unpkg.com/leaflet-geodesic@1.0.0/leaflet.geodesic.js"></script>
++    
++    <script>
++    (function() {
++        // Función para inicializar el mapa
++        function initMap() {
++            var mapContainer = document.getElementById('assignmentsMap');
++            if (!mapContainer) return;
++            if (window.assignmentsMapInitialized) return;
++            
++            if (typeof L === 'undefined') {
++                setTimeout(initMap, 200);
++                return;
++            }
++            
++            window.assignmentsMapInitialized = true;
++            
++            // Coordenadas por defecto (Bogotá)
++            var defaultCenter = [4.5709, -74.2973];
++            
++            // Crear el mapa
++            var map = L.map('assignmentsMap').setView(defaultCenter, 5);
++            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
++                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB',
++                subdomains: 'abcd',
++                minZoom: 2,
++                maxZoom: 18
++            }).addTo(map);
++            
++            // Colecciones
++            var airports = {};
++            var routes = [];
++            var bounds = [];
++            
++            // Recorrer todas las asignaciones
++            @foreach($assignments as $group => $tas)
++                @foreach($tas as $as)
++                    @if($as->flight && $as->flight->dpt_airport && $as->flight->arr_airport)
++                        @php
++                            $dpt = $as->flight->dpt_airport;
++                            $arr = $as->flight->arr_airport;
++                        @endphp
++                        
++                        @if($dpt && $dpt->lat && $dpt->lon)
++                            if (!airports['{{ $dpt->id }}']) {
++                                airports['{{ $dpt->id }}'] = {
++                                    lat: {{ $dpt->lat }},
++                                    lon: {{ $dpt->lon }},
++                                    name: '{{ addslashes($dpt->name) }}',
++                                    id: '{{ $dpt->id }}'
++                                };
++                                bounds.push([{{ $dpt->lat }}, {{ $dpt->lon }}]);
++                            }
++                        @endif
++                        
++                        @if($arr && $arr->lat && $arr->lon)
++                            if (!airports['{{ $arr->id }}']) {
++                                airports['{{ $arr->id }}'] = {
++                                    lat: {{ $arr->lat }},
++                                    lon: {{ $arr->lon }},
++                                    name: '{{ addslashes($arr->name) }}',
++                                    id: '{{ $arr->id }}'
++                                };
++                                bounds.push([{{ $arr->lat }}, {{ $arr->lon }}]);
++                            }
++                        @endif
++                        
++                        @if($dpt && $dpt->lat && $dpt->lon && $arr && $arr->lat && $arr->lon)
++                            routes.push({
++                                from: '{{ $dpt->id }}',
++                                to: '{{ $arr->id }}',
++                                latlngs: [[{{ $dpt->lat }}, {{ $dpt->lon }}], [{{ $arr->lat }}, {{ $arr->lon }}]],
++                                ident: '{{ $as->flight->ident }}',
++                                order: {{ $as->assignment_order }}
++                            });
++                        @endif
+                     @endif
++                @endforeach
++            @endforeach
++            
++            // Añadir marcadores de aeropuertos
++            for (var id in airports) {
++                var apt = airports[id];
++                var popupContent = '<strong>' + apt.id + '</strong><br>' + (apt.name || 'Aeropuerto');
++                L.marker([apt.lat, apt.lon]).bindPopup(popupContent).addTo(map);
++            }
++            
++            // Añadir rutas
++            var colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#2c3e50'];
++            routes.forEach(function(route) {
++                var color = colors[(route.order - 1) % colors.length];
++                L.geodesic(route.latlngs, {
++                    weight: 3,
++                    opacity: 0.7,
++                    color: color,
++                    steps: 10
++                }).bindPopup('<strong>' + route.ident + '</strong><br>' + route.from + ' → ' + route.to)
++                 .addTo(map);
++            });
++            
++            // Ajustar el mapa
++            if (bounds.length > 0) {
++                map.fitBounds(bounds);
++            }
++            
++            // Forzar actualización del tamaño
++            setTimeout(function() {
++                map.invalidateSize();
++            }, 100);
++        }
++        
++        // Esperar a que el DOM esté listo
++        if (document.readyState === 'loading') {
++            document.addEventListener('DOMContentLoaded', function() {
++                setTimeout(initMap, 300);
++            });
++        } else {
++            setTimeout(initMap, 300);
++        }
++    })();
++    </script>
++@endif
++
++      @foreach ($assignments as $group => $tas)
++        <div class="card mb-4">
++          <div class="card-header py-2 px-3"
++            style="background: linear-gradient(135deg, #412c4d20 0%, #2a263320 100%); border-bottom: 1px solid rgba(255,255,255,0.05);">
++            <div class="d-flex justify-content-between align-items-center">
++              @php
++                $firstAssignment = $tas->first();
++                $year = $firstAssignment ? $firstAssignment->assignment_year : date('Y');
++              @endphp
++              <h5 class="m-0">
++                <i class="bi bi-calendar-week me-2"></i>
++                {{ Carbon::createFromDate($year, $group, 1)->format('F Y') }}
++              </h5>
++              <span class="badge bg-primary">
++                {{ $tas->count() }} {{ Str::plural('flight', $tas->count()) }}
++              </span>
++            </div>
++          </div>
++          <div class="card-body p-0">
++            <div class="flights-list">
++              @foreach ($tas->sortBy('assignment_order', SORT_NATURAL) as $as)
++                @php
++                  $flight = $as->flight;
++                  $isCompleted = $as->completed;
++                  $pirepStatus = $as->pirep_status;
++                  $isCurrentMonth = $as->assignment_month == $curr_month;
++                  $isBid = isset($saved[$flight->id]) ? true : false;
++                  $canBid = ($flight && !$isCompleted && $pirepStatus !== 'in_progress' && 
++                    $isCurrentMonth && (!setting('pilots.only_flights_from_current') || 
++                    $flight->dpt_airport_id == optional($user->current_airport)->icao));
++
++                  $flight = $as->flight;
++                  $isCompleted = $as->completed;
++                  $isCurrentMonth = $as->assignment_month == $curr_month;
++                  $isBid = isset($saved[$flight->id]) ? true : false;
++                  
++                  $canBid = ($flight && !$isCompleted && $pirepStatus !== 'in_progress' && 
++                  $isCurrentMonth && (!setting('pilots.only_flights_from_current') || 
++                  $flight->dpt_airport_id == optional($user->current_airport)->icao));
++
++                  // Duración en formato legible
++                  $duration = '--';
++                  if ($flight && $flight->flight_time) {
++                      $minutes = (float) $flight->flight_time;
++                      $duration = floor($minutes / 60) . 'h ' . $minutes % 60 . 'm';
++                  }
++
++                  // Distancia - CORREGIDO
++                  $distanceValue = null;
++                  if ($flight && $flight->distance && property_exists($flight->distance, 'internalUnit')) {
++                      $distanceValue = (float) $flight->distance->internalUnit;
++                  }
++
++                  // Estado de la asignación
++                  if ($pirepStatus === 'in_progress') {
++                      $statusText = 'In Progress';
++                      $statusColor = '#28a745';
++                      $statusIcon = 'bi-arrow-repeat';
++                  } elseif ($isCompleted) {
++                      $statusText = 'Completed';
++                      $statusColor = '#28a745';
++                      $statusIcon = 'bi-check-circle-fill';
++                  } else {
++                      $statusText = 'Pending';
++                      $statusColor = '#ffc107';
++                      $statusIcon = 'bi-hourglass-split';
++                  }
++
++                  // Verificar aeronave reservada
++                  $hasReservedAircraft = false;
++                  $reservedRegistration = null;
++                  $reservedSubfleetName = null;
++
++                  if ($isBid && isset($saved[$flight->id])) {
++                      $bid = App\Models\Bid::find($saved[$flight->id]);
++                      if ($bid && $bid->aircraft_id) {
++                          $aircraft = App\Models\Aircraft::find($bid->aircraft_id);
++                          if ($aircraft) {
++                              $hasReservedAircraft = true;
++                              $reservedRegistration = $aircraft->registration;
++                              $reservedSubfleetName = $aircraft->subfleet->name ?? ($aircraft->name ?? $aircraft->icao);
++                          }
++                      }
++                  }
++                @endphp
++
++                <div class="flight-card" data-flight-id="{{ $flight->id ?? 0 }}"
++                  data-assignment-order="{{ $as->assignment_order }}">
++                  {{-- Cabecera con número de orden y estado --}}
++                  <div class="flight-header">
++                    <div class="flight-info">
++                      <span class="flight-callsign">
++                        <span class="badge bg-secondary me-2" style="background: #412c4d !important;">
++                          #{{ $as->assignment_order }}
++                        </span>
++                        {{ $flight ? $flight->ident : 'Flight not found' }}
++                      </span>
++                      @if ($flight)
++                        <span
++                          class="flight-airline">{{ optional($flight->airline)->name ?? (optional($flight->airline)->code ?? 'N/A') }}</span>
++                      @endif
++                    </div>
++                    <div class="flight-status" style="background: {{ $statusColor }}20; color: {{ $statusColor }}">
++                      <i class="bi {{ $statusIcon }} me-1"></i>
++                      {{ $statusText }}
++                    </div>
++                  </div>
++
++                  @if ($flight)
++                    {{-- Ruta principal con ICAO + IATA --}}
++                    <div class="flight-route">
++                      <div class="route-point">
++                        <a href="{{ route('frontend.airports.show', [$flight->dpt_airport_id]) }}" class="point-code">
++                          {{ $flight->dpt_airport_id }}
++                          @if ($flight->dpt_airport && $flight->dpt_airport->iata)
++                            <span class="point-iata">({{ $flight->dpt_airport->iata }})</span>
++                          @endif
++                        </a>
++                        <div class="point-name">{{ $flight->dpt_airport->name ?? 'Departure' }}
++                        </div>
++                      </div>
++
++                      <div class="route-arrow">
++                        <i class="bi bi-arrow-right"></i>
++                      </div>
++
++                      <div class="route-point">
++                        <a href="{{ route('frontend.airports.show', [$flight->arr_airport_id]) }}" class="point-code">
++                          {{ $flight->arr_airport_id }}
++                          @if ($flight->arr_airport && $flight->arr_airport->iata)
++                            <span class="point-iata">({{ $flight->arr_airport->iata }})</span>
++                          @endif
++                        </a>
++                        <div class="point-name">{{ $flight->arr_airport->name ?? 'Arrival' }}</div>
++                      </div>
++                    </div>
++
++                    {{-- Grid de información --}}
++                    <div class="flight-details-grid">
++                      <div class="detail-row">
++                        <div class="detail-item">
++                          <div class="detail-label">DURATION</div>
++                          <div class="detail-value">{{ $duration }}</div>
++                        </div>
++                        <div class="detail-item">
++                          <div class="detail-label">DISTANCE</div>
++                          <div class="detail-value">
++                            @if ($flight && $flight->distance && $flight->distance->internal() > 0)
++                              {{ number_format($flight->distance->internal(), 0) }} nm
++                            @else
++                              --
++                            @endif
++                          </div>
++                        </div>
++                        <div class="detail-item">
++                          <div class="detail-label">SCHEDULED</div>
++                          <div class="detail-value">
++                            @if ($flight->dpt_time)
++                              {{ \Carbon\Carbon::parse($flight->dpt_time)->format('H:i') }} →
++                              {{ \Carbon\Carbon::parse($flight->arr_time)->format('H:i') }}
++                            @else
++                              --
++                            @endif
++                          </div>
++                        </div>
++                      </div>
++
++                      <div class="detail-row">
++                        <div class="detail-item">
++                          <div class="detail-label">EQUIPMENT</div>
++                          <div class="detail-value">
++                            @if ($hasReservedAircraft)
++                              <span class="text-success">
++                                <i class="bi bi-check-circle-fill me-1"></i>
++                                {{ $reservedRegistration }} ({{ $reservedSubfleetName }})
++                              </span>
++                            @elseif($isBid && !$hasReservedAircraft)
++                              <span class="text-warning">
++                                <i class="bi bi-exclamation-triangle-fill me-1"></i>
++                                N/A (No aircraft selected)
++                              </span>
++                            @else
++                              @php
++                                $equipmentList = [];
++                                foreach ($flight->subfleets as $index => $sf) {
++                                    if ($index < 4) {
++                                        $equipmentList[] = $sf->icao ?? $sf->type;
++                                    }
++                                }
++                                $equipmentDisplay = implode('/', $equipmentList);
++                                if (count($flight->subfleets) > 4) {
++                                    $equipmentDisplay .= '/...';
++                                }
++                                echo $equipmentDisplay ?: 'N/A';
++                              @endphp
++                            @endif
++                          </div>
++                        </div>
++                        <div class="detail-item">
++                          <div class="detail-label">CALLSIGN</div>
++                          <div class="detail-value">{{ $flight->callsign ?: $flight->ident }}
++                          </div>
++                        </div>
++                        <div class="detail-item">
++                          <div class="detail-label">ASSIGNMENT</div>
++                          <div class="detail-value">
++                            @if ($isCompleted)
++                              <span class="text-success">
++                                <i class="bi bi-check-circle-fill me-1"></i> Completed
++                              </span>
++                            @elseif($isCurrentMonth)
++                              <span class="text-warning">
++                                <i class="bi bi-hourglass-split me-1"></i> Active
++                              </span>
++                            @else
++                              <span class="text-muted">
++                                <i class="bi bi-calendar me-1"></i> Past month
++                              </span>
++                            @endif
++                          </div>
++                        </div>
++                      </div>
++                    </div>
++
++                    {{-- Footer con acciones --}}
++                    <div class="flight-actions">
++                      <div class="d-flex justify-content-between align-items-center w-100">
++                        <div class="d-flex flex-wrap gap-2">
++                          <a href="{{ route('frontend.flights.show', [$flight->id]) }}" class="action-link">
++                            <i class="bi bi-eye"></i> Details
++                          </a>
++
++                          @if ($isCompleted && $as->pirep_id)
++                            <a href="{{ route('frontend.pireps.show', [$as->pirep_id]) }}" class="action-link">
++                              <i class="bi bi-file-text"></i> View PIREP
++                            </a>
++                          @elseif(!$isCompleted && $isCurrentMonth)
++                            <a href="{{ route('frontend.pireps.create') }}?flight_id={{ $flight->id }}"
++                              class="action-link">
++                              <i class="bi bi-file-text"></i> File PIREP
++                            </a>
++                          @endif
++                        </div>
++
++                        @if ($canBid)
++                          <button
++                            class="btn btn-sm m-0 mx-1 p-0 px-1 save_flight {{ isset($saved[$flight->id]) ? 'btn-danger' : 'btn-success' }}"
++                            x-id="{{ $flight->id }}" x-saved-class="btn-danger" type="button">
++                            {{ isset($saved[$flight->id]) ? 'Remove Bid' : 'Add Bid' }}
++                          </button>
++                        @endif
++                      </div>
++                    </div>
+                   @else
+-                    <i class="fas fa-exclamation-circle text-danger"></i>
+-                  @endif
+-                </td>
+-                <td class="text-end">
+-                  @if($as->flight && !$as->completed && $as->assignment_month == $curr_month)
+-                    {{-- !!! NOTE !!! Don't remove the "save_flight" class, or the x-id attribute. It will break the AJAX to save/delete --}}
+-                    {{-- "x-saved-class" is the class to add/remove if the bid exists or not. If you change it, remember to change it in the in-array line as well --}}
+-                    @if((!setting('pilots.only_flights_from_current') || $as->flight->dpt_airport_id == optional($user->current_airport)->icao))
+-                      <button class="btn btn-sm m-0 mx-1 p-0 px-1 save_flight {{ isset($saved[$as->flight->id]) ? 'btn-danger':'btn-success' }}" x-id="{{ $as->flight->id }}" x-saved-class="btn-danger" type="button">
+-                        {{ isset($saved[$as->flight->id]) ? 'Remove Bid' : 'Add Bid' }}
+-                      </button>
+-                    @endif
++                    <div class="flight-route p-3 text-center text-muted">
++                      <i class="bi bi-exclamation-triangle me-2"></i>
++                      Flight information not available (flight may have been removed)
++                    </div>
+                   @endif
+-                </td>
+-              </tr>
+-            @endforeach
+-          </table>
++                </div>
++              @endforeach
++            </div>
++          </div>
+         </div>
+-      </div>
+       @endforeach
+     </div>
+-    {{-- Right Column --}}
++
++    {{-- Right Column - Personal Stats --}}
+     <div class="col-lg-4">
+-      @if(count($assignments) > 0 && $dbasic === true)
+-        <div class="row mb-1">
++      @if (count($assignments) > 0 && $dbasic === true)
++        <div class="row mb-3">
+           <div class="col">
+             @widget('DBasic::Map', ['source' => 'assignment'])
+           </div>
+         </div>
+       @endif
+-      @if($stats)
+-        <div class="card mb-2">
+-          <div class="card-header p-1">
+-            <h5 class="m-1">
++
++      @if ($stats)
++        <div class="card mb-3">
++          <div class="card-header py-2 px-3" style="background: linear-gradient(135deg, #412c4d20 0%, #2a263320 100%);">
++            <h5 class="m-0">
++              <i class="bi bi-graph-up me-2"></i>
+               @lang('DSpecial::common.personal_stats')
+-              <i class="fas fa-dna float-end"></i>
+             </h5>
+           </div>
+-          <div class="card-body p-0 table-responsive">
++          <div class="card-body p-0">
+             @foreach ($stats as $month => $stat)
+-              @if($month === 'Overall')
+-                <table class="table table-sm table-borderless table-striped align-middle text-center mb-0">
+-                  <tr>
+-                    <th class="col-4">@lang('DSpecial::common.assignments')</th>
+-                    <th class="col-4">@lang('DSpecial::common.completed')</th>
+-                    <th class="col-4">@lang('DSpecial::common.earnings')<span class="small">&sup1;</span></th>
+-                  </tr>
+-                  <tr>
+-                    <td>{{ $stat['total'] }}</td>
+-                    <td>{{ $stat['completed'] }}</td>
+-                    <td>{{ $stat['earnings'] }}</td>
+-                  </tr>
+-                  <tr>
+-                    <td colspan="3">
+-                      <div class="progress" height="20px">
+-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $stat['ratio'] }}%;" aria-valuenow="{{ $stat['ratio'] }}" aria-valuemin="0" aria-valuemax="100">{{ $stat['ratio'].'%' }}</div>
+-                      </div>
+-                    </td>
+-                  </tr>
++              @if ($month === 'Overall')
++                <table class="table table-sm table-borderless align-middle text-center mb-0">
++                  <thead>
++                    <tr>
++                      <th class="fw-semibold">@lang('DSpecial::common.assignments')</th>
++                      <th class="fw-semibold">@lang('DSpecial::common.completed')</th>
++                      <th class="fw-semibold">@lang('DSpecial::common.earnings')<span class="small">¹</span></th>
++                    </tr>
++                  </thead>
++                  <tbody>
++                    <tr>
++                      <td><span class="badge bg-secondary">{{ $stat['total'] }}</span></td>
++                      <td><span class="badge bg-success">{{ $stat['completed'] }}</span></td>
++                      <td><span class="badge bg-primary">{{ $stat['earnings'] }}</span></td>
++                    </tr>
++                    <tr>
++                      <td colspan="3" class="pt-2">
++                        <div class="progress" style="height: 10px;">
++                          <div class="progress-bar bg-success" role="progressbar"
++                            style="width: {{ $stat['ratio'] }}%;" aria-valuenow="{{ $stat['ratio'] }}"
++                            aria-valuemin="0" aria-valuemax="100">
++                          </div>
++                        </div>
++                        <small class="text-muted">{{ $stat['ratio'] }}% completed</small>
++                      </td>
++                    </tr>
++                  </tbody>
+                 </table>
+               @elseif($month != 'Overall')
+-                <hr>
+-                <table class="table table-sm table-borderless table-striped align-middle text-center mb-0">
+-                  <tr>
+-                    <th class="text-start" colspan="3">{{ $month }}</th>
+-                  </tr>
+-                  <tr>
+-                    <th class="col-4">@lang('DSpecial::common.assignments')</th>
+-                    <th class="col-4">@lang('DSpecial::common.completed')</th>
+-                    <th class="col-4">@lang('DSpecial::common.earnings')<span class="small">&sup1;</span></th>
+-                  </tr>
+-                  <tr>
+-                    <td>{{ $stat['total'] }}</td>
+-                    <td>{{ $stat['completed'] }}</td>
+-                    <td>{{ $stat['earnings'] }}</td>
+-                  </tr>
+-                  <tr>
+-                    <td colspan="3">
+-                      <div class="progress" height="20px">
+-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $stat['ratio'] }}%;" aria-valuenow="{{ $stat['ratio'] }}" aria-valuemin="0" aria-valuemax="100">{{ $stat['ratio'].'%' }}</div>
+-                      </div>
+-                    </td>
+-                  </tr>
++                <hr class="m-0">
++                <table class="table table-sm table-borderless align-middle text-center mb-0">
++                  <thead>
++                    <tr>
++                      <th class="text-start fw-semibold" colspan="3">{{ $month }}</th>
++                    </tr>
++                    <tr>
++                      <th class="fw-semibold">@lang('DSpecial::common.assignments')</th>
++                      <th class="fw-semibold">@lang('DSpecial::common.completed')</th>
++                      <th class="fw-semibold">@lang('DSpecial::common.earnings')<span class="small">¹</span></th>
++                    </tr>
++                  </thead>
++                  <tbody>
++                    <tr>
++                      <td><span class="badge bg-secondary">{{ $stat['total'] }}</span></td>
++                      <td><span class="badge bg-success">{{ $stat['completed'] }}</span></td>
++                      <td><span class="badge bg-primary">{{ $stat['earnings'] }}</span></td>
++                    </tr>
++                    <tr>
++                      <td colspan="3" class="pt-2">
++                        <div class="progress" style="height: 10px;">
++                          <div class="progress-bar bg-success" role="progressbar"
++                            style="width: {{ $stat['ratio'] }}%;" aria-valuenow="{{ $stat['ratio'] }}"
++                            aria-valuemin="0" aria-valuemax="100">
++                          </div>
++                        </div>
++                        <small class="text-muted">{{ $stat['ratio'] }}% completed</small>
++                      </td>
++                    </tr>
++                  </tbody>
+                 </table>
+               @endif
+             @endforeach
+           </div>
+-          <div class="card-footer p-0 px-1 text-start small">
+-            <b>&sup1;</b> @lang('DSpecial::common.earning_note')
++          <div class="card-footer small text-muted">
++            <b>¹</b> @lang('DSpecial::common.earning_note')
+           </div>
+         </div>
+       @endif
+-      @ability('admin', 'admin-user')
+-        <div class="row">
+-          @if(!$sys_check)
+-            <div class="col">
+-              <div class="text-end">
+-                <form class="form" method="post" action="{{ route('DSpecial.assignments_manual') }}">
+-                  @csrf
+-                  <input type="hidden" name="curr_page" value="{{ url()->full() }}">
+-                  <button class="btn btn-sm bg-success p-0 px-1 text-black" type="submit">Assign Monthly Flights</button>
+-                </form>
+-              </div>
+-            </div>
+-          @else
+-            <div class="col">
+-              <div class="float-start">
+-                <form class="form" method="post" action="{{ route('DSpecial.assignments_manual') }}">
+-                  @csrf
+-                  <input type="hidden" name="curr_page" value="{{ url()->full() }}">
+-                  <button class="btn btn-sm bg-warning p-0 px-1" type="submit">Re-Assign Current Month</button>
+-                </form>
+-              </div>
+-              <div class="float-end">
+-                <form class="form" method="post" action="{{ route('DSpecial.assignments_manual') }}">
+-                  @csrf
+-                  <input type="hidden" name="curr_page" value="{{ url()->full() }}">
+-                  <input type="hidden" name="resetmonth" value="true">
+-                  <button class="btn btn-sm bg-danger p-0 px-1 text-black" type="submit" onclick="return confirm('Are you REALLY sure ? This will DELETE and re-assign flights !')">Delete & Re-Assign Current Month</button>
+-                </form>
+-              </div>
+-            </div>
+-          @endif
+-        </div>
+-      @endability
++
++
+     </div>
+   </div>
+-  @if(setting('bids.block_aircraft', false))
++
++  {{-- Incluir el modal de selección de aeronave si está configurado --}}
++  @if (setting('bids.block_aircraft', false))
+     @include('flights.bids_aircraft')
+   @endif
+-@endsection
+ 
+-@include('flights.scripts')
++  {{-- Scripts de bids (el mismo que usa /flights) --}}
++  @include('flights.scripts')
++@endsection

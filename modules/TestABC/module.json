@@ -1,0 +1,16 @@
+{
+    "name": "TestABC",
+    "alias": "testabc",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\TestABC\\Providers\\AppServiceProvider",
+        "Modules\\TestABC\\Providers\\EventServiceProvider",
+        "Modules\\TestABC\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
