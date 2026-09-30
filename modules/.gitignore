@@ -17,6 +17,10 @@
 !/VmsOpenFileManager
 !/TestABC
 
-# DisposableSpecial y CHJumpSeat NO se versionan: sus licencias prohiben
-# redistribuir el codigo. Se instalan aparte y sus parches viven en patches/.
+# DisposableSpecial y CHJumpSeat: versionados aqui por decision expresa del
+# mantenedor (el repo central es privado). Sus licencias prohiben redistribuir
+# el codigo; se asume la responsabilidad. Ver deploy/README.md.
+!/DisposableSpecial
+!/CHJumpSeat
+
 # DisposableBasic si se versiona, pero como submodulo (apunta a su repo upstream).
