@@ -1,3 +1,9 @@
 [submodule "modules/DisposableBasic"]
 	path = modules/DisposableBasic
 	url = https://github.com/FatihKoz/DisposableBasic.git
+[submodule "modules/VmsOpenOps"]
+	path = modules/VmsOpenOps
+	url = https://github.com/fhprietor/vmsOpenOps.git
+[submodule "modules/VmsOpenFileManager"]
+	path = modules/VmsOpenFileManager
+	url = https://github.com/fhprietor/vmsOpenFileManager.git
