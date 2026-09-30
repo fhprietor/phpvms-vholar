@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'new_ferry_request'         => 'New Ferry Request',
+    'jumpseat_preview'          => 'Jumpseat Preview',
+    'ferry_preview'             => 'Ferry Preview',
+    'make_jumpseat_request'     => 'Make Jumpseat Request',
+    'pay_immediate_jumpseat'    => 'Pay for Immediate Jumpseat',
+    'pay_immediately'           => 'Pay Immediately',
+    'submit_for_approval'       => 'Submit for Approval (Admin review required)',
+    'already_at_airport'        => 'You are already at this airport!',
+    'aircraft_already_here'     => 'This aircraft is already at your airport!',
+    'insufficient_funds_jumpseat' => 'Insufficient funds for immediate jumpseat.',
+    'insufficient_funds_ferry'  => 'Insufficient funds for immediate ferry.',
+    'no_aircraft_available'     => 'No aircraft available',
+    'select_airport_placeholder' => 'Type to search (min. 2 characters)',
+    'select_aircraft_type'      => 'Select aircraft type...',
+    'select_aircraft'           => 'Select an aircraft...',
+    'loading_aircraft'          => 'Loading aircraft...',
+    'reason_ferry_placeholder'  => 'Why do you need to ferry this aircraft?',
+    'alert_select_airport'      => 'Please select a destination airport.',
+    'alert_select_aircraft'     => 'Please select an aircraft to ferry.',
+    'alert_reason_jumpseat'     => 'Please provide a reason for your jumpseat request.',
+    'alert_reason_ferry'        => 'Please provide a reason for this ferry request.',
+];

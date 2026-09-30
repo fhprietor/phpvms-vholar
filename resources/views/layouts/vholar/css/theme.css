@@ -1,0 +1,1344 @@
+/* ==========================================================================
+   TEMA VHOLAR - Estilos principales
+   ========================================================================== */
+
+:root {
+  --bs-primary: #067ec1 !important;
+  --bs-secondary-color: #d0c8dc;
+  --primary-color: #412c4d;
+  --primary-hover: #5e3e73;
+  --bg-dark: #1e1623;
+  --vh-primary: #412c4d;
+  --vh-dark: #1e1b24;
+  --vh-light: #f4f2f6;
+  --vh-gray: #2a2633;
+  --vh-muted: #d0c8dc;
+}
+
+/* Fondo general */
+body {
+  background-color: var(--vh-dark);
+  color: #e5e5e5;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #412c4d !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  min-height: 55px;
+  backdrop-filter: blur(6px);
+  position: relative;
+  z-index: 1050;
+}
+
+/* Logo */
+.navbar-brand img {
+  height: 38px;
+}
+
+/* Links navbar */
+.navbar .nav-link {
+  color: rgba(255, 255, 255, 0.75) !important;
+  padding: 6px 12px !important;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+}
+
+.navbar .nav-link:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #ffffff !important;
+}
+
+/* Botón VHolar */
+.btn-primary {
+  background-color: #412c4d !important;
+  border-color: #412c4d !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #563a63 !important;
+  border-color: #563a63 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(65, 44, 77, 0.4);
+}
+
+/* Inputs VHolar */
+.form-control {
+  background-color: #1f1c27 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.form-control:focus {
+  border-color: #412c4d !important;
+  box-shadow: 0 0 0 0.2rem rgba(65, 44, 77, 0.3) !important;
+}
+
+/* Labels */
+.form-label,
+label {
+  color: #bbb !important;
+  font-weight: 500;
+}
+
+/* Links */
+a {
+  color: #dfc8f5;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+/* Card login */
+.auth-card,
+.card {
+  background-color: #2a2633 !important;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+body.login-page {
+  background: linear-gradient(rgba(30, 27, 36, 0.9), rgba(30, 27, 36, 0.95)),
+    url('/images/banner.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Footer */
+footer {
+  background-color: #16131c;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+/* Dropdown oscuro VHolar */
+.dropdown-menu {
+  background-color: #2a2633 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 8px 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  z-index: 2000 !important;
+  position: absolute;
+}
+
+.dropdown-item {
+  color: #ddd !important;
+  font-weight: 500;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: #412c4d !important;
+  color: #ffffff !important;
+}
+
+/* Separador */
+.dropdown-divider {
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Tarjetas de estadísticas */
+.card.bg-primary .card-body {
+  padding: 1rem;
+}
+
+.card.bg-primary h2 {
+  margin-bottom: 0.25rem;
+}
+
+.card.bg-primary p {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card.bg-primary small {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+body.home-page .card[style*="background-color"] {
+  background-color: #DDD3E4 !important;
+}
+
+/* Tablas */
+.table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: rgba(65, 44, 77, 0.1);
+}
+
+.table thead th {
+  border-bottom: 2px solid #412c4d;
+  font-weight: 600;
+}
+
+/* Carrusel */
+.carousel {
+  margin-bottom: 0;
+}
+
+.scrollto {
+  text-decoration: none;
+}
+
+.scrollto:hover {
+  text-decoration: underline;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 12px;
+  padding: 20px 30px;
+  bottom: 30px;
+  left: 10%;
+  right: 10%;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.carousel-caption h3 {
+  color: #ffffff !important;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-caption p {
+  color: #f0f0f0 !important;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+.carousel-caption a {
+  color: #ffd966 !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.carousel-caption a:hover {
+  color: #ffc107 !important;
+  text-decoration: underline;
+}
+
+/* Para móviles */
+@media (max-width: 768px) {
+  .carousel-caption {
+    padding: 10px 15px;
+    bottom: 15px;
+  }
+
+  .carousel-caption h3 {
+    font-size: 1rem;
+  }
+
+  .carousel-caption p {
+    font-size: 0.75rem;
+  }
+}
+
+/* Eliminar el padding-top del div vacío en home-page */
+body.home-page .body.container {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+body.home-page #myCarousel {
+  margin-top: 0;
+}
+
+body.home-page .card[style*="background-color: #f8f9fa"] {
+  background-color: #f8f9fa !important;
+}
+
+body.home-page .card[style*="background-color: #f8f9fa"] .text-dark {
+  color: #212529 !important;
+}
+
+body.home-page .card[style*="background-color: #f8f9fa"] .text-muted {
+  color: #6c757d !important;
+}
+
+/* ==========================================================================
+   FLIGHTS CARDS - ESTILO VHOLAR (Letras grandes, altura compacta)
+   ========================================================================== */
+
+.flights-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.flights-stats {
+  margin-bottom: 0.8rem;
+}
+
+.stats-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #2a2633 !important;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #aaa !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.flights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Tarjeta */
+.flights-list .flight-card {
+  background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%) !important;
+  border-radius: 12px !important;
+  border: 1px solid #412c4d !important;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.flights-list .flight-card:hover {
+  transform: translateY(-2px);
+  border-color: #5e3e73 !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Header - altura compacta */
+.flight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(65, 44, 77, 0.3) !important;
+}
+
+.flight-info {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.flight-callsign {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff !important;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.flight-airline {
+  font-size: 0.95rem;
+  color: #dfc8f5 !important;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.flight-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+  background: rgba(65, 44, 77, 0.5) !important;
+  color: #dfc8f5 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+/* Ruta - altura compacta */
+.flight-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem 0.4rem 1rem;
+}
+
+.route-point {
+  flex: 1;
+}
+
+.route-point:first-child {
+  text-align: left;
+}
+
+.route-point:last-child {
+  text-align: right;
+}
+
+/* Código ICAO + IATA */
+.point-code {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #412c4d, #2a1f33) !important;
+  padding: 0.3rem 0.9rem;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+/* Código IATA */
+.point-iata {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #dfc8f5 !important;
+}
+
+/* Alineación izquierda para salida */
+.route-point:first-child .point-code {
+  justify-content: flex-start;
+}
+
+/* Alineación derecha para llegada */
+.route-point:last-child .point-code {
+  justify-content: flex-end;
+}
+
+/* Nombre del aeropuerto */
+.point-name {
+  font-size: 0.95rem;
+  color: #aaa !important;
+  margin-top: 0.35rem;
+  font-weight: 500;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.route-point:first-child .point-name {
+  text-align: left;
+}
+
+.route-point:last-child .point-name {
+  text-align: right;
+}
+
+.route-arrow {
+  padding: 0 0.7rem;
+  color: #412c4d !important;
+}
+
+.route-arrow i {
+  font-size: 1.2rem;
+}
+
+/* Grid de información - altura compacta */
+.flight-details-grid {
+  padding: 0.4rem 1rem;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-item {
+  padding: 0.45rem 0.4rem;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888 !important;
+  margin-bottom: 0.2rem;
+  line-height: 1.2;
+}
+
+.detail-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #e5e5e5 !important;
+  line-height: 1.2;
+}
+
+.status-value {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.status-time {
+  font-size: 0.75rem;
+  color: #888 !important;
+  font-weight: 400;
+}
+
+/* Acciones - altura compacta */
+.flight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.9rem;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #bbb !important;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  line-height: 1.2;
+}
+
+.action-link:hover {
+  background: #412c4d !important;
+  color: #ffffff !important;
+}
+
+.action-link i {
+  font-size: 0.85rem;
+}
+
+/* Botón de bid */
+.bid-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+  line-height: 1.2;
+}
+
+.bid-add {
+  background: rgba(40, 167, 69, 0.2) !important;
+  color: #28a745 !important;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.bid-add:hover {
+  background: #28a745 !important;
+  color: white !important;
+}
+
+.bid-remove {
+  background: rgba(220, 53, 69, 0.2) !important;
+  color: #dc3545 !important;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+.bid-remove:hover {
+  background: #dc3545 !important;
+  color: white !important;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .flight-route {
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0.7rem;
+  }
+
+  .route-point {
+    text-align: center !important;
+    width: 100%;
+  }
+
+  .route-point:first-child .point-name,
+  .route-point:last-child .point-name {
+    text-align: center !important;
+  }
+
+  .route-point:first-child .point-code,
+  .route-point:last-child .point-code {
+    justify-content: center !important;
+  }
+
+  .point-code {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 1.6rem;
+  }
+
+  .point-iata {
+    font-size: 0.75rem;
+  }
+
+  .route-arrow {
+    transform: rotate(90deg);
+  }
+
+  .detail-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .detail-item {
+    padding: 0.45rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .flight-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-link {
+    justify-content: center;
+  }
+
+  .bid-button {
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 0.2rem;
+  }
+
+  .point-name {
+    white-space: normal;
+    max-width: none;
+    font-size: 0.85rem;
+  }
+
+  .flight-info {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .flight-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .point-code {
+    font-size: 1.3rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .point-iata {
+    font-size: 0.7rem;
+  }
+
+  .point-name {
+    font-size: 0.75rem;
+  }
+
+  .detail-value {
+    font-size: 0.9rem;
+  }
+
+  .flight-callsign {
+    font-size: 1.2rem;
+  }
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS - Estilo VHOLAR
+   ========================================================================== */
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast-notification {
+  min-width: 300px;
+  max-width: 400px;
+  background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%);
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideInRight 0.3s ease-out;
+  backdrop-filter: blur(8px);
+}
+
+.toast-notification.toast-success {
+  border-left-color: #28a745;
+}
+
+.toast-notification.toast-success .toast-icon {
+  color: #28a745;
+}
+
+.toast-notification.toast-danger {
+  border-left-color: #dc3545;
+}
+
+.toast-notification.toast-danger .toast-icon {
+  color: #dc3545;
+}
+
+.toast-notification.toast-warning {
+  border-left-color: #ffc107;
+}
+
+.toast-notification.toast-warning .toast-icon {
+  color: #ffc107;
+}
+
+.toast-notification.toast-info {
+  border-left-color: #067ec1;
+}
+
+.toast-notification.toast-info .toast-icon {
+  color: #067ec1;
+}
+
+.toast-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+  font-size: 0.85rem;
+}
+
+.toast-message {
+  font-size: 0.75rem;
+  color: #aaa;
+  line-height: 1.3;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.toast-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.toast-notification.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+@media (max-width: 576px) {
+  .toast-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .toast-notification {
+    min-width: auto;
+    max-width: none;
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   MODAL DE CONFIRMACIÓN - Estilo Vholar
+   ========================================================================== */
+
+.vholar-confirm-modal .modal-content {
+  background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%);
+  border: 1px solid #412c4d;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.vholar-confirm-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.25rem;
+  background: rgba(65, 44, 77, 0.3);
+  border-radius: 16px 16px 0 0;
+}
+
+.vholar-confirm-modal .modal-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vholar-confirm-modal .modal-title i {
+  color: #dc3545;
+  font-size: 1.2rem;
+}
+
+.vholar-confirm-modal .modal-body {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.confirm-icon {
+  font-size: 3rem;
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.confirm-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.confirm-message {
+  font-size: 0.9rem;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.flight-details-confirm {
+  background: rgba(65, 44, 77, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.flight-details-confirm .flight-ident {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.flight-details-confirm .flight-route {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.25rem;
+}
+
+.vholar-confirm-modal .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.vholar-confirm-modal .btn-cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #aaa;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.vholar-confirm-modal .btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #888;
+  color: #fff;
+}
+
+.vholar-confirm-modal .btn-confirm {
+  background: linear-gradient(135deg, #dc3545, #b02a37);
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  color: white;
+  transition: all 0.2s;
+}
+
+.vholar-confirm-modal .btn-confirm:hover {
+  background: linear-gradient(135deg, #c82333, #a71d2a);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.flight-actions .bid-button-right {
+  margin-left: auto;
+}
+
+/* ==========================================================================
+   MODAL DE SELECCIÓN DE AERONAVE - Estilo Vholar
+   ========================================================================== */
+
+.vholar-modal {
+  background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%);
+  border: 1px solid #412c4d;
+  border-radius: 16px;
+}
+
+.vholar-modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.25rem;
+  background: rgba(65, 44, 77, 0.3);
+  border-radius: 16px 16px 0 0;
+}
+
+.vholar-modal-header .modal-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.vholar-modal-header .modal-title i {
+  color: #412c4d;
+}
+
+.vholar-modal-body {
+  padding: 1.25rem;
+}
+
+.modal-description {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.vholar-select {
+  background-color: #1f1c27 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.vholar-select:focus {
+  border-color: #412c4d !important;
+  box-shadow: 0 0 0 0.2rem rgba(65, 44, 77, 0.3) !important;
+}
+
+.vholar-modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.vholar-modal-footer .btn-outline-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #aaa;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.vholar-modal-footer .btn-outline-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #888;
+  color: #fff;
+}
+
+.vholar-modal-footer .btn-primary {
+  background: linear-gradient(135deg, #412c4d, #2a1f33);
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.vholar-modal-footer .btn-primary:hover {
+  background: linear-gradient(135deg, #5e3e73, #412c4d);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(65, 44, 77, 0.4);
+}
+
+/* ==========================================================================
+   MAPA DE RUTAS DISPONIBLES
+   ========================================================================== */
+
+.flights-map-container {
+  background: #1a1a2e;
+  border-radius: 16px;
+  border: 1px solid #412c4d;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.flights-map-container .leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.5);
+  color: #888;
+  font-size: 9px;
+}
+
+.flights-map-container .leaflet-control-attribution a {
+  color: #dfc8f5;
+}
+
+.star-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.star-marker i {
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+/* ==========================================================================
+   MODAL ESTILO FLIGHTRADAR24
+   ========================================================================== */
+
+.flight-modal .modal-content {
+  background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+  border: 1px solid rgba(44, 123, 229, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.flight-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px 16px 0 0;
+}
+
+.flight-modal .modal-title {
+  font-weight: 700;
+  font-family: 'Inter', monospace;
+  letter-spacing: 1px;
+}
+
+.flight-modal .modal-body {
+  padding: 0;
+}
+
+/* Header del vuelo */
+.fr24-flight-header {
+  background: linear-gradient(135deg, #1e2a3a 0%, #0f1a24 100%);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fr24-callsign {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: 'Inter', monospace;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.fr24-airline {
+  font-size: 0.85rem;
+  color: #2c7be5;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Ruta estilo FR24 */
+.fr24-route {
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fr24-route-point {
+  text-align: center;
+  flex: 1;
+}
+
+.fr24-airport-code {
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-family: 'Inter', monospace;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.fr24-airport-name {
+  font-size: 0.7rem;
+  color: #888;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+}
+
+.fr24-route-time {
+  font-size: 0.8rem;
+  color: #2c7be5;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.fr24-route-arrow {
+  padding: 0 1rem;
+  color: #2c7be5;
+}
+
+.fr24-route-arrow i {
+  font-size: 1.2rem;
+}
+
+/* Grid de información FR24 */
+.fr24-info-grid {
+  padding: 1.5rem;
+}
+
+.fr24-info-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fr24-info-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.fr24-info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.fr24-info-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #666;
+  margin-bottom: 0.35rem;
+}
+
+.fr24-info-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #e5e5e5;
+  font-family: 'Inter', monospace;
+}
+
+/* Estado del vuelo */
+.fr24-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  background: rgba(44, 123, 229, 0.15);
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Footer del modal */
+.flight-modal .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .fr24-callsign {
+    font-size: 1.3rem;
+  }
+
+  .fr24-airport-code {
+    font-size: 1.2rem;
+  }
+
+  .fr24-info-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .fr24-route {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .fr24-route-arrow {
+    transform: rotate(90deg);
+  }
+}
+/* ==========================================================================
+   POPUP DEL MAPA - ESTILO COMPACTO
+   ========================================================================== */
+
+.leaflet-popup-content-wrapper {
+    background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%);
+    border-radius: 10px;
+    border: 1px solid #412c4d;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 0;
+}
+
+.leaflet-popup-content {
+    margin: 0 !important;
+    min-width: 220px;
+    max-width: 280px;
+}
+
+.leaflet-popup-tip {
+    background: #2a2633;
+    border-top: 1px solid #412c4d;
+    border-left: 1px solid #412c4d;
+}
+
+/* Contenido del popup compacto */
+.map-popup-compact {
+    padding: 8px 12px;
+}
+
+.map-popup-compact .popup-callsign {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.map-popup-compact .popup-route {
+    font-size: 0.75rem;
+    color: #2c7be5;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.map-popup-compact .popup-route i {
+    font-size: 0.7rem;
+    color: #412c4d;
+}
+
+.map-popup-compact .popup-details {
+    font-size: 0.7rem;
+    color: #aaa;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 5px;
+    margin-top: 4px;
+}
+
+.map-popup-compact .popup-details-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+}
+
+.map-popup-compact .popup-details-label {
+    color: #888;
+}
+
+.map-popup-compact .popup-details-value {
+    color: #e5e5e5;
+    font-weight: 500;
+}
+
+.map-popup-compact .popup-link {
+    display: block;
+    text-align: center;
+    margin-top: 6px;
+    padding: 4px 0;
+    background: rgba(65,44,77,0.3);
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #dfc8f5;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.map-popup-compact .popup-link:hover {
+    background: #412c4d;
+    color: #fff;
+}
