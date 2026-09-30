@@ -25,8 +25,10 @@ buena parte del codigo propio no estaban en git.
 
 ### Submodulos propios
 - `VmsOpenOps` y `VmsOpenFileManager` se extraen a repos propios
-  (`fhprietor/vmsOpenOps` 4154ace y `fhprietor/vmsOpenFileManager` 2fba5f8) y el
+  (`fhprietor/vmsOpenOps` 587bda0 y `fhprietor/vmsOpenFileManager` 183a5f3) y el
   repo central pasa a pinar el commit. `TestABC` sigue vendorizado (stub).
+- Cada repo de modulo incluye su **README**: funcionalidad, rutas, modelo de
+  datos, configuracion, instalacion y deuda tecnica verificada.
 
 ### Estado de modulos y datos
 - `app/Database/seeds/modules.yml` refleja el estado real de activacion
