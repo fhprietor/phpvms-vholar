@@ -25,9 +25,10 @@ theme:
     - public/assets/admin/css/vholar-admin.css
 
 modules:
-  # Estado real segun Nwidart en el momento de escribir este manifiesto.
-  # OJO: el fichero de estados (config/modules_statuses.json) NO esta en el repo,
-  # asi que la activacion/desactivacion no se reproduce sola: hay que aplicarla.
+  # El activador es "database" (App\Support\Modules\DatabaseActivator): el estado
+  # vive en la tabla `modules`. Se versiona en app/Database/seeds/modules.yml y
+  # se aplica al visitar /update. Un modulo sin fila se considera DESACTIVADO.
+  state_source: app/Database/seeds/modules.yml
   enabled:
     - Awards
     - DisposableBasic
@@ -48,19 +49,23 @@ modules:
       describe: v3.7.4-2-gf0b03db
       module_json_version: 3.7.4
     DisposableSpecial:
-      origin: vendored
+      origin: installed-separately
       upstream: https://github.com/FatihKoz/DisposableSpecial.git
       base_commit: d1d776cea9d4e6453dad99e59b18f3f3a9ddd153
       module_json_version: 3.7.8
       local_patch: patches/DisposableSpecial-d1d776c.patch
-      pending: extraer a fork propio y pinar como submodulo
+      notice: >
+        NO versionado: su licencia prohibe redistribuir el codigo sin permiso
+        escrito del autor. Se instala aparte y el parche local se reaplica con
+        patches/DisposableSpecial-d1d776c.patch
     CHJumpSeat:
-      origin: vendored
+      origin: installed-separately
       upstream: https://github.com/cardinalhorizon/CHJumpSeat.git
       base_commit: 97193a62a2293e444bcc84ef449643d01ef5377e
-      license: comercial (Cardinal Horizon) - solo uso interno en repo privado
       local_patch: patches/CHJumpSeat-97193a6.patch
-      pending: extraer a fork propio y pinar como submodulo
+      notice: >
+        NO versionado: licencia comercial (Cardinal Horizon) que prohibe
+        redistribuir el software y sus modificaciones. Instalacion aparte.
     SmartCARS3phpVMS7Api:
       origin: in-repo
       module_json_version: 1.0.2
@@ -91,13 +96,13 @@ settings:
   seed_file: app/Database/seeds/settings.yml
 
 data_changes_not_in_code:
-  # Cambios de datos puntuales que el repo NO reproduce.
+  # Ya no queda ninguno pendiente: el unico backfill de datos se convirtio en
+  # migracion reproducible.
   - date: 2026-09-29
     description: >
-      Backfill de pireps.source_name: 5718 PIREPs a "CrewSystem/import" y 227 a
-      "manual" (los que estaban vacios). Se aplico con query builder, sin tocar
-      updated_at.
-    follow_up: documentar en las notas del release o convertir en migracion
+      Backfill de pireps.source_name (5718 a "CrewSystem/import" y 227 a
+      "manual").
+    now_in_code: app/Database/migrations/2026_09_30_120000_backfill_pireps_source_name.php
 
 secrets_not_in_repo:
   - .env (APP_KEY, credenciales de BD, correo, webhooks de Discord)

@@ -1,5 +1,34 @@
 # Changelog
 
+## [Vholar] 2026-09-30 — Versionado del repositorio (vholar-1.0.0)
+
+Release que hace reproducible la instalacion: hasta ahora el tema, los modulos y
+buena parte del codigo propio no estaban en git.
+
+### Repositorio
+- `.gitignore`: se versionan el tema `vholar` (`resources/views/layouts/vholar`),
+  los modulos propios (`VmsOpenOps`, `VmsOpenFileManager`, `TestABC`) y se ignora
+  `.vscode/`.
+- `deploy/versions.yml`: manifiesto que congela base de phpVMS, versiones de
+  modulos, parches, settings y pasos de despliegue.
+- `deploy/README.md`: esquema de versionado (tags `vholar-*`) y pendientes.
+- Limpieza de ficheros basura en la raiz del repo.
+- `public/assets/themes/vholar/css`: symlink al CSS del tema convertido a
+  relativo (antes apuntaba a una ruta absoluta y no era portable).
+
+### Modulos de terceros
+- `DisposableSpecial` y `CHJumpSeat` **fuera del repo**: sus licencias prohiben
+  redistribuir el codigo. Se instalan aparte y sus parches propios quedan en
+  `patches/` con su commit base.
+- `DisposableBasic` sigue como submodulo (`f0b03db`, v3.7.4-2-g).
+
+### Estado de modulos y datos
+- `app/Database/seeds/modules.yml` refleja el estado real de activacion
+  (activador `database`), incluyendo `CHJumpSeat` y `TestABC` como desactivados.
+- Nueva migracion `2026_09_30_120000_backfill_pireps_source_name.php` que
+  reproduce el backfill de `pireps.source_name` aplicado el 2026-09-29
+  (`CrewSystem/import` para importaciones, `manual` para PIREPs de panel).
+
 ## [Vholar] 2026-05-17 — Discord notifications, ACARS parser fixes & pirep score
 
 ### Discord Notifications

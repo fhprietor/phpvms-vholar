@@ -1,6 +1,28 @@
+# Estado de activacion de modulos (activador: database, tabla `modules`).
+#
+# Se aplica con seeder_sync (visitar /update). OJO: este fichero es la fuente de
+# verdad; pasar por /update re-aplica lo que diga aqui.
+#
+# No incluir modulos que no esten instalados en modules/ (habia una fila suelta
+# de VMSAcars que no corresponde a ningun modulo en disco).
+
 - name: 'Awards'
   enabled: 1
+- name: 'CHJumpSeat'
+  enabled: 0
+- name: 'DisposableBasic'
+  enabled: 1
+- name: 'DisposableSpecial'
+  enabled: 1
+- name: 'Sample'
+  enabled: 1
+- name: 'SmartCARS3phpVMS7Api'
+  enabled: 1
+- name: 'TestABC'
+  enabled: 0
 - name: 'Vacentral'
   enabled: 1
-- name: 'VMSAcars'
+- name: 'VmsOpenFileManager'
+  enabled: 1
+- name: 'VmsOpenOps'
   enabled: 1
