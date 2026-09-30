@@ -89,3 +89,6 @@ sync.sh
 
 copy-from.sh
 copy-to.sh
+
+# IDE / local tooling
+.vscode/

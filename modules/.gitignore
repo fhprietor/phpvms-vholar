@@ -11,3 +11,12 @@
 !/ModulesManager
 !/DisposableBasic
 !/SmartCARS3phpVMS7Api
+
+# VA owned modules (to be extracted to their own repos and pinned as submodules)
+!/VmsOpenOps
+!/VmsOpenFileManager
+!/TestABC
+
+# Third party modules vendored in this private repo (to be pinned as submodules)
+!/DisposableSpecial
+!/CHJumpSeat
