@@ -25,7 +25,7 @@ buena parte del codigo propio no estaban en git.
 
 ### Submodulos propios
 - `VmsOpenOps` y `VmsOpenFileManager` se extraen a repos propios
-  (`fhprietor/vmsOpenOps` 249abce y `fhprietor/vmsOpenFileManager` f174900) y el
+  (`fhprietor/vmsOpenOps` 8a2f990 y `fhprietor/vmsOpenFileManager` f174900) y el
   repo central pasa a pinar el commit. `TestABC` sigue vendorizado (stub).
 - Cada repo de modulo incluye su **README**: funcionalidad, rutas, modelo de
   datos, configuracion, instalacion y deuda tecnica verificada.
@@ -59,6 +59,15 @@ buena parte del codigo propio no estaban en git.
 - **Codigo muerto eliminado**: el `getData()` sin ruta del
   `Frontend\StatisticsController` (consultaba columnas inexistentes), los
   caracteres sueltos `要` de tres `<thead>` y un import sin usar.
+- **Guardas redundantes**: la guarda `ability:admin,admin-access` estaba aplicada
+  tres veces (grupo de rutas, `admin.php` y constructor del controlador); se
+  conserva solo la del grupo.
+- **`Config/config.php` pasa a ser la fuente de defaults**: el codigo lee
+  `setting('vms_open_ops_x', config('vmsopenops.y'))` en controladores, modelo,
+  notificaciones y vistas, y el fichero se completa con los minimos.
+- **Previews duplicados eliminados**: la ruta de frontend `jumpseat/preview` y
+  los metodos `preview()` de Jumpseat y Ferry; las vistas (incluidos los overrides
+  del tema) cotizan con la API.
 
 ### Estado de modulos y datos
 - `app/Database/seeds/modules.yml` refleja el estado real de activacion
