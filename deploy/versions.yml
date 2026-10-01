@@ -124,9 +124,11 @@ deploy:
   - php artisan cache:clear && php artisan view:clear && php artisan route:clear
   caveats:
     - >
-      `php artisan migrate` global falla en la migracion del modulo
-      VmsOpenFileManager (create_vmsopen_liveries_table) porque los modulos se
-      re-registran como pendientes. Aplicar por --path si ocurre.
+      `php artisan migrate` global fallaba en la migracion del modulo
+      VmsOpenFileManager (create_vmsopen_liveries_table) porque la BD la tenia
+      registrada como 000004 y el fichero se llamaba 000007. Resuelto al
+      renumerar el fichero a 000004 (commit f174900 de vmsOpenFileManager):
+      `php artisan migrate` responde ahora "Nothing to migrate".
     - >
       El estado de activacion de modulos no esta versionado; aplicar la lista
       `modules.enabled` a mano tras el despliegue.

@@ -39,7 +39,7 @@ Ver la seccion `deploy` de [versions.yml](versions.yml). Resumen:
 1. `git checkout <tag>` + `git submodule update --init --recursive`
 2. `composer install --no-dev --optimize-autoloader`
 3. `npm ci && npm run production`
-4. `php artisan migrate --force` (ver aviso de VmsOpenFileManager en versions.yml)
+4. `php artisan migrate --force`
 5. Visitar `/update` para sincronizar settings, permisos y modulos.
 6. Limpiar caches. Aplicar a mano la lista `modules.enabled` si hace falta.
 
