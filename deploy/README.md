@@ -92,7 +92,7 @@ del repo), asi que ya no son clones actualizables in situ. Para subir de version
 
 1. ~~Extraer los modulos propios (`VmsOpenOps`, `VmsOpenFileManager`) a repos
    propios y pinarlos como submodulos~~ **Hecho**: viven en
-   `fhprietor/vmsOpenOps` (587bda0) y `fhprietor/vmsOpenFileManager` (f174900),
+   `fhprietor/vmsOpenOps` (249abce) y `fhprietor/vmsOpenFileManager` (f174900),
    ambos con README propio.
    `TestABC` sigue vendorizado por ser un stub: decidir si se mantiene.
 2. ~~Estado de modulos~~ **Hecho**: vive en `app/Database/seeds/modules.yml`

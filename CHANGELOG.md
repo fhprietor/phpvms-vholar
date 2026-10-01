@@ -25,7 +25,7 @@ buena parte del codigo propio no estaban en git.
 
 ### Submodulos propios
 - `VmsOpenOps` y `VmsOpenFileManager` se extraen a repos propios
-  (`fhprietor/vmsOpenOps` 587bda0 y `fhprietor/vmsOpenFileManager` f174900) y el
+  (`fhprietor/vmsOpenOps` 249abce y `fhprietor/vmsOpenFileManager` f174900) y el
   repo central pasa a pinar el commit. `TestABC` sigue vendorizado (stub).
 - Cada repo de modulo incluye su **README**: funcionalidad, rutas, modelo de
   datos, configuracion, instalacion y deuda tecnica verificada.
@@ -39,6 +39,26 @@ buena parte del codigo propio no estaban en git.
   publica; las liveries exigen `is_active` (tambien en `info`). Antes cualquier
   piloto autenticado podia descargar cualquier fichero o livery por su ID.
 - Los contadores de descargas solo se incrementan cuando la descarga se sirve.
+
+### Arreglos en VmsOpenOps
+- **`GET /api/vmsopenops/operations/pending` devolvia 500**: llamaba a
+  `OperationRequest::pendingForUser()`, que no existe. Ahora usa
+  `pending()->forUser()`.
+- **Eliminada la ruta `POST /vmsopenops/charter/aircraft`**: apuntaba a un metodo
+  inexistente y ninguna vista la usaba.
+- **El ferry por API nunca funcionaba**: comparaba `status` (`'A'`) con
+  `AircraftState::PARKED` (`0`) y respondia 400 siempre. Ahora exige
+  `state = PARKED` y `status = ACTIVE`, como el frontend.
+- **Precios unificados** en `Support\OpsPricing`: el ferry por API multiplicaba
+  por 100 y la vista cotizaba con la API mientras el cobro lo hacia el frontend.
+  Ahora hay una sola formula (minimos de jumpseat y de ferry por MTOW incluidos).
+- **Settings completos**: nueva migracion `000003` que siembra las 4 claves que
+  faltaban (`jumpseat.min_cost` y los tres `ferry.min_cost_*`) y borra la fila
+  huerfana con `id` vacio; `updateSettings` pasa a crear/actualizar **por `id`**
+  (era el origen de esa fila).
+- **Codigo muerto eliminado**: el `getData()` sin ruta del
+  `Frontend\StatisticsController` (consultaba columnas inexistentes), los
+  caracteres sueltos `要` de tres `<thead>` y un import sin usar.
 
 ### Estado de modulos y datos
 - `app/Database/seeds/modules.yml` refleja el estado real de activacion
