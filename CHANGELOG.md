@@ -1,5 +1,33 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Paleta en tokens y migracion a Bootstrap 5
+
+- **Paleta**: nuevo `resources/views/layouts/vholar/css/tokens.css` con la paleta
+  institucional (`--vh-*`, p. ej. `--vh-primary: #412C4D`) y `theme.css`
+  consumiendola; ~30 vistas vholar y `vholar-admin.css` pasan los literales `#hex`
+  a `var(--vh-*)` **sin fallbacks** (un `var()` sin definir invalida la
+  declaracion entera: fue el 403 de `tokens.css` en modo 600).
+- **Bootstrap 4 -> 5**: `data-toggle/target/dismiss/backdrop` -> `data-bs-*` en
+  las vistas de modulo; se deja de cargar `/assets/frontend/js/vendor.js` (bundle
+  con **Bootstrap 4.3.1**) en `vholar` y `seven`; fuera el Popper 2 suelto de
+  `seven` (ya va en `bootstrap.bundle`) y el Bootstrap 4 + now-ui-kit duplicados
+  del instalador.
+- **Build**: bundles y `mix-manifest.json` regenerados; retirado
+  `public/assets/admin/css/admin.min.css` (16.791 lineas, huerfano sin ninguna
+  referencia en el repo).
+- **Docs**: `docs/OPERACION-PERMISOS.md` (runbook de permisos de ficheros, con lo
+  que requiere root: setgid y restaurar el cron de permisos),
+  `docs/analisis-bootstrap.md` (inventario BS3/4/5) y `docs/paleta-vholar/`
+  (analisis, 7 informes de fase y capturas).
+- **VmsOpenOps**: pin subido a `fa0f441` (modales de los listados a `data-bs-*`).
+- Verificado: 38/38 vistas Blade compilan y el smoke test da 200 en dashboard,
+  flights, pireps (con analisis ACARS), assignments, liveries y admin.
+- **Pendiente (decision del mantenedor)**: `modules/DisposableBasic` (tercero)
+  queda con 3 vistas migradas sin commitear porque su remoto es upstream;
+  `Disposable_v3` sigue cargando el bundle de Bootstrap 4 (contradice el comentario
+  nuevo de `webpack.mix.js`); y quedan 2 literales de paleta en
+  `vholar/auth/login_layout.blade.php:63-64` (`--vh-primary-hover`).
+
 ## [Vholar] 2026-10-02 — Aislar el KVP y los logs de los tests (adios al aviso fantasma)
 
 - `tests/TestCase` usa ahora un KVP propio (`storage/framework/testing/kvp.json`)
