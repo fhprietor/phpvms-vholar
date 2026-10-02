@@ -3,7 +3,7 @@
 # Cada tag de release del repo debe congelar exactamente este contenido. Si un
 # despliegue no coincide con este fichero, no es reproducible.
 
-release: vholar-1.1.0
+release: vholar-1.1.1
 
 phpvms:
   upstream: https://github.com/phpvms/phpvms

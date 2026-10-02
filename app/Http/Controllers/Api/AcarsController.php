@@ -162,7 +162,11 @@ class AcarsController extends Controller
         $positions = $request->post('positions');
         foreach ($positions as $position) {
             $position['pirep_id'] = $id;
-            //$position['type'] = AcarsType::FLIGHT_PATH;
+            // La columna acars.type es NOT NULL y sin default, y PositionRequest no
+            // valida positions.*.type: si el cliente no lo manda, el insert falla y
+            // la posicion no llega al mapa. Se pone por defecto FLIGHT_PATH
+            // respetando el tipo si el cliente lo envia.
+            $position['type'] = $position['type'] ?? AcarsType::FLIGHT_PATH;
 
             if (isset($position['altitude'])) {
                 if (!isset($position['altitude_agl'])) {

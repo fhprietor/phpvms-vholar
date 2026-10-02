@@ -1,5 +1,17 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Tipo por defecto en las posiciones ACARS (vholar-1.1.1)
+
+- `Api\AcarsController@acars_store`: toda posicion almacenada lleva
+  `type = FLIGHT_PATH (0)` si el cliente no envia el campo
+  (`$position['type'] ?? AcarsType::FLIGHT_PATH`). La columna `acars.type` es
+  `NOT NULL` y **sin default**, y `PositionRequest` no valida
+  `positions.*.type`, asi que un cliente que omitiera el campo podia dejar la
+  posicion fuera del mapa y del track del PIREP.
+- Los logs (`type=2`) **no se ven afectados**: entran por `acars_logs` y
+  `acars_events`, que fijan su propio tipo.
+- Verificado con la suite completa: `OK (208 tests, 1166 assertions)`.
+
 ## [Vholar] 2026-10-01 — Actualizacion a phpVMS 7.0.10 (vholar-1.1.0)
 
 Merge de la ultima release de la linea 7.x: **9 commits, 20 ficheros, 315
