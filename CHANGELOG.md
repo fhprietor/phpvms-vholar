@@ -5,8 +5,10 @@
 - Creado el **Tour VHOLAR 2026**, codigo **`VHR26`**: 18 tramos, **7.871 nm (14.577 km)**,
   vigencia 2026-10-02 a 2026-12-31, con las reglas del tour (aeronaves autorizadas,
   METAR/TAF reales, callsign VHR** obligatorio e IVAO RMK/VHOLAR26 en el FPL remark).
-- Aeronaves validas: **A20N, A21N, A319, A320, A321 y B789** (subflotas del pivote de cada
-  tramo) = 108 asignaciones. Bloque estimado con ~450 kt de crucero + 15 min de rodaje.
+- Aeronaves validas: **A20N, A21N, A319, A320, A321 y B38M, B737, B738** (subflotas del
+  pivote de cada tramo) = 144 asignaciones. (El 2026-10-02 se corrigio: la familia Boeing
+  autorizada es la **737**, no la 787; el tour se creo primero con B789 por un error de
+  transcripcion.) Bloque estimado con ~450 kt de crucero + 15 min de rodaje.
 - Los tramos **son vuelos** (`Flight` con `route_code` = codigo del tour y `route_leg` = N),
   numerados **2603-2620** para no chocar con los del tour ANDES (2601-2602). Se deja
   `alt_airport_id` a NULL a proposito: con alterno, la logica de diversion lo tomaria como

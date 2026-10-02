@@ -23,8 +23,8 @@ $tourName = 'Tour VHOLAR 2026';
 // si no, MySQL lo trunca y luego la relacion legs() no encuentra los tramos.
 $airlineId = 1;
 
-// Familia Airbus A32X / A32X Neo y familia Boeing 787 (las que existen en la flota).
-$subfleetIds = DB::table('subfleets')->whereIn('type', ['A20N', 'A21N', 'A319', 'A320', 'A321', 'B789'])
+// Familia Airbus A32X / A32X Neo y familia Boeing 737 (las que existen en la flota).
+$subfleetIds = DB::table('subfleets')->whereIn('type', ['A20N', 'A21N', 'A319', 'A320', 'A321', 'B38M', 'B737', 'B738'])
     ->pluck('id')->all();
 
 // [leg, dpt, arr, distancia NM]
@@ -49,7 +49,7 @@ $legs = [
     [18, 'SKBO', 'SKRH', 416],
 ];
 
-$rules = '<b>Authorized Aircraft:</b> Airbus A32X / A32X Neo family and Boeing 787 family<br><br>'
+$rules = '<b>Authorized Aircraft:</b> Airbus A32X / A32X Neo family and Boeing 737 family<br><br>'
     .'<b>Weather Conditions:</b> Actual METAR/TAF conditions at the time of flight must be used.<br><br>'
     .'<b>Callsign:</b> VHR** callsign is mandatory<br><br>'
     .'<b>IVAO RMK:</b> VHOLAR26';
@@ -65,7 +65,7 @@ $tour = DS_Tour::create([
     'tour_name'     => $tourName,
     'tour_code'     => $tourCode,
     'tour_desc'     => '<p>18 legs across Colombia with two international escapes: San Jose (Costa Rica) and Miami. '
-        .'From the Caribbean coast to the Andes, flying the Airbus A32X family or the Boeing 787.</p>',
+        .'From the Caribbean coast to the Andes, flying the Airbus A32X family or the Boeing 737 family.</p>',
     'tour_rules'    => $rules,
     'tour_airline'  => $airlineId,
     'tour_token'    => 0,
