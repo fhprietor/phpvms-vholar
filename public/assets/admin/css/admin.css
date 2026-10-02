@@ -16,7 +16,7 @@ textarea.input-text {
 }
 
 .border-blue-bottom {
-    border-bottom: 3px solid #067ec1;
+    border-bottom: 3px solid var(--vh-primary);
 }
 
 @media (min-width: 992px) {
