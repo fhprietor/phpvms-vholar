@@ -167,10 +167,11 @@ migracion todavia en **draft** (`docs/upgrading-to-8.0.md`).
    ambos con README propio.
    `TestABC` sigue vendorizado por ser un stub: decidir si se mantiene.
 2. ~~Estado de modulos~~ **Hecho**: vive en `app/Database/seeds/modules.yml`
-   (activador `database`) y se aplica en `/update`. Quedan tres filas huerfanas
-   en la tabla (`VMSAcars`, `TestModule`, `Sample` — esta ultima corresponde a un
-   modulo que upstream elimina en 8.0) que no corresponden a modulos instalados;
-   se pueden borrar cuando convenga.
+   (activador `database`) y se aplica en `/update`. Las dos filas huerfanas de la
+   tabla (`VMSAcars`, `TestModule`, sin modulo en disco) se eliminaron el
+   2026-10-02: la tabla queda con las **10 filas que coinciden exactamente con
+   `modules/`** y con la semilla. `Sample` **si** es un modulo real (upstream lo
+   elimina en 8.0, ver la ruta a phpVMS 8).
 3. ~~Convertir a migracion el backfill de `pireps.source_name`~~ **Hecho**:
    `app/Database/migrations/2026_09_30_120000_backfill_pireps_source_name.php`.
 4. **Reponer los `.git` de los modulos** si se quiere volver a actualizarlos in

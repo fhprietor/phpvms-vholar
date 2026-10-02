@@ -59,10 +59,23 @@ WHERE log_name = 'assignments' AND causer_id IS NULL
 ORDER BY id DESC;
 ```
 
-## Historico anterior a la instrumentacion
+## Historico y entradas de backfill
 
-La generacion de **octubre de 2026** (85 filas, `2026-10-01 09:07:46-47`) no
-tiene registro en `activity_log`: se reconstruyo desde el access log de nginx
-(`POST /admin/dassignments_manual` a las 09:07:47) cruzado con
-`users.lastlogin_at` y el *user-agent* (VHR001, unico login de esa manana). A
-partir de ahora estos cambios ya se registran solos.
+La generacion de **octubre de 2026** (85 filas, `2026-10-01 09:07:46-47`) fue
+anterior a esta instrumentacion, asi que se anoto **a posteriori** con una
+entrada marcada como inferida:
+
+| Campo | Valor |
+|---|---|
+| `event` | `assignments_generated_backfill` |
+| `causer_id` | `1` (VHR001) |
+| `created_at` | cuando se anoto (2026-10-02 01:12) |
+| `properties.generated_at` | `2026-10-01 09:07:47` (cuando ocurrio de verdad) |
+| `properties.inferred` | `true` |
+| `properties.evidence` | access log de nginx (09:07:47, Edge 154) + `users.lastlogin_at` (VHR001, 09:06:40) |
+
+**Convencion**: los hechos anteriores a la instrumentacion se registran con
+`event = '*_backfill'` y `properties.inferred = true`; la fecha real del hecho va
+en `properties.generated_at`, porque el `created_at` de la fila es cuando se
+anoto. Para separarlas de las reales:
+`WHERE event NOT LIKE '%\_backfill'`.

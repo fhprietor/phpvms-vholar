@@ -1,5 +1,22 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Manifiesto, limpieza de datos y ruta a phpVMS 8
+
+- `deploy/versions.yml` **no era YAML valido**: `caveats:` estaba anidado dentro
+  de la lista `deploy:` ("You cannot define a mapping item when in a sequence").
+  Los pasos pasan a `deploy.steps` y `caveats` queda como hermano.
+- Nuevo `tests/DeployManifestTest.php`: el manifiesto debe parsear, el tag seguir
+  el prefijo `vholar-` y `config/version.yml` coincidir con `phpvms.base_tag` (de
+  eso depende que no reaparezca el aviso de "nueva version" del panel).
+- Eliminadas las dos filas huerfanas de la tabla `modules` (`VMSAcars`,
+  `TestModule`, sin modulo en disco): la tabla queda con las **10 filas que
+  coinciden con `modules/`** y con `app/Database/seeds/modules.yml`.
+- `activity_log`: entrada de *backfill* de la generacion de asignaciones de
+  octubre-2026 (`assignments_generated_backfill`), marcada como inferida
+  (`properties.inferred = true`) con la evidencia del access log de nginx.
+- `deploy/README.md`: nueva seccion "Ruta a phpVMS 8" con la investigacion
+  (estado, distancia, impacto por personalizacion y plan por fases).
+
 ## [Vholar] 2026-10-02 — Tipo por defecto en las posiciones ACARS (vholar-1.1.1)
 
 - `Api\AcarsController@acars_store`: toda posicion almacenada lleva
