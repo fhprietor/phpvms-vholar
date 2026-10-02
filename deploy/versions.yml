@@ -54,6 +54,14 @@ modules:
       base_commit: d1d776cea9d4e6453dad99e59b18f3f3a9ddd153
       module_json_version: 3.7.8
       local_patch: patches/DisposableSpecial-d1d776c.patch
+      local_changes:
+        - Http/Controllers/DS_AssignmentController.php
+          (vista admin de asignaciones, edicion/alta/baja y auditoria en activity_log)
+        - Models/DS_Assignment.php
+        - Providers/DS_ServiceProvider.php
+        - Resources/views/assignments/index.blade.php
+        - Resources/views/assignments/admin.blade.php
+          (faltaba en la version anterior del parche)
       license: >
         Prohibida la redistribucion sin permiso escrito del autor. Se versiona
         por decision expresa del mantenedor en un repositorio privado, asumiendo

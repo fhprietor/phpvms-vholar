@@ -250,8 +250,26 @@ public function adminIndex(Request $request)
         }
 
         $oldFlightId = $assignment->flight_id;
+        $oldFlight = Flight::find($oldFlightId);
         $assignment->flight_id = $newFlightId;
         $assignment->save();
+
+        $this->logAssignmentActivity(
+            'assignment_updated',
+            "Asignacion modificada (vuelo {$oldFlightId} -> {$newFlightId})",
+            [
+                'assignment_id' => $assignment->id,
+                'pilot_id' => $assignment->user_id,
+                'year' => $assignment->assignment_year,
+                'month' => $assignment->assignment_month,
+                'order' => $assignment->assignment_order,
+                'old_flight_id' => $oldFlightId,
+                'old_flight' => $oldFlight?->ident,
+                'new_flight_id' => $newFlightId,
+                'new_flight' => $newFlight->ident,
+            ],
+            $assignment
+        );
 
         flash()->success("Asignación actualizada: Vuelo {$oldFlightId} → {$newFlightId}");
         return back();
@@ -372,9 +390,15 @@ public function adminIndex(Request $request)
         $curr_y = $now->year;
         $curr_m = $now->month;
 
-        if (!$user) {
+        // Objetivo fijo: en la rama "todos los pilotos" el bucle reutilizaba $user
+        // y al terminar ya no era null, asi que no servia para el registro final.
+        $target = $user;
+        $before = $this->countMonthAssignments($curr_y, $curr_m, $target);
+        $deleted = 0;
+
+        if (!$target) {
             if ($reset === true) {
-                DS_Assignment::where(['assignment_year' => $curr_y, 'assignment_month' => $curr_m])->delete();
+                $deleted = DS_Assignment::where(['assignment_year' => $curr_y, 'assignment_month' => $curr_m])->delete();
                 // Log::info('Disposable Special | ALL Monthly Flight Assignments DELETED for '.$curr_y.'/'.$curr_m);
             }
             // Assign Flights to all ACTIVE Users
@@ -382,20 +406,92 @@ public function adminIndex(Request $request)
 
             if ($active_users) {
                 // Log::info('Disposable Special | Begin Monthly Flight Assignment process for '.$curr_y.'/'.$curr_m);
-                foreach ($active_users as $user) {
-                    $this->GenerateAssignments($user);
+                foreach ($active_users as $active_user) {
+                    $this->GenerateAssignments($active_user);
                 }
                 // Log::info('Disposable Special | Monthly Flight Assignment process completed for '.$curr_y.'/'.$curr_m);
             }
-        } elseif ($user) {
+        } else {
             // Handle a specific User's Assignments
             if ($reset === true) {
-              $deleted = DS_Assignment::where(['user_id' => $user->id, 'assignment_year' => $curr_y, 'assignment_month' => $curr_m])->delete();
-              // Log::info("Deleted $deleted assignments for user {$user->id}");
+                $deleted = DS_Assignment::where(['user_id' => $target->id, 'assignment_year' => $curr_y, 'assignment_month' => $curr_m])->delete();
             }
-            // Log::info('Disposable Special | Begin Monthly Flight Assignment of '.$user->name_private.' process for '.$curr_y.'/'.$curr_m);
-            $this->GenerateAssignments($user);
-            // Log::info('Disposable Special | Monthly Flight Assignment process of '.$user->name_private.' completed for '.$curr_y.'/'.$curr_m);
+            $this->GenerateAssignments($target);
+        }
+
+        // Registro de auditoria: quien (o que) ha generado las asignaciones del mes
+        $after = $this->countMonthAssignments($curr_y, $curr_m, $target);
+
+        $this->logAssignmentActivity(
+            'assignments_generated',
+            $target
+                ? "Asignaciones mensuales generadas para {$target->ident}"
+                : 'Asignaciones mensuales generadas para todos los pilotos activos',
+            [
+                'year' => $curr_y,
+                'month' => $curr_m,
+                'scope' => $target ? 'single_pilot' : 'all_active_pilots',
+                'target_user_id' => $target?->id,
+                'target_ident' => $target?->ident,
+                'reset' => (bool) $reset,
+                'trigger' => request()->route() ? 'web' : 'console',
+                'assignments_before' => $before,
+                'assignments_after' => $after,
+                'assignments_deleted' => $deleted,
+                'delta' => $after - $before,
+            ]
+        );
+    }
+
+    /**
+     * Cuenta las asignaciones de un mes (de un piloto concreto o de todos)
+     */
+    private function countMonthAssignments(int $year, int $month, $user = null): int
+    {
+        return DS_Assignment::where(['assignment_year' => $year, 'assignment_month' => $month])
+            ->when($user, function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->count();
+    }
+
+    /**
+     * Deja constancia del cambio en activity_log, con log_name "assignments".
+     *
+     * El causer lo resuelve spatie/laravel-activitylog desde la sesion
+     * (auth()->user()); si lo dispara el cron queda a null, de modo que se
+     * distingue lo automatico de lo manual.
+     *
+     * La instalacion desactiva el activity log por defecto (AppServiceProvider)
+     * y solo lo reactiva en el grupo de rutas /admin del core
+     * (middleware EnableActivityLogging). Las rutas de asignaciones viven en su
+     * propio grupo, asi que aqui se activa de forma puntual y se restaura el
+     * estado previo: asi la auditoria tambien cubre el cron.
+     */
+    private function logAssignmentActivity(string $event, string $description, array $properties = [], ?DS_Assignment $subject = null): void
+    {
+        $status = app(\Spatie\Activitylog\ActivityLogStatus::class);
+        $wasDisabled = $status->disabled();
+
+        if ($wasDisabled) {
+            $status->enable();
+        }
+
+        try {
+            $logger = activity('assignments')
+                ->event($event)
+                ->causedBy(auth()->user())
+                ->withProperties($properties);
+
+            if ($subject) {
+                $logger->performedOn($subject);
+            }
+
+            $logger->log($description);
+        } finally {
+            if ($wasDisabled) {
+                $status->disable();
+            }
         }
     }
 
@@ -653,7 +749,25 @@ public function adminIndex(Request $request)
             return back();
         }
 
+        $data = [
+            'assignment_id' => $assignment->id,
+            'pilot_id' => $assignment->user_id,
+            'year' => $assignment->assignment_year,
+            'month' => $assignment->assignment_month,
+            'order' => $assignment->assignment_order,
+            'flight_id' => $assignment->flight_id,
+            'flight' => $assignment->flight?->ident,
+        ];
+
         $assignment->delete();
+
+        $this->logAssignmentActivity(
+            'assignment_deleted',
+            'Asignacion eliminada (vuelo '.($data['flight'] ?? $data['flight_id']).')',
+            $data,
+            $assignment
+        );
+
         flash()->success('Asignación eliminada correctamente');
         return back();
     }
@@ -715,6 +829,21 @@ public function adminIndex(Request $request)
         $assignment->assignment_order = $newOrder;
         $assignment->flight_id = $flightId;
         $assignment->save();
+
+        $this->logAssignmentActivity(
+            'assignment_added',
+            "Asignacion anadida (orden {$newOrder})",
+            [
+                'assignment_id' => $assignment->id,
+                'pilot_id' => $userId,
+                'year' => $year,
+                'month' => $month,
+                'order' => $newOrder,
+                'flight_id' => $flightId,
+                'flight' => Flight::find($flightId)?->ident,
+            ],
+            $assignment
+        );
 
         flash()->success("Nueva asignación añadida (orden {$newOrder})");
         return back();

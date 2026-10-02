@@ -1,5 +1,23 @@
 # Changelog
 
+## [Vholar] 2026-10-01 — Auditoria de asignaciones de pilotos
+
+### DisposableSpecial: registro en `activity_log`
+- Generacion, edicion, alta y baja de asignaciones quedan registradas en
+  `activity_log` con `log_name = 'assignments'`, el **usuario** que las hizo
+  (`causer`) y propiedades legibles (mes, piloto, vuelo anterior/nuevo, contadores).
+  Si lo dispara el **cron**, el `causer` queda `NULL` y `trigger = console`.
+- `TriggerAssignment()` deja de reutilizar `$user` dentro del bucle: el objetivo
+  del registro se captura aparte (era un shadowing latente).
+- Guia de consulta y ejemplos SQL: `docs/auditoria-asignaciones.md`.
+
+### Parche vendorizado regenerado
+- `patches/DisposableSpecial-d1d776c.patch` **no incluia**
+  `Resources/views/assignments/admin.blade.php` (710 lineas de la vista de admin
+  de asignaciones). Regenerado contra `d1d776c` y verificado: aplica limpio sobre
+  la base y reproduce el modulo actual byte a byte.
+- `deploy/versions.yml`: el modulo declara ahora sus `local_changes`.
+
 ## [Vholar] 2026-09-30 — Versionado del repositorio (vholar-1.0.0)
 
 Release que hace reproducible la instalacion: hasta ahora el tema, los modulos y
