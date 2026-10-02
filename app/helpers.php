@@ -466,3 +466,30 @@ if (!function_exists('carto_tile_url')) {
         return $url;
     }
 }
+
+if (!function_exists('vholar_version_line')) {
+    /**
+     * Version de la instalacion para los pies de pagina, p. ej.
+     * "phpVMS 7.0.10 · Vholar 1.1.1".
+     *
+     * La version de phpVMS (la base) sale de config/version.yml y el release de
+     * Vholar de config/vholar.php; tests/DeployManifestTest mantiene ambos
+     * alineados con deploy/versions.yml. Se cachea en un static porque el pie se
+     * renderiza en todas las paginas.
+     */
+    function vholar_version_line(): string
+    {
+        static $line = null;
+
+        if ($line === null) {
+            $line = 'phpVMS '.app(\App\Services\VersionService::class)->getCurrentVersion(false);
+
+            $release = (string) config('vholar.release', '');
+            if ($release !== '') {
+                $line .= ' · Vholar '.preg_replace('/^vholar-/', '', $release);
+            }
+        }
+
+        return $line;
+    }
+}

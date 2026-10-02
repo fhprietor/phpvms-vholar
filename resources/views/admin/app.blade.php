@@ -94,6 +94,9 @@
           <ul>
           </ul>
         </nav>
+        <div class="pull-right text-muted" style="padding-right: 15px; font-size: 12px;">
+          {{ vholar_version_line() }}
+        </div>
       </div>
     </footer>
   </div>

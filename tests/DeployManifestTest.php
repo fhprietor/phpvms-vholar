@@ -65,4 +65,17 @@ final class DeployManifestTest extends TestCase
             'config/version.yml debe coincidir con phpvms.base_tag del manifiesto'
         );
     }
+
+    /**
+     * El release de la VA se muestra en los pies de pagina: si config/vholar.php
+     * se queda atras, el pie anuncia una version que no es.
+     */
+    public function test_vholar_release_matches_the_manifest(): void
+    {
+        $this->assertSame(
+            $this->manifest['release'],
+            config('vholar.release'),
+            'config/vholar.php debe coincidir con release: de deploy/versions.yml'
+        );
+    }
 }

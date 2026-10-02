@@ -30,7 +30,11 @@ El punto de partida y las versiones exactas de cada pieza estan en
 - Los tags `7.0.x` son de phpVMS upstream (base).
 - Los releases de la VA usan el prefijo `vholar-` (p. ej. `vholar-1.0.0`) y
   deben ir acompanados de una entrada en `CHANGELOG.md` y de la actualizacion de
-  `deploy/versions.yml`.
+  **tres** sitios que han de decir lo mismo:
+  1. `deploy/versions.yml` (`release:`),
+  2. `config/vholar.php` (`release`, que es lo que se ve en los pies de pagina), y
+  3. `config/version.yml` si el release sube la base de phpVMS.
+  Lo vigila `tests/DeployManifestTest.php`: si se desincronizan, el test falla.
 
 ## Despliegue
 

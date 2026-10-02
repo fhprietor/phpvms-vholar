@@ -1,5 +1,20 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Version visible en los pies de pagina
+
+- Los pies de pagina muestran ahora **`phpVMS 7.0.10 · Vholar 1.1.1`**. La version
+  de la base sale de `config/version.yml` (via `VersionService`) y el release de la
+  VA de `config/vholar.php`, con `vholar_version_line()` como helper compartido
+  (cacheado en un static: el pie se renderiza en todas las paginas). Se **anade**
+  junto a "Powered by phpVMS", que debe seguir visible por licencia.
+- Aparece en el pie publico (columna central, que estaba libre) y en el pie del
+  admin (que estaba vacio).
+- `tests/DeployManifestTest` gana un candado: `config/vholar.php` debe coincidir
+  con `release:` de `deploy/versions.yml` (la misma guardia que ya vigila la
+  version de la base, que es lo que fallo con el aviso de "nueva version").
+- `deploy/README.md`: el checklist de release pasa a listar los tres sitios que
+  deben decir lo mismo.
+
 ## [Vholar] 2026-10-02 — DisposableBasic pasa a modulo vendorizado
 
 - Sale del modo **submodulo** (su remoto es upstream, `FatihKoz/DisposableBasic`,
