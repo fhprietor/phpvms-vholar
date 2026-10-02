@@ -1,5 +1,20 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Pie de pagina unificado
+
+- El pie deja de repetir la atribucion: pasa de dos textos
+  (`phpVMS 7.0.10 · Vholar 1.1.1` + `Powered by phpVMS`) a uno solo:
+  **`Powered by phpVMS 7.0.10 · Vholar 1.1.1`**, con el enlace a phpvms.net en
+  "phpVMS" (la atribucion sigue visible, que es lo que exige la licencia).
+- Se aplica en los **tres** pies, incluido el del **login layout**
+  (`auth/login_layout.blade.php`), que es el que ve un invitado y tenia su propio
+  "Powered by phpVMS" sin version; si no, la version solo se veria tras entrar.
+- El helper pasa a `vholar_versions()` y devuelve solo los numeros (`7.0.10 ·
+  Vholar 1.1.1`): cada pie pone el texto que lo precede.
+- Pendiente de licencia detectado al tocar los pies: **no aparece el credito de
+  Disposable (Basic/v3)**, y la licencia de DisposableBasic exige que el nombre y
+  el enlace del software sean visibles en el pie de todas las paginas.
+
 ## [Vholar] 2026-10-02 — Incidente: `config/vholar.php` en modo 600 tumbaba la web
 
 - **Causa**: al crear `config/vholar.php` quedo con permisos `600` (dueno `frank`),

@@ -136,7 +136,7 @@
             </div>
             <div class="col-md-4 d-flex align-items-center justify-content-end">
                 <span class="mb-3 mb-md-0 text-end">Powered by <a style="color: orange" href="https://www.phpvms.net"
-                        target="_blank">phpVMS</a></span>
+                        target="_blank">phpVMS</a> {{ vholar_versions() }}</span>
             </div>
         </div>
     </footer>

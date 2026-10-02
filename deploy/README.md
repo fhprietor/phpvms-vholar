@@ -93,8 +93,11 @@ con sus modificaciones locales ya aplicadas. No revertir sin hablarlo antes.
   no se podian empujar alli. Parche:
   `patches/DisposableBasic-f0b03db.patch`.
 
-`DisposableBasic` se versiona como **submodulo** que apunta a su repo upstream:
-no redistribuye nada.
+> **Pendiente de licencia**: los pies de pagina **no** muestran el nombre ni el
+> enlace de Disposable (ni `DisposableBasic` ni el tema `Disposable_v3`), y la
+> condicion de su licencia es que sean visibles en el pie de todas las paginas
+> (salvo permiso escrito del autor). El tema `Disposable_v3` original tampoco lo
+> ponia. Decidir: anadirlo al pie o pedir el permiso.
 
 ### Actualizar un modulo vendorizado
 
