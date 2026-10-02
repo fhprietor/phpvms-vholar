@@ -1,5 +1,26 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Incidente: `config/vholar.php` en modo 600 tumbaba la web
+
+- **Causa**: al crear `config/vholar.php` quedo con permisos `600` (dueno `frank`),
+  asi que `www-data` no podia leerlo. Laravel hace `require` de **todo** `config/`
+  en el arranque (`LoadConfiguration`), de modo que todas las peticiones devolvian
+  **500**, tanto en local (127.0.0.1 con Host) como a traves de Cloudflare, que se
+  limitaba a pasar el 500. No era Cloudflare ni un servicio caido (nginx, php-fpm y
+  MariaDB estaban activos).
+- **Arreglo**: `chmod 644 config/vholar.php`. Verificado: 200 en local y publico, y
+  el pie muestra ya `phpVMS 7.0.10 · Vholar 1.1.1`.
+- **Guardia**: nuevo `tests/FilePermissionsTest.php`, que automatiza el `find` del
+  runbook (`docs/OPERACION-PERMISOS.md`) sobre `app/`, `bootstrap/`, `config/`,
+  `database/`, `public/`, `resources/` y `routes/`: falla si algun fichero no tiene
+  lectura para "otros", nombrandolo y con el `chmod` en el mensaje. Comprobado que
+  detecta el caso (sonda en modo 600 -> FAILURES).
+- **Limpieza** de los restos de mis ejecuciones: 602 vistas compiladas y 5 sesiones
+  propiedad de `frank` (grupo pasado a `www-data` y eliminadas).
+- **Pendiente con root** (de fondo): el cron de permisos
+  (`/usr/local/bin/phpvms-fix-permissions.sh`) sigue caido desde hace meses; es lo
+  que evitarla esta familia de fallos de forma sistematica.
+
 ## [Vholar] 2026-10-02 — Version visible en los pies de pagina
 
 - Los pies de pagina muestran ahora **`phpVMS 7.0.10 · Vholar 1.1.1`**. La version

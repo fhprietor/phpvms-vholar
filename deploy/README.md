@@ -52,7 +52,14 @@ Ver la seccion `deploy` de [versions.yml](versions.yml). Resumen:
 - **Suite de tests**: `vendor/bin/phpunit`. Usa **SQLite en memoria**
   (`DB_CONNECTION=memory` en `phpunit.xml`), asi que no toca la BD real; requiere
   la extension `pdo_sqlite`. Estado en `vholar-1.1.1` (phpVMS 7.0.10):
-  `OK (216 tests, 1223 assertions)`.
+  `OK (219 tests)`. El numero de aserciones varia ligeramente entre ejecuciones
+  (hay tests con datos generados), asi que no se fija aqui.
+- **Permisos**: `find . -type f ! -perm -o=r -not -path "./vendor/*" -not -path
+  "./node_modules/*" -not -path "./.git/*"` debe salir **vacio**. Un `config/*.php`
+  en modo 600 devuelve 500 en *todas* las paginas, porque Laravel hace `require`
+  de todo `config/` al arrancar (paso el 2026-10-02 con `config/vholar.php`; el 500
+  se veia igual en local y via Cloudflare). Lo vigila
+  `tests/FilePermissionsTest.php`.
 - **Aislamiento**: la suite usa su **propio KVP**
   (`storage/framework/testing/kvp.json`) y su **propio directorio de logs**
   (`storage/framework/testing/logs`). Importa porque el KVP real es
