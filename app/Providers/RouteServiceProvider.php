@@ -641,6 +641,15 @@ class RouteServiceProvider extends ServiceProvider
 
                 // Route::get('settings', 'SettingsController@index');
 
+                /*
+                 * Credenciales del servicio NavData, selladas con la api_key del
+                 * piloto que las pide. El cliente las usa para hablar
+                 * directamente con NavData: phpVMS no hace de proxy.
+                 */
+                Route::get('navdata', 'NavDataController@get')
+                    ->middleware([EnableActivityLogging::class, 'throttle:30,1'])
+                    ->name('navdata');
+
                 // This is the info of the user whose token is in use
                 Route::get('user', 'UserController@index');
                 Route::get('user/fleet', 'UserController@fleet');

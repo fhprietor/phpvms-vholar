@@ -89,13 +89,20 @@
   options: ''
   type: text
   description: 'API key for the CARTO basemaps (basemaps.cartocdn.com). Without it the tiles show an "API key required" watermark. Free key at https://carto.com/basemaps/apikey/'
+- key: general.navdata_api_url
+  name: 'NavData API URL'
+  group: general
+  value: ''
+  options: ''
+  type: text
+  description: 'Base URL of the NavData service handed to ACARS clients by GET /api/navdata (eg. https://navdata.example.com/api)'
 - key: general.navdata_api_key
   name: 'NavData API Key'
   group: general
   value: ''
   options: ''
   type: text
-  description: 'API key used for the NavData requests made from phpVMS'
+  description: 'NavData API key handed to ACARS clients by GET /api/navdata. It is never sent in clear text: it travels sealed with AES-256-GCM under the API key of the pilot making the request'
 - key: captcha.enabled
   name: 'hCaptcha Enabled'
   group: captcha

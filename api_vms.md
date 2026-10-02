@@ -458,7 +458,72 @@ enviados por `acars/logs` y `acars/events`; **no** aparecen en `acars/position`.
 
 ---
 
-## 1.10 Usuarios
+## 1.10 NavData (credenciales del cliente ACARS)
+
+### `GET /api/navdata` _(api.auth)_
+
+Entrega al cliente ACARS autenticado la **URL** y la **API key** del servicio NavData que el staff
+mantiene en Admin > Settings. phpVMS **no hace de proxy**: entrega las credenciales una vez y a
+partir de ahí el cliente habla directamente con NavData (scoring de pista, SIDs/STARs, anuncios…).
+
+La clave **nunca viaja en claro**: va dentro de un sobre cifrado con la `api_key` del propio piloto,
+que es el único secreto que cliente y servidor comparten ya (`X-API-KEY`).
+
+**Request:** sin parámetros. Solo el header de autenticación habitual.
+
+**Response 200** (`Cache-Control: no-store, private`):
+
+```json
+{
+  "data": {
+    "service": "navdata",
+    "cipher": "aes-256-gcm",
+    "kdf": "hkdf-sha256",
+    "key_id": "3f9a1c2b7d4e5061",
+    "issued_at": "2026-10-01T18:22:05+00:00",
+    "expires_at": "2026-10-02T00:22:05+00:00",
+    "payload": "base64(nonce12 || tag16 || ciphertext)"
+  }
+}
+```
+
+| Campo | Descripción |
+|---|---|
+| `cipher` / `kdf` | Algoritmos del sobre. Hoy `aes-256-gcm` + `hkdf-sha256` |
+| `key_id` | Huella HMAC-SHA256 (16 hex) de la clave de NavData. Sirve para detectar una rotación sin descifrar |
+| `issued_at` / `expires_at` | ISO-8601. Al caducar, el cliente debe volver a pedir el sobre (así recoge una clave rotada) |
+| `payload` | Sobre cifrado. Contiene `{url, key, key_id, issued_at, expires_at}` |
+
+**Cómo se descifra** (contrato completo y ejemplo .NET en
+[`docs/vmsopenacars/ENTREGA-CLAVE-NAVDATA.md`](docs/vmsopenacars/ENTREGA-CLAVE-NAVDATA.md)):
+
+1. Clave: `HKDF-SHA256(ikm = api_key del piloto, salt = "vmsopenacars/navdata/v1", info = "navdata-api-key", L = 32)`
+2. Sobre: `base64_decode(payload)` → `nonce` (12 B) + `tag` (16 B) + `ciphertext`
+3. `AES-256-GCM` con `AAD = "vmsopenacars/navdata/v1"`
+
+**Errores:**
+
+| HTTP | `type` | Cuándo |
+|---|---|---|
+| `401` | — | Falta el header o la `api_key` no existe / el piloto no está ACTIVE |
+| `503` | `navdata-not-configured` | El staff no ha rellenado la URL o la clave en Admin > Settings (`settings` en el cuerpo indica qué campos faltan) |
+
+**Auditoría:** cada entrega queda registrada en `activity_log` (`log_name = navdata`) con piloto, IP,
+`User-Agent` y `key_id`. Límite de 30 peticiones por minuto y por piloto.
+
+**Settings relacionadas** (Admin > Settings, grupo *General*):
+
+| Setting | Contenido |
+|---|---|
+| `general.navdata_api_url` | URL base del servicio NavData |
+| `general.navdata_api_key` | Clave de acceso. No se sirve en claro por ningún endpoint |
+
+> La URL se entrega junto a la clave para poder retirarla del fichero `.config` que se publica en el
+> gestor de ficheros: ese fichero ya no necesita contener el secreto.
+
+---
+
+## 1.11 Usuarios
 
 ### `GET /api/user` _(api.auth)_
 ### `GET /api/users/me` _(api.auth)_
@@ -527,7 +592,7 @@ PIREPs del usuario. Paginados por `created_at DESC`. Excluye cancelados por defe
 
 ---
 
-## 1.11 Bids (Reservas de Vuelo)
+## 1.12 Bids (Reservas de Vuelo)
 
 ### `GET /api/bids` _(api.auth)_
 ### `GET /api/user/bids` _(api.auth)_
@@ -567,7 +632,7 @@ Detalle de un bid específico. Verifica pertenencia al usuario autenticado.
 
 ---
 
-## 1.12 Mantenimiento / Cron
+## 1.13 Mantenimiento / Cron
 
 ### `GET /api/cron/{id}`
 
@@ -586,7 +651,7 @@ Sin autenticación, pero requiere que `id` coincida con `setting('cron.random_id
 
 ---
 
-## 1.13 Settings (ruta comentada, no activa)
+## 1.14 Settings (ruta comentada, no activa)
 
 ### `GET /api/settings`
 
