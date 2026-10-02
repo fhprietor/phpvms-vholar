@@ -43,6 +43,19 @@ Ver la seccion `deploy` de [versions.yml](versions.yml). Resumen:
 5. Visitar `/update` para sincronizar settings, permisos y modulos.
 6. Limpiar caches. Aplicar a mano la lista `modules.enabled` si hace falta.
 
+## Verificacion
+
+- **Suite de tests**: `vendor/bin/phpunit`. Usa **SQLite en memoria**
+  (`DB_CONNECTION=memory` en `phpunit.xml`), asi que no toca la BD real; requiere
+  la extension `pdo_sqlite`. Estado en `vholar-1.1.0` (phpVMS 7.0.10):
+  `OK (208 tests, 1166 assertions)`.
+- **Smoke test manual**: dashboard de admin (sin el aviso de nueva version),
+  `/admin/flights`, `/admin/pireps`, `/admin/users`, asignaciones, VmsOpenOps,
+  VmsOpenFileManager, dashboard de piloto, listado y detalle de un PIREP
+  (analisis ACARS), perfil y flights.
+- Cuidado al tocar ACARS: el detalle del PIREP depende del parseo de los logs
+  (`type=2`), asi que conviene revisar un PIREP con log tras cualquier cambio ahi.
+
 ## Modulos de terceros con parches locales
 
 `DisposableSpecial` y `CHJumpSeat` **si** se versionan aqui, con sus
