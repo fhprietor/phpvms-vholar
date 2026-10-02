@@ -7,7 +7,7 @@ use App\Models\Airline;
 use App\Models\Flight;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class DS_Tour extends Model
 {
@@ -52,10 +52,20 @@ class DS_Tour extends Model
         return (Carbon::now()->between($this->start_date, $this->end_date, true)) ? true : false;
     }
 
-    // Relationship with flights (legs)
-    public function legs(): HasMany
+    /**
+     * Relacion con los vuelos (tramos).
+     *
+     * Los tramos viven en su propia tabla (disposable_tour_flights) para NO tocar los
+     * vuelos de la programacion: route_code/route_leg son de phpVMS (rutas multietapa) y
+     * el modulo los usaba como enlace, lo que marcaba los vuelos como "ruta del tour".
+     * El numero de tramo es `$leg->pivot->leg` y varios vuelos pueden compartir tramo
+     * (rutas elegibles).
+     */
+    public function legs(): BelongsToMany
     {
-        return $this->hasMany(Flight::class, 'route_code', 'tour_code');
+        return $this->belongsToMany(Flight::class, 'disposable_tour_flights', 'tour_id', 'flight_id')
+            ->withPivot('leg')
+            ->orderBy('disposable_tour_flights.leg');
     }
 
     // Relationship to airline

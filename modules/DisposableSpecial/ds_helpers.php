@@ -278,6 +278,40 @@ if (!function_exists('DS_UserCount')) {
     }
 }
 
+// Get Flight IDs of the given Tour codes (via the tour legs table)
+// Return array
+if (!function_exists('DS_TourFlightIds')) {
+    function DS_TourFlightIds($tour_codes = null): array
+    {
+        if (blank($tour_codes)) {
+            return [];
+        }
+
+        return DB::table('disposable_tour_flights')
+            ->join('disposable_tours', 'disposable_tours.id', '=', 'disposable_tour_flights.tour_id')
+            ->whereIn('disposable_tours.tour_code', (array) $tour_codes)
+            ->pluck('disposable_tour_flights.flight_id')
+            ->unique()->values()->toArray();
+    }
+}
+
+// Get Tour codes which contain any of the given Flights (reverse of the above)
+// Return array
+if (!function_exists('DS_TourCodesForFlights')) {
+    function DS_TourCodesForFlights($flight_ids = null): array
+    {
+        if (blank($flight_ids)) {
+            return [];
+        }
+
+        return DB::table('disposable_tour_flights')
+            ->join('disposable_tours', 'disposable_tours.id', '=', 'disposable_tour_flights.tour_id')
+            ->whereIn('disposable_tour_flights.flight_id', (array) $flight_ids)
+            ->pluck('disposable_tours.tour_code')
+            ->unique()->values()->toArray();
+    }
+}
+
 // Check if the user has an accepted pirep for a particular tour Leg
 // Check all details for tours like code, leg, dates, aircraft
 // Return boolean
@@ -288,15 +322,30 @@ if (!function_exists('DS_IsTourLegFlown')) {
             return false;
         }
 
-        // Get User's Pirep with details, covers both acars and manual pireps
-        $pirep = Pirep::with('aircraft')->where([
-            'user_id'        => $user_id,
-            'route_code'     => $flight->route_code,
-            'route_leg'      => $flight->route_leg,
-            'dpt_airport_id' => $flight->dpt_airport_id,
-            'arr_airport_id' => $flight->arr_airport_id,
-            'state'          => PirepState::ACCEPTED,
-        ])->orderby('submitted_at', 'desc')->first();
+        // Tramo del vuelo: sale del pivote del tour (o del metodo antiguo si el vuelo
+        // todavia lleva route_code/route_leg)
+        $leg_number = $flight->pivot->leg ?? $flight->route_leg;
+
+        // Get User's Pirep with details, covers both acars and manual pireps.
+        // Se busca por el vuelo reportado (flight_id) y, si el piloto lo reporto a mano
+        // sin vuelo, por el codigo/tramo del tour (metodo antiguo).
+        $pirep = Pirep::with('aircraft')
+            ->where([
+                'user_id'        => $user_id,
+                'dpt_airport_id' => $flight->dpt_airport_id,
+                'arr_airport_id' => $flight->arr_airport_id,
+                'state'          => PirepState::ACCEPTED,
+            ])
+            ->where(function ($query) use ($flight, $tour, $leg_number) {
+                $query->where('flight_id', $flight->id);
+
+                if (filled($tour->tour_code)) {
+                    $query->orWhere(function ($legacy) use ($tour, $leg_number) {
+                        $legacy->where('route_code', $tour->tour_code)->where('route_leg', $leg_number);
+                    });
+                }
+            })
+            ->orderby('submitted_at', 'desc')->first();
 
         // Get dates with times either for flight or the tour itself
         if (filled($flight->start_date) && filled($flight->end_date)) {

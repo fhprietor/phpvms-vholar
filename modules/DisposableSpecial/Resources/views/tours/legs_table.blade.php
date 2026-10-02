@@ -11,10 +11,11 @@
     <th class="text-center">Actions</th>
     <th class="text-center">@lang('common.status')</th>
   </tr>
-  @foreach($tour->legs->sortby('route_leg') as $leg)
+  @foreach($tour->legs as $leg)
+    @php $leg_no = $leg->pivot->leg ?? $leg->route_leg; @endphp
     <tr>
       <td><a href="{{ route('frontend.flights.show', [$leg->id]) }}"><i class="fas fa-info-circle ms-2"></i></a></td>
-      <td>{{ $leg->route_leg }}</td>
+      <td>{{ $leg_no }}</td>
       <td>
         <img class="img-h25 me-1" src="{{ public_asset('/image/flags_new/'.strtolower(optional($leg->dpt_airport)->country).'.png') }}" alt="">
         {{ optional($leg->dpt_airport)->full_name ?? $leg->dpt_airport_id }}
@@ -42,14 +43,14 @@
       </td>
       <td class="text-center">@if($leg->distance[$units['distance']] > 0) {{ number_format($leg->distance[$units['distance']]).' '.$units['distance'] }} @endif</td>
       <td class="text-center">@if($leg->flight_time > 0) @minutestotime($leg->flight_time) @endif</td>
-      @if($leg_checks[$leg->route_leg] === true)
+      @if(($leg_checks[$leg_no] ?? false) === true)
         <td class="text-center">&nbsp;</td>
         <td class="text-center">
           <i class="fas fa-check-circle text-success" title="@lang('DSpecial::tours.icontrue')"></i>
         </td>
       @else
         <td class="text-center">
-          @if((!setting('pilots.only_flights_from_current') || $leg->dpt_airport_id == optional($user)->curr_airport_id) && (($leg->route_leg > 1 && $leg_checks[($leg->route_leg - 1)] === true) || $leg->route_leg == 1))
+          @if((!setting('pilots.only_flights_from_current') || $leg->dpt_airport_id == optional($user)->curr_airport_id) && (($leg_no > 1 && ($leg_checks[($leg_no - 1)] ?? false) === true) || $leg_no == 1))
             {{-- Bid --}}
             @if((setting('bids.allow_multiple_bids') === true || setting('bids.allow_multiple_bids') === false && count($saved) === 0))
               <button class="btn btn-sm m-0 mx-1 p-0 px-1 save_flight {{ isset($saved[$leg->id]) ? 'btn-danger':'btn-success' }}"

@@ -469,7 +469,12 @@ partir de ahí el cliente habla directamente con NavData (scoring de pista, SIDs
 La clave **nunca viaja en claro**: va dentro de un sobre cifrado con la `api_key` del propio piloto,
 que es el único secreto que cliente y servidor comparten ya (`X-API-KEY`).
 
-**Request:** sin parámetros. Solo el header de autenticación habitual.
+**Request:** sin parámetros. Solo el header de autenticación habitual y, opcionalmente, el cifrado
+del sobre:
+
+| Header | Valores | Por defecto |
+|---|---|---|
+| `X-NavData-Cipher` | `aes-256-gcm`, `aes-256-cbc-hmac-sha256` | `aes-256-gcm` |
 
 **Response 200** (`Cache-Control: no-store, private`):
 
@@ -489,27 +494,30 @@ que es el único secreto que cliente y servidor comparten ya (`X-API-KEY`).
 
 | Campo | Descripción |
 |---|---|
-| `cipher` / `kdf` | Algoritmos del sobre. Hoy `aes-256-gcm` + `hkdf-sha256` |
+| `cipher` / `kdf` | Algoritmos del sobre. `cipher` es el que se pidió por header |
 | `key_id` | Huella HMAC-SHA256 (16 hex) de la clave de NavData. Sirve para detectar una rotación sin descifrar |
 | `issued_at` / `expires_at` | ISO-8601. Al caducar, el cliente debe volver a pedir el sobre (así recoge una clave rotada) |
 | `payload` | Sobre cifrado. Contiene `{url, key, key_id, issued_at, expires_at}` |
 
-**Cómo se descifra** (contrato completo y ejemplo .NET en
-[`docs/vmsopenacars/ENTREGA-CLAVE-NAVDATA.md`](docs/vmsopenacars/ENTREGA-CLAVE-NAVDATA.md)):
+**Cómo se descifra** (contrato completo y ejemplos .NET Framework 4.8.1 en
+[`docs/vmsopenacars/ENTREGA-CLAVE-NAVDATA.md`](docs/vmsopenacars/ENTREGA-CLAVE-NAVDATA.md)). En
+ambos sobres la clave se deriva con `HKDF-SHA256(ikm = api_key del piloto, salt = "vmsopenacars/navdata/v1")`:
 
-1. Clave: `HKDF-SHA256(ikm = api_key del piloto, salt = "vmsopenacars/navdata/v1", info = "navdata-api-key", L = 32)`
-2. Sobre: `base64_decode(payload)` → `nonce` (12 B) + `tag` (16 B) + `ciphertext`
-3. `AES-256-GCM` con `AAD = "vmsopenacars/navdata/v1"`
+| Sobre | Derivación | Formato del `payload` |
+|---|---|---|
+| `aes-256-gcm` | `info = "navdata-api-key"`, `L = 32` | `nonce[12] \|\| tag[16] \|\| ciphertext`, `AAD = "vmsopenacars/navdata/v1"` |
+| `aes-256-cbc-hmac-sha256` | `info = "navdata-api-key-cbc"`, `L = 64` (32 enc + 32 mac) | `iv[16] \|\| ciphertext \|\| mac[32]`, `mac = HMAC-SHA256(mac_key, AAD \|\| iv \|\| ciphertext)` |
 
 **Errores:**
 
 | HTTP | `type` | Cuándo |
 |---|---|---|
+| `400` | `navdata-unsupported-cipher` | `X-NavData-Cipher` trae un valor que phpVMS no emite |
 | `401` | — | Falta el header o la `api_key` no existe / el piloto no está ACTIVE |
 | `503` | `navdata-not-configured` | El staff no ha rellenado la URL o la clave en Admin > Settings (`settings` en el cuerpo indica qué campos faltan) |
 
 **Auditoría:** cada entrega queda registrada en `activity_log` (`log_name = navdata`) con piloto, IP,
-`User-Agent` y `key_id`. Límite de 30 peticiones por minuto y por piloto.
+`User-Agent`, cifrado y `key_id`. Límite de 30 peticiones por minuto y por piloto.
 
 **Settings relacionadas** (Admin > Settings, grupo *General*):
 

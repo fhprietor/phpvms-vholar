@@ -1,6 +1,6 @@
 # Analisis: desacoplar los tramos de tour de `route_code`
 
-Fecha: 2026-10-02. Estado: **propuesta — nada implementado todavia**.
+Fecha: 2026-10-02. Estado: **implementado el 2026-10-02** (ver CHANGELOG, "Tramos de tour desacoplados de route_code"). Lo que sigue es el analisis previo.
 
 ## El problema
 

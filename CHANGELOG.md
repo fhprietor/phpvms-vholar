@@ -1,5 +1,35 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Tramos de tour desacoplados de `route_code`
+
+Los tramos ya no son "vuelos marcados con `route_code` = codigo del tour" (eso obligaba a
+tocar los vuelos de la programacion y los convertia en la "ruta VHR26", con ident
+`VHR1265/C.VHR26/L.1`). Ahora viven en su propia tabla y **los vuelos no se tocan**:
+
+- **`disposable_tour_flights`** (`tour_id`, `flight_id`, `leg`, timestamps; unico por
+  tour+vuelo, indices por tour+tramo y por vuelo). Sin unico por (tour, tramo) a
+  proposito: varios vuelos pueden ser el mismo tramo (rutas elegibles).
+- `DS_Tour::legs()` pasa a `belongsToMany(...)->withPivot('leg')`; el numero de tramo es
+  `$leg->pivot->leg`.
+- **Sellado del PIREP**: nuevo listener `Gen_TourPirepStamp` en `PirepFiled` que pone
+  `route_code`/`route_leg` en el PIREP cuando el vuelo es un tramo del tour, para que
+  premios, widget de progreso e informes (que buscan por `route_code`) sigan funcionando
+  sin tocar los vuelos.
+- El matching (`DS_IsTourLegFlown`) mira primero por `flight_id` y deja el metodo antiguo
+  como respaldo para los PIREPs manuales que se reportan escribiendo codigo y tramo.
+- Nuevos helpers `DS_TourFlightIds()` / `DS_TourCodesForFlights()`; el controlador, el
+  cron, los premios, la API (`dsapi/tours` mantiene la forma de la respuesta), las
+  asignaciones y las vistas leen del pivote.
+- **Los vuelos vuelven a su estado normal**: los 20 tramos de ANDES y VHR26 se importaron
+  al pivote y se limpio su `route_code`/`route_leg`/`owner` (el 1265 vuelve a ser
+  `VHR1265`, sin agrupacion bajo el tour).
+- **Corregido un peligro del modulo**: las acciones de admin borraban vuelos de verdad
+  (`delete_leg` hacia `forceDelete()` del vuelo, y `delete_all` tambien). Ahora sueltan el
+  tramo del tour y no tocan el vuelo.
+- `deploy/scripts/tour-vholar26.php` actualizado al nuevo modelo (idempotente).
+- Parche del modulo regenerado (2.933 lineas) y validado: aplica sobre `d1d776c` y
+  reproduce el modulo byte a byte. Suite: `OK (234 tests)`.
+
 ## [Vholar] 2026-10-02 — Tour VHOLAR 2026 montado (18 tramos)
 
 - Creado el **Tour VHOLAR 2026**, codigo **`VHR26`**: 18 tramos, **7.879 nm (14.592 km)**

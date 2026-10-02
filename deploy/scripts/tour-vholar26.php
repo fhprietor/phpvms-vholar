@@ -3,27 +3,26 @@
 /*
  * Tour VHOLAR 2026 — 18 tramos (SKBO base, con salidas a MROC y KMIA).
  *
- * IMPORTANTE: en DisposableSpecial un "tramo" es un VUELO normal de la aerolinea
- * marcado con route_code = codigo del tour, route_leg = N y owner = DS_Tour
- * (ver DS_Tour::legs() y leg_actions()/normalize, que lo libera al terminar).
- * Por eso este script **marca los vuelos que ya existen** en lugar de duplicar la
- * programacion; solo crea los dos tramos que no tienen vuelo programado.
+ * IMPORTANTE (modelo nuevo): los tramos de un tour viven en su propia tabla
+ * (`disposable_tour_flights`: tour_id, flight_id, leg). Los vuelos de la aerolinea
+ * **no se tocan**: no se les cambia route_code, route_leg ni owner. El modulo
+ * (DisposableSpecial) parcheado lee los tramos de ahi, y sella el PIREP con el
+ * tour/tramo al reportarse (Listeners/Gen_TourPirepStamp).
  *
- * Codigo del tour: VHR26 (flights.route_code y disposable_tours.tour_code son
- * varchar(5): no cabe mas).
+ * Codigo del tour: VHR26 (disposable_tours.tour_code es varchar(5)).
  *
  * Ejecutar desde la raiz del proyecto:
  *   php artisan tinker --execute="require 'deploy/scripts/tour-vholar26.php';"
  *
- * Es idempotente. Para revertir un tramo enlazado: route_code = NULL,
- * route_leg = NULL, owner_type = NULL, owner_id = NULL (asi estaban los 16 vuelos).
+ * Es idempotente. Para "soltar" un tramo: borrar su fila de disposable_tour_flights
+ * (o la accion normalize del admin, que suelta todos).
  */
 
 use App\Models\Flight;
 use Illuminate\Support\Facades\DB;
 use Modules\DisposableSpecial\Models\DS_Tour;
 
-$tourCode = 'VHR26'; // OJO: flights.route_code y disposable_tours.tour_code son varchar(5)
+$tourCode = 'VHR26';
 $tourName = 'Tour VHOLAR 2026';
 $airlineId = 1;
 
@@ -83,7 +82,7 @@ if (!$tour) {
     echo "Tour {$tourCode} creado (id {$tour->id}).\n";
 }
 
-// 2) Los tramos
+// 2) Los tramos: vuelo de la aerolinea (o creado) + fila en el pivote
 $linked = 0;
 $created = 0;
 
@@ -96,70 +95,45 @@ foreach ($legs as [$leg, $dpt, $arr, $nm, $flightNumber]) {
             ->first()
         : null;
 
-    if ($flight) {
-        // Vuelo real de la aerolinea: solo se marca como tramo (no se toca nada mas)
-        $flight->route_code = $tourCode;
-        $flight->route_leg = $leg;
-        $flight->owner_type = 'DS_Tour';
-        $flight->owner_id = $tour->id;
-        $flight->save();
+    if (!$flight) {
+        // Sin vuelo programado: se crea un vuelo normal (sin route_code de tour)
+        $flight = Flight::where('airline_id', $airlineId)
+            ->where('flight_number', $newLegNumbers[$leg])
+            ->where('dpt_airport_id', $dpt)
+            ->where('arr_airport_id', $arr)
+            ->first();
+    }
+
+    if (!$flight) {
+        // Bloque estimado: ~450 kt de crucero (7.5 nm/min) + 15 min de rodaje, en multiplos de 5.
+        $blockTime = (int) (round(($nm / 7.5 + 15) / 5) * 5);
+
+        $flight = Flight::create([
+            'airline_id'     => $airlineId,
+            'flight_number'  => $newLegNumbers[$leg],
+            'dpt_airport_id' => $dpt,
+            'arr_airport_id' => $arr,
+            'alt_airport_id' => null, // sin alterno: evita que se marque diversion
+            'distance'       => $nm,
+            'flight_time'    => $blockTime,
+            'level'          => 40000,
+            'flight_type'    => 'J', // pasajeros programado
+            'notes'          => 'Tour VHOLAR 2026 - Leg '.$leg.' | IFR | IVAO RMK/VHOLAR26',
+            'active'         => 1,
+            'visible'        => 1,
+        ]);
+
+        $flight->subfleets()->attach($subfleetIds);
+        $created++;
+    } else {
         $linked++;
-
-        continue;
     }
 
-    // Sin vuelo programado: se crea el tramo (salvo que ya exista de una pasada anterior)
-    $existing = Flight::where('route_code', $tourCode)->where('route_leg', $leg)->first();
-    if ($existing) {
-        continue;
-    }
-
-    // Bloque estimado: ~450 kt de crucero (7.5 nm/min) + 15 min de rodaje, en multiplos de 5.
-    $blockTime = (int) (round(($nm / 7.5 + 15) / 5) * 5);
-
-    $flight = Flight::create([
-        'airline_id'     => $airlineId,
-        'flight_number'  => $newLegNumbers[$leg],
-        'route_code'     => $tourCode,
-        'route_leg'      => $leg,
-        'dpt_airport_id' => $dpt,
-        'arr_airport_id' => $arr,
-        'alt_airport_id' => null, // sin alterno: evita que se marque diversion
-        'distance'       => $nm,
-        'flight_time'    => $blockTime,
-        'level'          => 40000,
-        'flight_type'    => 'J', // pasajeros programado
-        'notes'          => 'Tour VHOLAR 2026 - Leg '.$leg.' | IFR | IVAO RMK/VHOLAR26',
-        'active'         => 1,
-        'visible'        => 1,
-    ]);
-
-    $flight->subfleets()->attach($subfleetIds);
-    $created++;
+    DB::table('disposable_tour_flights')->updateOrInsert(
+        ['tour_id' => $tour->id, 'flight_id' => $flight->id],
+        ['leg' => $leg, 'updated_at' => now(), 'created_at' => now()]
+    );
 }
 
-// 3) Limpieza: vuelos creados por la version anterior del script que ya no son tramos.
-// Solo se borran si no tienen reservas ni PIREPs.
-$keepNumbers = array_values(array_filter($newLegNumbers));
-$obsolete = Flight::where('route_code', $tourCode)
-    ->whereBetween('flight_number', [2603, 2620])
-    ->whereNotIn('flight_number', $keepNumbers)
-    ->get();
-
-$removed = 0;
-foreach ($obsolete as $flight) {
-    $hasBids = DB::table('bids')->where('flight_id', $flight->id)->exists();
-    $hasPireps = DB::table('pireps')->where('flight_id', $flight->id)->exists();
-    if ($hasBids || $hasPireps) {
-        echo "AVISO: el vuelo {$flight->flight_number} tiene reservas/PIREPs, no se borra.\n";
-
-        continue;
-    }
-
-    $flight->subfleets()->detach();
-    $flight->delete();
-    $removed++;
-}
-
-$legsInTour = Flight::where('route_code', $tourCode)->count();
-echo "Tour {$tourCode}: {$legsInTour} tramos ({$linked} enlazados a vuelos existentes, {$created} creados, {$removed} obsoletos borrados).\n";
+$legsInTour = DB::table('disposable_tour_flights')->where('tour_id', $tour->id)->count();
+echo "Tour {$tourCode}: {$legsInTour} tramos ({$linked} vuelos existentes, {$created} creados).\n";

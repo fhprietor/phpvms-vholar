@@ -69,7 +69,7 @@ class DSpecial_AirlineTour extends Award
             return false;
         }
 
-        $ordered_tour_flights = $tour->legs()->whereNotNull('route_leg')->orderBy('route_leg', 'asc')->pluck('route_leg')->toArray();
+        $ordered_tour_flights = $tour->legs->map(fn ($l) => $l->pivot->leg ?? $l->route_leg)->filter()->sort()->values()->toArray();
 
         $pirep_order_check = array_intersect_assoc($ordered_tour_flights, $ordered_user_pireps);
 
@@ -97,8 +97,6 @@ class DSpecial_AirlineTour extends Award
                 $where = [
                     'user_id'        => $user_id,
                     'airline_id'     => $tour->tour_airline,
-                    'route_code'     => $fl->route_code,
-                    'route_leg'      => $fl->route_leg,
                     'dpt_airport_id' => $fl->dpt_airport_id,
                     'arr_airport_id' => $fl->arr_airport_id,
                     'state'          => PirepState::ACCEPTED,
@@ -106,7 +104,16 @@ class DSpecial_AirlineTour extends Award
                     ['submitted_at', '<=', $end_date],
                 ];
 
-                $pirep_check = Pirep::where($where)->count();
+                // El PIREP puede venir del vuelo (flight_id) o del metodo antiguo
+                $leg_number = $fl->pivot->leg ?? $fl->route_leg;
+                $pirep_check = Pirep::where($where)->where(function ($query) use ($fl, $tour, $leg_number) {
+                    $query->where('flight_id', $fl->id);
+                    if (filled($tour->tour_code)) {
+                        $query->orWhere(function ($legacy) use ($tour, $leg_number) {
+                            $legacy->where('route_code', $tour->tour_code)->where('route_leg', $leg_number);
+                        });
+                    }
+                })->count();
 
                 if ($pirep_check > 0) {
                     $pirep_count++;

@@ -120,9 +120,10 @@ modules:
 
 settings:
   # Claves anadidas desde el fork; el valor real vive en la BD (Admin > Settings),
-  # no en el repo. Ambas se siembran vacias y se rellenan a mano.
+  # no en el repo. Se siembran vacias y se rellenan a mano.
   added_by_vholar:
     - general.carto_api_key
+    - general.navdata_api_url
     - general.navdata_api_key
   seed_file: app/Database/seeds/settings.yml
 

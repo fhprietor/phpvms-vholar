@@ -134,6 +134,79 @@ final class NavDataKeyTest extends TestCase
         $this->assertNull(app(NavDataService::class)->open(base64_encode($blob), $this->pilot->api_key));
     }
 
+    public function test_it_delivers_a_cbc_envelope_when_the_client_asks_for_one(): void
+    {
+        $this->configure();
+
+        $response = $this->withHeaders(array_merge($this->headers($this->pilot), [
+            'X-NavData-Cipher' => 'aes-256-cbc-hmac-sha256',
+        ]))->getJson('/api/navdata')->assertStatus(200);
+
+        $data = $response->json('data');
+        $this->assertSame('aes-256-cbc-hmac-sha256', $data['cipher']);
+        $this->assertSame('hkdf-sha256', $data['kdf']);
+        $this->assertStringNotContainsString(self::API_KEY, $response->getContent());
+
+        $payload = $this->openCbcEnvelope($data['payload'], $this->pilot->api_key);
+        $this->assertIsArray($payload);
+        $this->assertSame(self::API_URL, $payload['url']);
+        $this->assertSame(self::API_KEY, $payload['key']);
+        $this->assertSame($data['key_id'], $payload['key_id']);
+
+        // El servicio abre lo mismo que emite.
+        $this->assertSame(
+            $payload,
+            app(NavDataService::class)->open($data['payload'], $this->pilot->api_key, 'aes-256-cbc-hmac-sha256')
+        );
+    }
+
+    public function test_the_cbc_mac_rejects_a_tampered_envelope(): void
+    {
+        $this->configure();
+
+        $sealed = $this->withHeaders(array_merge($this->headers($this->pilot), [
+            'X-NavData-Cipher' => 'aes-256-cbc-hmac-sha256',
+        ]))->getJson('/api/navdata')->json('data.payload');
+
+        $blob = base64_decode($sealed, true);
+
+        // Alterar el criptograma (no el MAC) debe invalidar el HMAC.
+        $blob[20] = $blob[20] === "\x00" ? "\x01" : "\x00";
+        $this->assertNull($this->openCbcEnvelope(base64_encode($blob), $this->pilot->api_key));
+
+        // Y alterar el MAC tampoco cuela.
+        $blob = base64_decode($sealed, true);
+        $blob[\strlen($blob) - 1] = $blob[\strlen($blob) - 1] === "\x00" ? "\x01" : "\x00";
+        $this->assertNull($this->openCbcEnvelope(base64_encode($blob), $this->pilot->api_key));
+    }
+
+    public function test_the_two_envelopes_are_not_interchangeable(): void
+    {
+        $this->configure();
+
+        $gcm = $this->withHeaders($this->headers($this->pilot))->getJson('/api/navdata')->json('data.payload');
+        $cbc = $this->withHeaders(array_merge($this->headers($this->pilot), [
+            'X-NavData-Cipher' => 'aes-256-cbc-hmac-sha256',
+        ]))->getJson('/api/navdata')->json('data.payload');
+
+        // Salt/info distintos: una api_key no abre el sobre del otro cifrado.
+        $this->assertNull($this->openCbcEnvelope($gcm, $this->pilot->api_key));
+        $this->assertNull($this->openEnvelope($cbc, $this->pilot->api_key));
+    }
+
+    public function test_an_unknown_cipher_is_rejected(): void
+    {
+        $this->configure();
+
+        $this->withHeaders(array_merge($this->headers($this->pilot), [
+            'X-NavData-Cipher' => 'aes-128-rot13',
+        ]))->getJson('/api/navdata')
+            ->assertStatus(400)
+            ->assertJsonPath('type', config('phpvms.error_root').'/navdata-unsupported-cipher')
+            ->assertJsonPath('cipher', 'aes-128-rot13')
+            ->assertJsonPath('supported', ['aes-256-gcm', 'aes-256-cbc-hmac-sha256']);
+    }
+
     public function test_the_key_id_changes_when_the_key_is_rotated(): void
     {
         $this->configure();
@@ -215,6 +288,40 @@ final class NavDataKeyTest extends TestCase
             substr($blob, 0, 12),
             substr($blob, 12, 16),
             self::AAD
+        );
+
+        return $plaintext === false ? null : json_decode($plaintext, true);
+    }
+
+    /**
+     * Replica independiente del contrato CBC: base64(iv[16] || ct || mac[32]),
+     * con mac = HMAC-SHA256(mac_key, AAD || iv || ct) y las claves derivadas de
+     * 64 bytes de HKDF (32 enc + 32 mac).
+     */
+    private function openCbcEnvelope(string $sealed, string $apiKey): ?array
+    {
+        $blob = base64_decode($sealed, true);
+        if ($blob === false || \strlen($blob) <= 48) {
+            return null;
+        }
+
+        $material = hash_hkdf('sha256', $apiKey, 64, self::KDF_INFO.'-cbc', self::KDF_SALT);
+
+        $iv = substr($blob, 0, 16);
+        $mac = substr($blob, -32);
+        $ciphertext = substr($blob, 16, -32);
+
+        $expected = hash_hmac('sha256', self::AAD.$iv.$ciphertext, substr($material, 32), true);
+        if (!hash_equals($expected, $mac)) {
+            return null;
+        }
+
+        $plaintext = openssl_decrypt(
+            $ciphertext,
+            'aes-256-cbc',
+            substr($material, 0, 32),
+            OPENSSL_RAW_DATA,
+            $iv
         );
 
         return $plaintext === false ? null : json_decode($plaintext, true);

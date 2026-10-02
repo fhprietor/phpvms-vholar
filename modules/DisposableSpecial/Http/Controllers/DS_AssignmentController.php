@@ -529,7 +529,7 @@ public function adminIndex(Request $request)
 
         if ($avoid_tours) {
             $tour_codes = DS_Tour::groupby('tour_code')->pluck('tour_code')->toArray();
-            $tour_flights = Flight::whereIn('route_code', $tour_codes)->pluck('id')->toArray();
+            $tour_flights = DS_TourFlightIds($tour_codes);
             $avoid_array = array_merge($avoid_array, $tour_flights);
             $avoid_array = array_unique($avoid_array, SORT_STRING);
         }

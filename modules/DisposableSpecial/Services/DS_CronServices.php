@@ -120,7 +120,7 @@ class DS_CronServices
         $tours = DS_Tour::select('id', 'tour_code')->get();
 
         foreach ($tours as $tour) {
-            $flights = Flight::where('route_code', $tour->tour_code)->update(['owner_id' => $tour->id, 'owner_type' => 'DS_Tour']);
+            $flights = Flight::whereIn('id', DS_TourFlightIds([$tour->tour_code]))->update(['owner_id' => $tour->id, 'owner_type' => 'DS_Tour']);
             if (filled($flights) && $flights > 0) {
                 Log::info('Disposable Special | '.$flights.' Tour legs processed and owned by '.$tour->tour_code);
             }
@@ -140,7 +140,7 @@ class DS_CronServices
         $keephidden = DS_Tour::whereDate('start_date', '<=', $today)->orWhereDate('end_date', '>=', $tomorrow)->pluck('tour_code')->toArray();
 
         if (filled($keephidden) && count($keephidden) > 0 && DS_Setting('dspecial.keep_tf_invisible', false) == true) {
-            $flights = Flight::whereIn('route_code', $keephidden)->get();
+            $flights = Flight::whereIn('id', DS_TourFlightIds($keephidden))->get();
 
             if (filled($flights) && $flights->count() > 0) {
                 foreach ($flights as $flight) {
@@ -154,7 +154,7 @@ class DS_CronServices
         }
 
         if (filled($activate) && count($activate) > 0) {
-            $flights = Flight::whereIn('route_code', $activate)->whereNull('start_date')->whereNull('end_date')->get();
+            $flights = Flight::whereIn('id', DS_TourFlightIds($activate))->whereNull('start_date')->whereNull('end_date')->get();
 
             if (filled($flights) && $flights->count() > 0) {
                 foreach ($flights as $flight) {
@@ -169,7 +169,7 @@ class DS_CronServices
         }
 
         if (filled($deactivate) && count($deactivate) > 0) {
-            $flights = Flight::whereIn('route_code', $deactivate)->whereNull('start_date')->whereNull('end_date')->get();
+            $flights = Flight::whereIn('id', DS_TourFlightIds($deactivate))->whereNull('start_date')->whereNull('end_date')->get();
 
             if (filled($flights) && $flights->count() > 0) {
                 foreach ($flights as $flight) {

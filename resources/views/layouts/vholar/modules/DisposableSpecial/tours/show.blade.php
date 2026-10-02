@@ -3,7 +3,7 @@
 
 @section('content')
 @php
-  $legs = $tour->legs->sortBy('route_leg');
+  $legs = $tour->legs;
   $totalLegs = $legs->count();
 
   // Distancias: se leen de la tabla porque el modelo Flight castea distance a Unit y
@@ -190,19 +190,20 @@
 <div class="accordion vh-tour-legs mb-4" id="tourLegs">
   @foreach($legs as $leg)
     @php
-      $isFlown = ($leg_checks[$leg->route_leg] ?? false) === true;
+      $legNo = $leg->pivot->leg ?? $leg->route_leg;
+      $isFlown = ($leg_checks[$legNo] ?? false) === true;
       $nmi = (float) ($legNmi[$leg->id] ?? 0);
       $subfleets = $leg->subfleets;
-      $previousFlown = $leg->route_leg == 1 || (($leg_checks[$leg->route_leg - 1] ?? false) === true);
+      $previousFlown = $legNo == 1 || (($leg_checks[$legNo - 1] ?? false) === true);
       $atCurrentAirport = !setting('pilots.only_flights_from_current') || $leg->dpt_airport_id == optional($user)->curr_airport_id;
     @endphp
 
     <div class="accordion-item mb-2">
-      <h2 class="accordion-header" id="leg-head-{{ $leg->route_leg }}">
+      <h2 class="accordion-header" id="leg-head-{{ $legNo }}">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#leg-body-{{ $leg->route_leg }}" aria-expanded="false"
-                aria-controls="leg-body-{{ $leg->route_leg }}">
-          <span>@lang('vholar_tours.leg', ['number' => $leg->route_leg]) :
+                data-bs-target="#leg-body-{{ $legNo }}" aria-expanded="false"
+                aria-controls="leg-body-{{ $legNo }}">
+          <span>@lang('vholar_tours.leg', ['number' => $legNo]) :
             <b>{{ $leg->dpt_airport_id }} - {{ $leg->arr_airport_id }}</b></span>
           {{-- Numero del vuelo real de la aerolinea que hay que volar en este tramo --}}
           <span class="ms-2 badge text-bg-secondary p-1" title="@lang('vholar_tours.view_flight')">{{ $leg->flight_number }}</span>
@@ -217,8 +218,8 @@
         </button>
       </h2>
 
-      <div id="leg-body-{{ $leg->route_leg }}" class="accordion-collapse collapse"
-           aria-labelledby="leg-head-{{ $leg->route_leg }}" data-bs-parent="#tourLegs">
+      <div id="leg-body-{{ $legNo }}" class="accordion-collapse collapse"
+           aria-labelledby="leg-head-{{ $legNo }}" data-bs-parent="#tourLegs">
         <div class="accordion-body">
           <p class="mb-2">
             @lang('vholar_tours.distance'): <b>{{ number_format($nmi) }} nm ({{ number_format($nmi * 1.852) }} km)</b>

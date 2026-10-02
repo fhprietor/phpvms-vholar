@@ -17,6 +17,7 @@ use Modules\DisposableSpecial\Listeners\Gen_Cron;
 use Modules\DisposableSpecial\Listeners\Gen_Diversion;
 use Modules\DisposableSpecial\Listeners\Gen_Maintenance;
 use Modules\DisposableSpecial\Listeners\Gen_RandomFlights;
+use Modules\DisposableSpecial\Listeners\Gen_TourPirepStamp;
 
 class DS_EventProvider extends ServiceProvider
 {
@@ -33,6 +34,9 @@ class DS_EventProvider extends ServiceProvider
                 Fare_InFlight::class,
             ],
             PirepFiled::class => [
+                // Sella el PIREP con el tour/tramo si el vuelo es un tramo (antes de
+                // que los comentarios/premios lean los datos del tour)
+                Gen_TourPirepStamp::class,
                 Gen_Comments::class,
             ],
             PirepAccepted::class => [

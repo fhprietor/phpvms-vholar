@@ -27,7 +27,7 @@ class DS_TourController extends Controller
     public function index(Request $request)
     {
         $sfid = !empty($request->input('sfid')) ? $request->input('sfid') : null;
-        $tours = DS_Tour::withCount('legs')->with(['airline', 'token'])->where('active', 1)->orderby('start_date')->orderby('tour_name')->get();
+        $tours = DS_Tour::withCount('legs')->with(['airline', 'token', 'legs'])->where('active', 1)->orderby('start_date')->orderby('tour_name')->get();
 
         // Provide market bought tokens per user
         $user_id = Auth::id();
@@ -35,13 +35,13 @@ class DS_TourController extends Controller
         $user_tokens = DS_Marketowner::where('user_id', $user_id)->whereIn('marketitem_id', $tour_tokens)->pluck('marketitem_id')->toArray();
         // Prepare tour subfleets for dropdown
         $tour_codes = $tours->where('end_date', '>=', Carbon::today())->sortBy('tour_code', SORT_NATURAL)->pluck('tour_code')->toArray();
-        $tour_flights = Flight::withCount('subfleets')->whereIn('route_code', $tour_codes)->having('subfleets_count', '>', 0)->pluck('id')->toArray();
+        $tour_flights = Flight::withCount('subfleets')->whereIn('id', DS_TourFlightIds($tour_codes))->having('subfleets_count', '>', 0)->pluck('id')->toArray();
         $tour_subfleets = DB::table('flight_subfleet')->whereIn('flight_id', $tour_flights)->groupBy('subfleet_id')->pluck('subfleet_id')->toArray();
         $view_subfleets = Subfleet::with('airline')->whereIn('id', $tour_subfleets)->orderBy('name')->get();
 
         if ($sfid) {
             $fleet_flights = DB::table('flight_subfleet')->where('subfleet_id', $sfid)->whereIn('flight_id', $tour_flights)->pluck('flight_id')->toArray();
-            $fleet_codes = Flight::whereIn('id', $fleet_flights)->groupBy('route_code')->pluck('route_code')->toArray();
+            $fleet_codes = DS_TourCodesForFlights($fleet_flights);
             // Filter tours according to selected subfleet
             $tours = $tours->whereIn('tour_code', $fleet_codes);
         }
@@ -103,18 +103,36 @@ class DS_TourController extends Controller
 
         // Tour Report
         $tour_report = [];
-        $tour_pilots = Pirep::where(['route_code' => $code, 'state' => PirepState::ACCEPTED])->groupBy('user_id')->pluck('user_id')->toArray();
+        $tour_flight_ids = $tour->legs->pluck('id')->all();
+        $leg_by_flight = $tour->legs->mapWithKeys(fn ($l) => [$l->id => ($l->pivot->leg ?? $l->route_leg)])->all();
+        $tour_pilots = Pirep::where('state', PirepState::ACCEPTED)
+            ->where(function ($query) use ($code, $tour_flight_ids) {
+                $query->whereIn('flight_id', $tour_flight_ids);
+                if (filled($code)) {
+                    $query->orWhere('route_code', $code);
+                }
+            })->groupBy('user_id')->pluck('user_id')->toArray();
         $pilots = User::whereIn('id', $tour_pilots)->orderBy('pilot_id', 'asc')->get();
 
         if (filled($pilots)) {
             foreach ($pilots as $pilot) {
-                $user_pireps = Pirep::where(['user_id' => $pilot->id, 'state' => PirepState::ACCEPTED, 'route_code' => $code])->whereNotNull('route_leg')->orderBy('submitted_at')->pluck('route_leg')->toArray();
+                $user_pireps = Pirep::where(['user_id' => $pilot->id, 'state' => PirepState::ACCEPTED])
+                    ->where(function ($query) use ($code, $tour_flight_ids) {
+                        $query->whereIn('flight_id', $tour_flight_ids);
+                        if (filled($code)) {
+                            $query->orWhere('route_code', $code);
+                        }
+                    })
+                    ->orderBy('submitted_at')->get()
+                    ->map(fn ($p) => $leg_by_flight[$p->flight_id] ?? $p->route_leg)
+                    ->filter()->values()->toArray();
+
                 $tour_order = range(1, count($user_pireps));
                 $tour_report[$pilot->id] = [];
                 $tour_report[$pilot->id]['order'] = ($tour_order == $user_pireps) ? true : false;
                 $tour_report[$pilot->id]['flown'] = implode(', ', $user_pireps);
-                foreach ($tour->legs->sortBy('route_leg', SORT_NATURAL) as $tl) {
-                    $tour_report[$pilot->id][$tl->route_leg] = DS_IsTourLegFlown($tour, $tl, $pilot->id);
+                foreach ($tour->legs as $tl) {
+                    $tour_report[$pilot->id][$tl->pivot->leg ?? $tl->route_leg] = DS_IsTourLegFlown($tour, $tl, $pilot->id);
                 }
             }
         }
@@ -127,7 +145,7 @@ class DS_TourController extends Controller
             $tour_mapCenter = setting('acars.center_coords');
         }
 
-        foreach ($tour->legs->where('route_leg', 1) as $fleg) {
+        foreach ($tour->legs->filter(fn ($l) => ($l->pivot->leg ?? $l->route_leg) == 1) as $fleg) {
             $tour_mapCenter = $fleg->dpt_airport->lat.','.$fleg->dpt_airport->lon;
         }
 
@@ -181,16 +199,17 @@ class DS_TourController extends Controller
 
         foreach ($tour->legs as $mf) {
             // Leg Checks
-            $leg_checks[$mf->route_leg] = DS_IsTourLegFlown($tour, $mf, optional($user)->id);
+            $mf_leg = $mf->pivot->leg ?? $mf->route_leg;
+            $leg_checks[$mf_leg] = DS_IsTourLegFlown($tour, $mf, optional($user)->id);
             // Popups
             $pop = '<a href="/flights/'.$mf->id.'" target="_blank">Leg #';
-            $pop .= $mf->route_leg.': '.$mf->airline->code.$mf->flight_number.' '.$mf->dpt_airport_id.'-'.$mf->arr_airport_id;
+            $pop .= $mf_leg.': '.$mf->airline->code.$mf->flight_number.' '.$mf->dpt_airport_id.'-'.$mf->arr_airport_id;
             $pop .= '</a>';
             // Flights with popups and check results
             $mapFlights[] = [
                 'id'   => $mf->id,
                 'geod' => '[['.$mf->dpt_airport->lat.','.$mf->dpt_airport->lon.'],['.$mf->arr_airport->lat.','.$mf->arr_airport->lon.']]',
-                'geoc' => $leg_checks[$mf->route_leg] ? 'Flown' : 'NotFlown', // (DS_IsTourLegFlown($tour, $mf, optional($user)->id)) ? 'Flown' : 'NotFlown',
+                'geoc' => $leg_checks[$mf_leg] ? 'Flown' : 'NotFlown',
                 'pop'  => $pop,
             ];
         }
@@ -289,7 +308,7 @@ class DS_TourController extends Controller
         }
 
         if ($request->delete_tour === 'delete_tour' && filled($request->tour_code)) {
-            $flight_count = Flight::where('route_code', $request->tour_code)->count();
+            $flight_count = count(DS_TourFlightIds([$request->tour_code]));
 
             if ($flight_count > 0) {
                 flash()->error('Tour '.$request->tour_code.' has '.$flight_count.' legs, cannot delete !');
@@ -350,7 +369,7 @@ class DS_TourController extends Controller
     public function ManageTourSubfleets($action, $tour_codes, $subfleet_ids)
     {
         if ($action === 'add' && $tour_codes && $subfleet_ids) {
-            $flights = Flight::whereIn('route_code', $tour_codes)->pluck('id')->toArray();
+            $flights = DS_TourFlightIds($tour_codes);
 
             if (count($flights) === 0) {
                 flash()->error('No flights found for '.implode(',', $tour_codes).' !');
@@ -378,7 +397,7 @@ class DS_TourController extends Controller
         }
 
         if ($action === 'remove' && $tour_codes && $subfleet_ids) {
-            $flights = Flight::whereIn('route_code', $tour_codes)->pluck('id')->toArray();
+            $flights = DS_TourFlightIds($tour_codes);
 
             if (count($flights) === 0) {
                 flash()->error('No flights found for '.implode(', ', $tour_codes).' !');
@@ -442,19 +461,26 @@ class DS_TourController extends Controller
         }
 
         if ($action === 'normalize') {
-            // Remove ownership and tour code, make legs active and visible. They will be regular/scheduled flights.
-            $normalized = $tour->legs()->update([
-                'route_code' => null,
-                'owner_type' => null,
-                'owner_id'   => null,
-                'start_date' => null,
-                'end_date'   => null,
-                'notes'      => 'Was a part of '.$tour->tour_name.' ('.$tour->tour_code.'), normalized on '.Carbon::now()->format('Y-m-d'),
-                'active'     => 1,
-                'visible'    => 1,
-            ]);
+            // Con los tramos en su propia tabla, normalizar = soltarlos del tour. Los
+            // vuelos no se tocan (su route_code es suyo), solo se limpian fechas y
+            // ownership si el tour se los habia puesto.
+            $normalized_ids = $tour->legs()->pluck('flights.id')->all();
+            $tour->legs()->detach();
+
+            if (count($normalized_ids) > 0) {
+                Flight::whereIn('id', $normalized_ids)->update([
+                    'owner_type' => null,
+                    'owner_id'   => null,
+                    'start_date' => null,
+                    'end_date'   => null,
+                    'active'     => 1,
+                    'visible'    => 1,
+                ]);
+            }
+
+            $normalized = count($normalized_ids);
             Log::debug('Disposable Special | '.$normalized.' legs of '.$tour->tour_code.' normalized');
-            flash()->info($tour->tour_code.' legs normalized, ownership and tour code removed.');
+            flash()->info($tour->tour_code.' legs normalized, released from the tour.');
         }
 
         if ($action === 'export') {
@@ -466,9 +492,16 @@ class DS_TourController extends Controller
         }
 
         if ($action === 'delete_leg') {
-            $selected_leg = $tour->legs()->where('id', $request->leg_id)->first();
-            $selected_leg->forceDelete();
-            flash()->info('Leg '.$selected_leg->route_leg.' deleted');
+            // OJO: antes esto hacia forceDelete() del vuelo. Ahora solo se suelta del
+            // tour: los vuelos de la aerolinea no se borran desde aqui.
+            $selected_leg = $tour->legs()->where('flights.id', $request->leg_id)->first();
+            if (filled($selected_leg)) {
+                $leg_number = $selected_leg->pivot->leg ?? $selected_leg->route_leg;
+                $tour->legs()->detach($selected_leg->id);
+                flash()->info('Leg '.$leg_number.' released from the tour');
+            } else {
+                flash()->error('Leg not found !');
+            }
         }
 
         return redirect(route('DSpecial.tour_admin').'?touredit='.$tour->id);
@@ -478,11 +511,11 @@ class DS_TourController extends Controller
     public function LegOwnership($action = null, $tour = null)
     {
         if (filled($tour) && $action === 'own') {
-            $ownership = Flight::where('route_code', $tour->tour_code)->update(['owner_type' => 'DS_Tour', 'owner_id' => $tour->id]);
+            $ownership = Flight::whereIn('id', DS_TourFlightIds([$tour->tour_code]))->update(['owner_type' => 'DS_Tour', 'owner_id' => $tour->id]);
             Log::debug('Disposable Special | Leg ownership of '.$tour->tour_code.' added for '.$ownership.' legs');
             flash()->info('Tour leg ownership completed');
         } elseif (filled($tour) && $action === 'drop') {
-            $ownership = Flight::where('route_code', $tour->tour_code)->update(['owner_type' => null, 'owner_id' => null]);
+            $ownership = Flight::whereIn('id', DS_TourFlightIds([$tour->tour_code]))->update(['owner_type' => null, 'owner_id' => null]);
             Log::debug('Disposable Special | Leg ownership of '.$tour->tour_code.' removed for '.$ownership.' legs');
             flash()->info('Tour leg ownership removed');
         } else {
@@ -496,9 +529,12 @@ class DS_TourController extends Controller
         $selected_tour = DS_Tour::where('id', $tour->id)->first();
 
         if (filled($selected_tour) && $action === 'delete') {
-            $deleted = $selected_tour->legs()->forceDelete();
-            Log::debug('Disposable Special | '.$deleted.' legs of '.$selected_tour->tour_code.' deleted');
-            flash()->info($selected_tour->tour_code.' legs deleted');
+            // Suelta todos los tramos del tour. NO borra los vuelos: antes hacia
+            // forceDelete() y se llevaba por delante vuelos de la programacion.
+            $released = $selected_tour->legs()->count();
+            $selected_tour->legs()->detach();
+            Log::debug('Disposable Special | '.$released.' legs of '.$selected_tour->tour_code.' released');
+            flash()->info($selected_tour->tour_code.' legs released from the tour');
         } else {
             flash()->error('Tour not found !');
         }
@@ -510,7 +546,7 @@ class DS_TourController extends Controller
         $selected_tour = DS_Tour::where('id', $tour->id)->first();
 
         if (filled($selected_tour) && $action === 'clean') {
-            $cleaned = $selected_tour->legs()->update(['notes' => null]);
+            $cleaned = Flight::whereIn('id', $selected_tour->legs()->pluck('flights.id')->all())->update(['notes' => null]);
             Log::debug('Disposable Special | Notes/Remarks of '.$cleaned.' legs for '.$selected_tour->tour_code.' cleaned');
             flash()->info($selected_tour->tour_code.' leg notes/remarls cleaned');
         } else {
@@ -525,11 +561,11 @@ class DS_TourController extends Controller
         $selected_tour = DS_Tour::where('id', $tour->id)->first();
 
         if (filled($selected_tour) && $action === 'activate') {
-            $legs = $selected_tour->legs()->update(['active' => 1, 'visible' => $visibility]);
+            $legs = Flight::whereIn('id', $selected_tour->legs()->pluck('flights.id')->all())->update(['active' => 1, 'visible' => $visibility]);
             Log::debug('Disposable Special | '.$legs.' legs of '.$selected_tour->tour_code.' activated');
             flash()->info($selected_tour->tour_code.' legs activated');
         } elseif (filled($selected_tour) && $action === 'deactivate') {
-            $legs = $selected_tour->legs()->update(['active' => 0, 'visible' => 0]);
+            $legs = Flight::whereIn('id', $selected_tour->legs()->pluck('flights.id')->all())->update(['active' => 0, 'visible' => 0]);
             Log::debug('Disposable Special | '.$legs.' legs of '.$selected_tour->tour_code.' deactivated');
             flash()->info('Tour legs deactivated');
         } else {

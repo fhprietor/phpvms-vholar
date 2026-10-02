@@ -102,7 +102,7 @@
   value: ''
   options: ''
   type: text
-  description: 'NavData API key handed to ACARS clients by GET /api/navdata. It is never sent in clear text: it travels sealed with AES-256-GCM under the API key of the pilot making the request'
+  description: 'NavData API key handed to ACARS clients by GET /api/navdata. It is never sent in clear text: it travels sealed (AES-256-GCM or AES-256-CBC+HMAC) under the API key of the pilot making the request'
 - key: captcha.enabled
   name: 'hCaptcha Enabled'
   group: captcha

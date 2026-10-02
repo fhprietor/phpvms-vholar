@@ -10,7 +10,7 @@
  */
 return [
     'release' => 'vholar-1.1.1',
-    'theme' => 'vholar',
+    'theme'   => 'vholar',
 
     /*
      * Entrega de la clave de NavData a los clientes ACARS (GET /api/navdata).
@@ -32,11 +32,8 @@ return [
         'kdf_salt' => 'vmsopenacars/navdata/v1',
         'kdf_info' => 'navdata-api-key',
 
-        // Datos autenticados asociados (AAD) del AES-GCM. Contexto publico que
-        // ata el sobre a este uso concreto.
+        // Datos autenticados asociados (AAD) del sobre. Contexto publico que
+        // ata el cifrado a este uso concreto.
         'aad' => 'vmsopenacars/navdata/v1',
-
-        // Cifrado autenticado del sobre: AES-256-GCM.
-        'cipher' => 'aes-256-gcm',
     ],
 ];

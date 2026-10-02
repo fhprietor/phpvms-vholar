@@ -6,11 +6,10 @@
   // Distancias de los legs: una sola consulta agrupada por route_code. Se consulta la
   // tabla directamente porque el modelo Flight aplica un scope global y dejaba fuera
   // legs (daba 1 nm en vez de 360 para el tour ANDES).
+  // Distancias por vuelo (los tramos ya no llevan route_code: la relacion es el pivote)
   $legDistances = \Illuminate\Support\Facades\DB::table('flights')
-      ->whereIn('route_code', $tours->pluck('tour_code')->all())
-      ->selectRaw('route_code, coalesce(sum(distance), 0) as distance')
-      ->groupBy('route_code')
-      ->pluck('distance', 'route_code');
+      ->whereIn('id', $tours->flatMap(fn ($t) => $t->legs->pluck('id'))->unique()->all())
+      ->pluck('distance', 'id');
 
   // Secciones al estilo de la web de referencia: en vez de pestanas, bloques.
   $endingSoon = [];
@@ -163,7 +162,7 @@
       </h5>
       <div class="row g-3 mb-4">
         @foreach($list as $tour)
-          @include('DSpecial::tours.table', ['leg_distance' => $legDistances[$tour->tour_code] ?? null])
+          @include('DSpecial::tours.table', ['leg_distance' => $tour->legs->sum(fn ($l) => (float) ($legDistances[$l->id] ?? 0))])
         @endforeach
       </div>
     @endif

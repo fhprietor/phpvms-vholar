@@ -127,11 +127,11 @@
             <th class="text-right">Details</th>
             <th class="text-right">Actions</th>
           </tr>
-          @foreach($tour->legs->sortBy('route_leg', SORT_NATURAL) as $leg)
+          @foreach($tour->legs as $leg)
             <tr>
               <td>{{ optional($leg->airline)->code.' '.$leg->flight_number}}</td>
-              <td>{{ $leg->route_code }}</td>
-              <td>{{ $leg->route_leg }}</td>
+              <td>{{ $tour->tour_code }}</td>
+              <td>{{ $leg->pivot->leg ?? $leg->route_leg }}</td>
               <td>{{ $leg->dpt_airport_id }}</td>
               <td>{{ $leg->arr_airport_id }}</td>
               <td>{{ $leg->distance->local(0).' '.$units['distance'] }}</td>

@@ -102,7 +102,16 @@ class DS_ApiController extends Controller
                 'state'        => ($t->start_date <= $now) ? 'Active' : 'Planned',
                 'leg_count'    => $t->legs->count(),
                 'plt_count'    => Pirep::where('route_code', $t->tour_code)->where('state', PirepState::ACCEPTED)->distinct('user_id')->count(),
-                'legs'         => $t->legs()->with('dpt_airport', 'arr_airport')->select('id', 'flight_number', 'route_code', 'route_leg', 'dpt_airport_id', 'arr_airport_id', 'start_date', 'end_date')->orderby('route_leg')->get(),
+                'legs'         => $t->legs()->with('dpt_airport', 'arr_airport')->get()->map(fn ($l) => [
+                    'id'             => $l->id,
+                    'flight_number'  => $l->flight_number,
+                    'route_code'     => $t->tour_code,
+                    'route_leg'      => $l->pivot->leg,
+                    'dpt_airport_id' => $l->dpt_airport_id,
+                    'arr_airport_id' => $l->arr_airport_id,
+                    'start_date'     => $l->start_date,
+                    'end_date'       => $l->end_date,
+                ]),
             ];
 
             // Append either active or planned collections

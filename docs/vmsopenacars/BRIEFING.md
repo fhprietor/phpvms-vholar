@@ -72,11 +72,15 @@ Haz clic en el botón **SETTINGS** para abrir el diálogo de configuración. Tod
 
 vmsOpenAcars consulta el servicio **NavData API** para calcular con precisión la distancia al umbral de pista, la desviación de centreline, y detectar el ILS de la pista de aterrizaje. Sin una API key válida el scoring básico funciona, pero los criterios **Touchdown Zone**, **Centreline Deviation**, **Localizer Alignment** y **Minimums Compliance** no se evaluarán.
 
+Las credenciales de NavData **ya no se reparten dentro del fichero `.config` publicado**: al autenticarse, la app las pide a phpVMS con tu API Key personal (`GET /api/navdata`) y phpVMS las entrega cifradas con esa misma clave. A partir de ahí la app habla directamente con NavData. Si el sobre caduca (6 h por defecto), la app lo vuelve a pedir sola.
+
 | Campo | Descripción |
 |---|---|
-| NavData API URL | URL base del servicio NavData de tu aerolínea virtual |
-| NavData API Key | Clave de acceso proporcionada por tu aerolínea virtual |
+| NavData API URL | URL base del servicio NavData. Se rellena sola con lo que entrega phpVMS; puedes dejarla como respaldo |
+| NavData API Key | **Déjalo vacío**: lo entrega phpVMS sellado en cada sesión. Solo se rellena a mano si tu aerolínea todavía no publica el endpoint |
 | Origin Domain | Dominio de la aerolínea (para validación de origen HTTP) |
+
+> Equipo de desarrollo: el contrato exacto (petición, respuesta y descifrado en .NET Framework 4.8.1) está en [`ENTREGA-CLAVE-NAVDATA.md`](ENTREGA-CLAVE-NAVDATA.md).
 
 Pulsa **TEST** para verificar la conectividad y la validez de la API key. El botón muestra en verde el ciclo AIRAC vigente si todo es correcto, en naranja si el servicio está activo pero la key es inválida, y en rojo si el servicio no es alcanzable.
 
