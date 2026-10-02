@@ -3,7 +3,7 @@ current:
   label: ''
   major: 7
   minor: 0
-  patch: 0
+  patch: 10
   prerelease: false
   buildmetadata:
   commit: ''

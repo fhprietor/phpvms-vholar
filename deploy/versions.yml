@@ -3,12 +3,16 @@
 # Cada tag de release del repo debe congelar exactamente este contenido. Si un
 # despliegue no coincide con este fichero, no es reproducible.
 
-release: vholar-1.0.0
+release: vholar-1.1.0
 
 phpvms:
   upstream: https://github.com/phpvms/phpvms
-  base_tag: 7.0.5
-  base_commit: 68efe7ce
+  # Linea 7.x en mantenimiento (rama releases/7.0). 7.0.9 y 7.0.10 apuntan al
+  # mismo commit. `main` ya es 8.0.0-dev (Filament, 130 migraciones): no se toma.
+  base_tag: 7.0.10
+  base_commit: 46a0e88e
+  merged_from: 7.0.10 (merge e6ec6497, 0 conflictos)
+  local_version: config/version.yml declara 7.0.10 (upstream no lo sube en la rama)
   fork: https://github.com/fhprietor/phpvms-vholar
   branch: custom-vholar
 

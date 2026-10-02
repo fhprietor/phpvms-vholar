@@ -1,5 +1,30 @@
 # Changelog
 
+## [Vholar] 2026-10-01 — Actualizacion a phpVMS 7.0.10 (vholar-1.1.0)
+
+Merge de la ultima release de la linea 7.x: **9 commits, 20 ficheros, 315
+inserciones / 469 borrados**, sin migraciones ni cambios de dependencias.
+
+- **Merge limpio**: `git merge 7.0.10` sin conflictos. Solo 2 ficheros se
+  solapaban con los cambios propios y ambos se reconcilian solos:
+  `app/Providers/RouteServiceProvider.php` (sobreviven las rutas propias de
+  ACARS, desaparecen las del importador) y
+  `app/Http/Controllers/Frontend/ProfileController.php` (entra la validacion de
+  avatar de upstream y se mantiene el manejo propio del fichero).
+- **Seguridad**: instalador endurecido, comprobacion de `.env` en vez de la
+  tabla `users`, y validacion/sanitizacion de los campos de perfil.
+- **Modulos**: dos arreglos del activador (`DatabaseActivator::setActive` con
+  modulo nuevo, e invalidacion de la cache del manifiesto de nwidart), que es
+  justo el mecanismo que usa esta instalacion (`modules.yml` + tabla `modules`).
+- **Otros**: conteo de aeronaves por vuelo, parametro `post_date` en
+  `FinanceService`, y eliminacion del importador antiguo (rutas + 8 vistas).
+- `config/version.yml` se sube a **7.0.10** (upstream no lo actualiza en la
+  rama), con lo que desaparece el aviso "New version 7.0.10 is available!" del
+  panel de admin.
+- Verificado por smoke test: dashboard de admin (sin aviso), flights, pireps,
+  users, asignaciones, VmsOpenOps, VmsOpenFileManager, dashboard de piloto,
+  listado y detalle de pirep (analisis ACARS), perfil y flights.
+
 ## [Vholar] 2026-10-01 — Auditoria de asignaciones de pilotos
 
 ### DisposableSpecial: registro en `activity_log`
