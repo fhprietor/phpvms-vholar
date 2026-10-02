@@ -1,5 +1,24 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Estadisticas: totales de compania publicos
+
+- `/vmsopenops/stats` pasa a ser una **pagina publica** con dos bloques:
+  - **Arriba, los totales historicos de la compania** (14 tarjetas con icono de
+    Bootstrap Icons): pilotos con PIREP y activos, pilotos del mes, aeronaves, vuelos
+    programados, rutas unicas, PIREPs aceptados, vuelos hoy y ayer, horas voladas
+    (H:MM), destinos, combustible (lb -> kg), distancia y hubs. Se renderizan en el
+    HTML, asi que **se ven sin sesion**, y se cachean 15 min.
+  - **Debajo, los rankings por periodo** que ya habia (top score, millas, vuelos,
+    rutas, subflotas, aeronaves y aeropuertos). Su API (`GET /api/vmsopenops/stats`)
+    sigue detras de `auth` y el JS ya no se inyecta a los invitados: si no hay sesion
+    se muestra un aviso con el boton de login.
+- Los totales se calculan en una sola pasada sobre los PIREPs aceptados mas cuatro
+  counts (antes no existia ningun cuadro de totales en la web).
+- Modulo `VmsOpenOps` -> `7cac471` (el pin se actualiza en `deploy/versions.yml`).
+- Inspirado en el cuadro de totales de Star Alliance Virtual (vaSystem). Sus iconos
+  son Font Awesome; aqui se hace el equivalente con Bootstrap Icons, que el tema ya
+  carga, sin anadir dependencias.
+
 ## [Vholar] 2026-10-02 — Aportes preparados para upstream
 
 - Nuevo `docs/aportes-upstream/` con lo que podemos devolver a los proyectos

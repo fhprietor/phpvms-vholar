@@ -99,7 +99,7 @@ modules:
     VmsOpenOps:
       origin: submodule
       url: https://github.com/fhprietor/vmsOpenOps.git
-      commit: fa0f441a6b908700289a87a6b83d1fedfa994fb0
+      commit: 7cac4715d2bebbac0dbaf07fee66f58f7662c92f
       branch: main
       module_json_version: null
     VmsOpenFileManager:

@@ -29,6 +29,9 @@ final class FilePermissionsTest extends TestCase
         'public',
         'resources',
         'routes',
+        // Los modulos tambien se leen en caliente (controladores, rutas y vistas):
+        // un fichero en 600 ahi tambien tumba la pagina que lo carga.
+        'modules',
     ];
 
     public function test_files_the_app_reads_are_world_readable(): void
