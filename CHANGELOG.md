@@ -1,5 +1,29 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Detalle del tour con el layout de referencia
+
+- `/dtours/{code}` deja las pestanas (Legs / Rules / Map modal / Awards / Report) y pasa
+  a **secciones**, en la linea del listado:
+  - **Sobre este tour**: portada (imagen opcional `public/assets/themes/vholar/tours/
+    {CODE}.jpg` o degradado), titulo, tipo/codigo/fechas, descripcion, resumen
+    `X nm (Y km)` repartidos en N tramos y, con sesion, barra de **progreso** (tramos
+    volados de N).
+  - **Mapa** inline (antes era un modal).
+  - **Tramos**: un acordeon por tramo con distancia (nm y km), aeropuertos enlazados,
+    tiempo de vuelo, validez, aeronaves validas (subflotas) y acciones (detalles del
+    vuelo, reservar, SimBrief) con las mismas reglas que el modulo.
+  - Reglas, galardonados e informe (admin) bajan al final como secciones.
+- **Arreglado el mapa, que estaba roto**: el script del modulo llamaba a
+  `L.tileLayer.provider(...)`, de un plugin (`leaflet-providers`) que el tema **no
+  carga**; ahora usa capas planas, con CARTO y la ApiKey del ajuste via
+  `carto_tile_url()`. El plugin `leaflet-geodesic` se carga en la vista, como ya hace
+  la vista de asignaciones del tema.
+- Los iconos `fas fa-*` del modulo (invisibles en vholar, que solo carga Bootstrap
+  Icons) pasan a `bi bi-*`.
+- Sin tocar el modulo: es override del tema + claves nuevas en
+  `resources/lang/{en,es-es}/vholar_tours.php` (resumen, tramos, distancia, progreso,
+  galardonados...).
+
 ## [Vholar] 2026-10-02 — Tours en el menu, reglas traducibles y locale
 
 - **Nav**: "Tours" sale del bloque `@auth` del desplegable **Centro de Operaciones**
