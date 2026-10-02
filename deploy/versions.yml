@@ -8,7 +8,8 @@ release: vholar-1.1.1
 phpvms:
   upstream: https://github.com/phpvms/phpvms
   # Linea 7.x en mantenimiento (rama releases/7.0). 7.0.9 y 7.0.10 apuntan al
-  # mismo commit. `main` ya es 8.0.0-dev (Filament, 130 migraciones): no se toma.
+  # mismo commit. `main` ya es 8.0.0-dev (Filament 5, 105 migraciones nuevas) y
+  # NO esta publicado: ver "Ruta a phpVMS 8" en deploy/README.md.
   base_tag: 7.0.10
   base_commit: 46a0e88e
   merged_from: 7.0.10 (merge e6ec6497, 0 conflictos)
@@ -127,13 +128,14 @@ secrets_not_in_repo:
   - storage/app/public/filemanager/**/vmsopenacarsexe.config (contiene la API key de NavData)
 
 deploy:
-  - git clone <fork> && git checkout <tag>
-  - git submodule update --init --recursive
-  - composer install --no-dev --optimize-autoloader
-  - npm ci && npm run production
-  - php artisan migrate --force
-  - visitar /update   # sincroniza settings, permisos y modulos
-  - php artisan cache:clear && php artisan view:clear && php artisan route:clear
+  steps:
+    - git clone <fork> && git checkout <tag>
+    - git submodule update --init --recursive
+    - composer install --no-dev --optimize-autoloader
+    - npm ci && npm run production
+    - php artisan migrate --force
+    - visitar /update   # sincroniza settings, permisos y modulos
+    - php artisan cache:clear && php artisan view:clear && php artisan route:clear
   caveats:
     - >
       `php artisan migrate` global fallaba en la migracion del modulo

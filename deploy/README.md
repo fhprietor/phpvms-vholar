@@ -47,8 +47,8 @@ Ver la seccion `deploy` de [versions.yml](versions.yml). Resumen:
 
 - **Suite de tests**: `vendor/bin/phpunit`. Usa **SQLite en memoria**
   (`DB_CONNECTION=memory` en `phpunit.xml`), asi que no toca la BD real; requiere
-  la extension `pdo_sqlite`. Estado en `vholar-1.1.0` (phpVMS 7.0.10):
-  `OK (208 tests, 1166 assertions)`.
+  la extension `pdo_sqlite`. Estado en `vholar-1.1.1` (phpVMS 7.0.10):
+  `OK (208 tests, 1213 assertions)`.
 - **Smoke test manual**: dashboard de admin (sin el aviso de nueva version),
   `/admin/flights`, `/admin/pireps`, `/admin/users`, asignaciones, VmsOpenOps,
   VmsOpenFileManager, dashboard de piloto, listado y detalle de un PIREP
@@ -101,6 +101,64 @@ del repo), asi que ya no son clones actualizables in situ. Para subir de version
   `git config --global --add safe.directory /var/www/phpvms/modules/VmsOpenOps`
   (idem para el resto). Si no, pasar `-c safe.directory=<ruta>` en cada comando.
 
+## Ruta a phpVMS 8 (investigacion, 2026-10-02)
+
+Comprobado contra upstream en `73199ca2` (14-sep-2026) y
+[docs.phpvms.net/8.x](https://docs.phpvms.net/8.x/whats-new). **phpVMS 8 NO esta
+publicado**: no hay tags `8.x`, `main` declara `8.0.0` y la documentacion de la
+8.x esta marcada como *unreleased*. Upstream guarda ademas una guia interna de
+migracion todavia en **draft** (`docs/upgrading-to-8.0.md`).
+
+### Distancia desde esta base (7.0.10)
+
+| Metrica | Valor |
+|---|---|
+| Commits / ficheros | 973 / 3.261 |
+| Migraciones nuevas | 105 |
+| PHP requerido | >= 8.4.1 (aqui: 8.3.35) |
+| Framework | Laravel 10 -> 13 |
+| Admin | Rehecho en Filament 5; el admin Blade de 7.x desaparece |
+| Build / tests | Vite + bun (adios webpack.mix); Pest 4 en vez de PHPUnit |
+
+### Impacto en lo nuestro
+
+| Personalizacion | En phpVMS 8 |
+|---|---|
+| Admin BS3 + `vholar-admin.css` + overrides de admin | Se pierde: admin Filament, URLs nuevas |
+| Modulos (propios y de terceros) | `nwidart/laravel-modules` eliminado: sistema de addons (`addons`, `AddonServiceProvider`, `module.json` validado) |
+| Activador por BD (`DatabaseActivator` + `modules.yml`) | Sustituido por el gestor de addons |
+| Laratrust (`ability:admin,admin-access`, `role:admin`) | `spatie/laravel-permission`, permisos renombrados |
+| `PirepRepository` (filtro `source_name` de vmsOpenAcars) | El patron repositorio se elimina: rehacer con Query classes |
+| `App\Models\Enums\*` (`AcarsType`, `PirepState`...) | Pasan a `App\Enums\*` como enums nativos |
+| `app/Http/Kernel.php` + `RouteServiceProvider` | `bootstrap/app.php`: no hay Kernel |
+| `flights.active` | Renombrada a `flights.enabled` (la vista `month_assignments` la consulta) |
+| ACARS | Nueva tabla `pirep_positions`; migracion destructiva que purga huerfanos de `acars` |
+| Notificaciones Discord | Settings `*_webhook_url` -> `*_route` |
+| PIREP fields (los 3 de vmsOpenAcars) | Pasan a ser tipados (`type` / `units`) |
+
+### Lo que sobrevive (y lo que no rompe)
+
+- **Temas**: el sistema sigue igual (`igaster/laravel-theme`,
+  `resources/views/layouts/<nombre>`), asi que la arquitectura del tema `vholar`
+  es reutilizable; habria que portar los assets a Vite y refrescar la base
+  Disposable.
+- **Clientes ACARS**: la superficie de la API no cambia (salvo
+  `airports/{id}` -> `airports/{airport}` y un endpoint nuevo) y las API keys por
+  usuario siguen funcionando (OAuth2 se anade, no sustituye). vmsOpenAcars y
+  vmsACARS no se romperian por la API.
+
+### Plan
+
+1. **Ahora**: quieto en 7.0.10, el final de la linea 7.x (suite en verde).
+2. **Cuando salga RC o tag de 8.0**: spike aislado (contenedor PHP 8.4 + 8.0
+   limpio) portando solo el tema y un modulo, para medir el esfuerzo real.
+3. **Si se migra**, orden: infra PHP 8.4 + renombres de `.env`
+   (`CACHE_DRIVER`->`CACHE_STORE`, etc.) -> tema a Vite -> roles/permisos ->
+   addons -> admin a Filament -> rehacer el filtro `source_name` y arreglar
+   `month_assignments` con `flights.enabled`.
+4. **Dependencia externa**: el tema va sobre Disposable Theme v3 y hay 4-5
+   modulos Disposable/CHJumpSeat; sin versiones para 8 no hay migracion posible.
+
 ## Pendiente (siguiente iteracion)
 
 1. ~~Extraer los modulos propios (`VmsOpenOps`, `VmsOpenFileManager`) a repos
@@ -109,9 +167,10 @@ del repo), asi que ya no son clones actualizables in situ. Para subir de version
    ambos con README propio.
    `TestABC` sigue vendorizado por ser un stub: decidir si se mantiene.
 2. ~~Estado de modulos~~ **Hecho**: vive en `app/Database/seeds/modules.yml`
-   (activador `database`) y se aplica en `/update`. Quedan dos filas huerfanas
-   en la tabla (`VMSAcars`, `TestModule`) que no corresponden a modulos
-   instalados; se pueden borrar cuando convenga.
+   (activador `database`) y se aplica en `/update`. Quedan tres filas huerfanas
+   en la tabla (`VMSAcars`, `TestModule`, `Sample` — esta ultima corresponde a un
+   modulo que upstream elimina en 8.0) que no corresponden a modulos instalados;
+   se pueden borrar cuando convenga.
 3. ~~Convertir a migracion el backfill de `pireps.source_name`~~ **Hecho**:
    `app/Database/migrations/2026_09_30_120000_backfill_pireps_source_name.php`.
 4. **Reponer los `.git` de los modulos** si se quiere volver a actualizarlos in
