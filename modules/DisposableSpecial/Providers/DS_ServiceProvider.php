@@ -68,9 +68,6 @@ class DS_ServiceProvider extends ServiceProvider
             // Page Controller Routes
             Route::get('dopsmanual', 'DS_PageController@ops_manual')->name('ops_manual');
             Route::get('dlandingrates', 'DS_PageController@landing_rates')->name('landing_rates');
-            // Tour Controller Routes
-            Route::get('dtours', 'DS_TourController@index')->name('tours');
-            Route::get('dtours/{code}', 'DS_TourController@show')->name('tour');
         });
 
         // Frontend Public
@@ -82,6 +79,10 @@ class DS_ServiceProvider extends ServiceProvider
         ], function () {
             Route::get('daboutus', 'DS_PageController@about_us')->name('about_us');
             Route::get('drulesandregs', 'DS_PageController@rules_regs')->name('rules_regs');
+            // Tours: publicos a proposito (no hay informacion sensible). El detalle
+            // (DS_TourController@show) esta preparado para invitados.
+            Route::get('dtours', 'DS_TourController@index')->name('tours');
+            Route::get('dtours/{code}', 'DS_TourController@show')->name('tour');
         });
 
         // API Public

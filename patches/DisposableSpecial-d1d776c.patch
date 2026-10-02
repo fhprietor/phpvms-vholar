@@ -565,6 +565,40 @@ index aa67dcc..8e30857 100644
 +        return back();
 +    }  
  }
+diff --git a/Http/Controllers/DS_TourController.php b/Http/Controllers/DS_TourController.php
+index b93e876..dd2d36d 100644
+--- a/Http/Controllers/DS_TourController.php
++++ b/Http/Controllers/DS_TourController.php
+@@ -82,13 +82,16 @@ class DS_TourController extends Controller
+             return redirect(route('DSpecial.tours'));
+         }
+ 
+-        // Logged in user
++        // Logged in user (NULL en la pagina publica de tours)
+         $user = User::with(['bids', 'current_airport'])->find(Auth::id());
+ 
+-        // Check user tokens and redirect even before starting lots of stuff
+-        $user_token_check = DS_Marketowner::where(['user_id' => $user->id, 'marketitem_id' => $tour->tour_token])->count();
++        // Check user tokens and redirect even before starting lots of stuff.
++        // Solo con sesion: un invitado no puede comprar el token, pero si ver el tour.
++        $user_token_check = $user
++            ? DS_Marketowner::where(['user_id' => $user->id, 'marketitem_id' => $tour->tour_token])->count()
++            : 0;
+ 
+-        if ($tour->tour_token > 0 && $user_token_check == 0) {
++        if ($user && $tour->tour_token > 0 && $user_token_check == 0) {
+             flash()->error('You do not have the required token for '.$tour->tour_name.', please check the shop...');
+ 
+             return redirect(route('DSpecial.market').'?cat='.DS_ItemCategory::TOUR);
+@@ -193,7 +196,7 @@ class DS_TourController extends Controller
+         }
+ 
+         $saved_flights = [];
+-        foreach ($user->bids as $bid) {
++        foreach (optional($user)->bids ?? [] as $bid) {
+             $saved_flights[$bid->flight_id] = $bid->id;
+         }
+ 
 diff --git a/Models/DS_Assignment.php b/Models/DS_Assignment.php
 index fc93df8..b77e323 100644
 --- a/Models/DS_Assignment.php
@@ -622,7 +656,7 @@ index fc93df8..b77e323 100644
 +
  }
 diff --git a/Providers/DS_ServiceProvider.php b/Providers/DS_ServiceProvider.php
-index a3e43d5..504af02 100644
+index a3e43d5..538b9d7 100644
 --- a/Providers/DS_ServiceProvider.php
 +++ b/Providers/DS_ServiceProvider.php
 @@ -35,6 +35,8 @@ class DS_ServiceProvider extends ServiceProvider
@@ -634,7 +668,28 @@ index a3e43d5..504af02 100644
      }
  
      // Register routes
-@@ -104,8 +106,17 @@ class DS_ServiceProvider extends ServiceProvider
+@@ -66,9 +68,6 @@ class DS_ServiceProvider extends ServiceProvider
+             // Page Controller Routes
+             Route::get('dopsmanual', 'DS_PageController@ops_manual')->name('ops_manual');
+             Route::get('dlandingrates', 'DS_PageController@landing_rates')->name('landing_rates');
+-            // Tour Controller Routes
+-            Route::get('dtours', 'DS_TourController@index')->name('tours');
+-            Route::get('dtours/{code}', 'DS_TourController@show')->name('tour');
+         });
+ 
+         // Frontend Public
+@@ -80,6 +79,10 @@ class DS_ServiceProvider extends ServiceProvider
+         ], function () {
+             Route::get('daboutus', 'DS_PageController@about_us')->name('about_us');
+             Route::get('drulesandregs', 'DS_PageController@rules_regs')->name('rules_regs');
++            // Tours: publicos a proposito (no hay informacion sensible). El detalle
++            // (DS_TourController@show) esta preparado para invitados.
++            Route::get('dtours', 'DS_TourController@index')->name('tours');
++            Route::get('dtours/{code}', 'DS_TourController@show')->name('tour');
+         });
+ 
+         // API Public
+@@ -104,8 +107,17 @@ class DS_ServiceProvider extends ServiceProvider
          ], function () {
              Route::get('dspecial', 'DS_AdminController@index')->name('admin')->middleware('ability:admin|admin-access,addons|modules');
              Route::post('dsettings_store', 'DS_AdminController@update')->name('save_settings')->middleware('ability:admin|admin-access,addons|modules');
@@ -2064,3 +2119,80 @@ index 84b2774..c395f93 100644
 +  {{-- Scripts de bids (el mismo que usa /flights) --}}
 +  @include('flights.scripts')
 +@endsection
+diff --git a/Resources/views/tours/index.blade.php b/Resources/views/tours/index.blade.php
+index 04ab523..659f259 100644
+--- a/Resources/views/tours/index.blade.php
++++ b/Resources/views/tours/index.blade.php
+@@ -7,22 +7,22 @@
+   @else
+     <ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1 active" id="pills-activet-tab" data-toggle="pill" href="#pills-activet" role="tab" aria-controls="pills-activet" aria-selected="true">
++        <a class="nav-link p-1 active" id="pills-activet-tab" data-bs-toggle="pill" href="#pills-activet" role="tab" aria-controls="pills-activet" aria-selected="true">
+           @lang('DSpecial::tours.current')
+         </a>
+       </li>
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1" id="pills-futuret-tab" data-toggle="pill" href="#pills-futuret" role="tab" aria-controls="pills-futuret" aria-selected="false">
++        <a class="nav-link p-1" id="pills-futuret-tab" data-bs-toggle="pill" href="#pills-futuret" role="tab" aria-controls="pills-futuret" aria-selected="false">
+           @lang('DSpecial::tours.future')
+         </a>
+       </li>
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1" id="pills-closedt-tab" data-toggle="pill" href="#pills-closedt" role="tab" aria-controls="pills-closedt" aria-selected="false">
++        <a class="nav-link p-1" id="pills-closedt-tab" data-bs-toggle="pill" href="#pills-closedt" role="tab" aria-controls="pills-closedt" aria-selected="false">
+           @lang('DSpecial::tours.past')
+         </a>
+       </li>
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1" id="pills-rulest-tab" data-toggle="pill" href="#pills-rulest" role="tab" aria-controls="pills-rulest" aria-selected="false">
++        <a class="nav-link p-1" id="pills-rulest-tab" data-bs-toggle="pill" href="#pills-rulest" role="tab" aria-controls="pills-rulest" aria-selected="false">
+           @lang('DSpecial::tours.trules')
+         </a>
+       </li>
+diff --git a/Resources/views/tours/show.blade.php b/Resources/views/tours/show.blade.php
+index 0318abc..9aa475d 100644
+--- a/Resources/views/tours/show.blade.php
++++ b/Resources/views/tours/show.blade.php
+@@ -6,11 +6,11 @@
+     @include('DSpecial::tours.table')
+     <div class="col-lg-2">
+       <div class="nav flex-column nav-pills" id="pills-tab" role="tablist" aria-orientation="vertical">
+-        <a class="nav-link mb-2 active" id="pills-legs-tab" data-toggle="pill" href="#pills-legs" role="tab" aria-controls="pills-legs" aria-selected="false">
++        <a class="nav-link mb-2 active" id="pills-legs-tab" data-bs-toggle="pill" href="#pills-legs" role="tab" aria-controls="pills-legs" aria-selected="false">
+           @lang('DSpecial::tours.legs')
+         </a>
+         @if(filled($tour->tour_rules))
+-          <a class="nav-link mb-2" id="pills-rules-tab" data-toggle="pill" href="#pills-rules" role="tab" aria-controls="pills-rules" aria-selected="false">
++          <a class="nav-link mb-2" id="pills-rules-tab" data-bs-toggle="pill" href="#pills-rules" role="tab" aria-controls="pills-rules" aria-selected="false">
+             @lang('DSpecial::tours.trules')
+           </a>
+         @endif
+@@ -20,12 +20,12 @@
+           </button>
+         @endif
+         @if(filled($tour_awards))
+-          <a class="nav-link mb-2" id="pills-awards-tab" data-toggle="pill" href="#pills-awards" role="tab" aria-controls="pills-report" aria-selected="false">
++          <a class="nav-link mb-2" id="pills-awards-tab" data-bs-toggle="pill" href="#pills-awards" role="tab" aria-controls="pills-report" aria-selected="false">
+             @lang('DSpecial::tours.tawards')
+           </a>
+         @endif
+         @ability('admin', 'admin-access')
+-          <a class="nav-link mb-2" id="pills-report-tab" data-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="false">
++          <a class="nav-link mb-2" id="pills-report-tab" data-bs-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="false">
+             @lang('DSpecial::tours.treport')
+           </a>
+         @endability
+diff --git a/Resources/views/widgets/notams.blade.php b/Resources/views/widgets/notams.blade.php
+index d18254d..1e70429 100644
+--- a/Resources/views/widgets/notams.blade.php
++++ b/Resources/views/widgets/notams.blade.php
+@@ -4,7 +4,7 @@
+       <h5 class="m-1">
+         NOTAMs
+         @if($notams->count() > 1)
+-          <i class="fas fa-scroll float-end" title="Show More" data-toggle="collapse" data-target="#notams" aria-expanded="false" aria-controls="notams"></i>
++          <i class="fas fa-scroll float-end" title="Show More" data-bs-toggle="collapse" data-bs-target="#notams" aria-expanded="false" aria-controls="notams"></i>
+         @else
+           <i class="fas fa-clipboard float-end"></i>
+         @endif

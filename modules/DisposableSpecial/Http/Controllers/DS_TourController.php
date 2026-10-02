@@ -82,13 +82,16 @@ class DS_TourController extends Controller
             return redirect(route('DSpecial.tours'));
         }
 
-        // Logged in user
+        // Logged in user (NULL en la pagina publica de tours)
         $user = User::with(['bids', 'current_airport'])->find(Auth::id());
 
-        // Check user tokens and redirect even before starting lots of stuff
-        $user_token_check = DS_Marketowner::where(['user_id' => $user->id, 'marketitem_id' => $tour->tour_token])->count();
+        // Check user tokens and redirect even before starting lots of stuff.
+        // Solo con sesion: un invitado no puede comprar el token, pero si ver el tour.
+        $user_token_check = $user
+            ? DS_Marketowner::where(['user_id' => $user->id, 'marketitem_id' => $tour->tour_token])->count()
+            : 0;
 
-        if ($tour->tour_token > 0 && $user_token_check == 0) {
+        if ($user && $tour->tour_token > 0 && $user_token_check == 0) {
             flash()->error('You do not have the required token for '.$tour->tour_name.', please check the shop...');
 
             return redirect(route('DSpecial.market').'?cat='.DS_ItemCategory::TOUR);
@@ -193,7 +196,7 @@ class DS_TourController extends Controller
         }
 
         $saved_flights = [];
-        foreach ($user->bids as $bid) {
+        foreach (optional($user)->bids ?? [] as $bid) {
             $saved_flights[$bid->flight_id] = $bid->id;
         }
 

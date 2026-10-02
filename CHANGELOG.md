@@ -1,5 +1,36 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Tours: layout de tarjetas por secciones
+
+- `/dtours` deja las pestanas (Current / Future / Past / Rules) y pasa a **secciones
+  con tarjetas en rejilla** (`col-md-4 col-lg-3`, 4 por fila en pantallas grandes), al
+  estilo de Star Alliance Virtual:
+  - "Terminan pronto" (activos que acaban en <= 30 dias), "Tours en curso",
+    "Proximos tours" y "Tours finalizados"; las secciones vacias no se pintan.
+  - "Reglas de los tours" baja al final como bloque de texto.
+  - Se mantiene el filtro por flota de la cabecera.
+- Cada tarjeta: portada, titulo (enlazado al detalle), descripcion, tipo
+  (abierta / aerolinea), codigo, fechas, y pie con `N legs · X nm (Y km)` mas el aviso
+  del token del market cuando el tour lo requiere.
+- **Portadas**: `DS_Tour` no tiene columna de imagen, asi que la tarjeta busca
+  `public/assets/themes/vholar/tours/{CODE}.jpg|jpeg|png|webp`; si no existe, pinta un
+  degradado con el codigo del tour. Convencion documentada en esa carpeta.
+- Se hace como **override del tema**
+  (`resources/views/layouts/vholar/modules/DisposableSpecial/tours/`), asi que **no se
+  toca el modulo de terceros**: no hay parche nuevo que mantener.
+- Arreglado de paso: la tarjeta usaba iconos Font Awesome (`fas fa-*`), que el tema
+  vholar no carga (solo Bootstrap Icons) -> ahora todo son `bi bi-*`.
+- La distancia de los legs se calcula con una consulta agrupada a `flights`; usando el
+  modelo `Flight` un scope global dejaba legs fuera (daba 1 nm en vez de 360 en ANDES).
+- **`/dtours` y `/dtours/{code}` pasan a ser publicas** (decision del mantenedor: no
+  hay informacion sensible), como en la web de referencia. Para que el detalle no
+  reviente sin sesion se anadieron dos guardas en `DS_TourController@show`, que hacia
+  `$user->id` y `foreach ($user->bids ...)` con `$user` NULL (500 para invitados), y el
+  chequeo del token del market ahora solo redirige si hay sesion.
+- Se regenero `patches/DisposableSpecial-d1d776c.patch`, que estaba **desactualizado**:
+  no incluia las vistas migradas a Bootstrap 5 (tours/index, tours/show, notams) ni el
+  controlador. Validado: aplica sobre `d1d776c` y reproduce el modulo byte a byte.
+
 ## [Vholar] 2026-10-02 — Estadisticas: totales de compania publicos
 
 - `/vmsopenops/stats` pasa a ser una **pagina publica** con dos bloques:
