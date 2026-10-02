@@ -1,6 +1,6 @@
 # Changelog
 
-## [Vholar] 2026-10-02 — Aislar el KVP de los tests (adios al aviso fantasma)
+## [Vholar] 2026-10-02 — Aislar el KVP y los logs de los tests (adios al aviso fantasma)
 
 - `tests/TestCase` usa ahora un KVP propio (`storage/framework/testing/kvp.json`)
   en lugar de `storage/app/kvp.json`. La suite compartia ese fichero con la web:
@@ -10,9 +10,17 @@
   instalada!), y `UtilsTest` dejaba claves sueltas (`testkey`, `intval`).
 - Nuevo `tests/TestCaseIsolationTest.php`: falla si el KVP de los tests apunta al
   de produccion o si una escritura de test llega al fichero real.
+- **Logs**: `tests/TestCase` repunta tambien los canales (`daily`, `single`,
+  `cron_rotating`) a `storage/framework/testing/logs` y rehace los handlers del
+  logger raiz. Hacia falta porque `App\Contracts\CronCommand::
+  redirectLoggingToFile('cron')` empalma los handlers del canal `cron` en el
+  logger raiz (singleton): cualquier test que construyera un comando del cron
+  mandaba el resto de la ejecucion a `storage/logs/cron-*.log` (10.731 lineas
+  `testing.` acumuladas, que despistan al leer ese log).
 - KVP de produccion limpiado y recalculado: `latest_version_tag = 7.0.10` y
   `new_version_available = false` (el aviso desaparece del panel).
-- Suite completa: `OK (214 tests, 1202 assertions)`.
+- Suite completa: `OK (216 tests, 1223 assertions)`. Verificado que, al correr la
+  suite, el numero de lineas `testing.` en los logs de produccion **no sube**.
 
 ## [Vholar] 2026-10-02 — Manifiesto, limpieza de datos y ruta a phpVMS 8
 

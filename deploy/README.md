@@ -48,12 +48,14 @@ Ver la seccion `deploy` de [versions.yml](versions.yml). Resumen:
 - **Suite de tests**: `vendor/bin/phpunit`. Usa **SQLite en memoria**
   (`DB_CONNECTION=memory` en `phpunit.xml`), asi que no toca la BD real; requiere
   la extension `pdo_sqlite`. Estado en `vholar-1.1.1` (phpVMS 7.0.10):
-  `OK (214 tests, 1202 assertions)`.
-- **Aislamiento**: la suite usa tambien su **propio KVP**
-  (`storage/framework/testing/kvp.json`). Importa porque el KVP real es
-  `storage/app/kvp.json` y de ahi sale el aviso de "nueva version" del panel: los
-  tests llegaron a dejar `new_version_available = true` con `7.0.0-beta`. Lo
-  vigila `tests/TestCaseIsolationTest.php`.
+  `OK (216 tests, 1223 assertions)`.
+- **Aislamiento**: la suite usa su **propio KVP**
+  (`storage/framework/testing/kvp.json`) y su **propio directorio de logs**
+  (`storage/framework/testing/logs`). Importa porque el KVP real es
+  `storage/app/kvp.json` (de ahi sale el aviso de "nueva version" del panel) y
+  porque `CronCommand::redirectLoggingToFile('cron')` empalma el canal `cron` en
+  el logger raiz, con lo que los tests volcaban miles de lineas `testing.` en
+  `storage/logs/cron-*.log`. Lo vigila `tests/TestCaseIsolationTest.php`.
 - **Smoke test manual**: dashboard de admin (sin el aviso de nueva version),
   `/admin/flights`, `/admin/pireps`, `/admin/users`, asignaciones, VmsOpenOps,
   VmsOpenFileManager, dashboard de piloto, listado y detalle de un PIREP

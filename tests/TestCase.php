@@ -51,6 +51,11 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
      */
     protected string $kvpTestPath;
 
+    /**
+     * Directorio donde los tests dejan sus logs (ver redirectLogsToTesting).
+     */
+    protected string $logsTestPath;
+
     /** @var User */
     protected $user;
 
@@ -82,6 +87,15 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         }
 
         config(['phpvms.kvp_storage_path' => $this->kvpTestPath]);
+
+        // Aislar tambien los logs. App\Contracts\CronCommand empalma los handlers
+        // del canal 'cron' en el logger raiz (singleton) al construirse, asi que
+        // cualquier test que cree un comando del cron mandaba el resto de la
+        // ejecucion a storage/logs/cron-*.log (miles de lineas 'testing.' que
+        // despistan al leer ese log). Se repuntan los canales al directorio de
+        // testing y se rehacen los handlers del logger raiz, que se crearon al
+        // arrancar la app con las rutas de produccion.
+        $this->redirectLogsToTesting();
 
         // Don't throttle requests when running the tests
         $this->withoutMiddleware(
@@ -117,7 +131,56 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
             unlink($this->kvpTestPath);
         }
 
+        if (isset($this->logsTestPath) && is_dir($this->logsTestPath)) {
+            foreach (glob($this->logsTestPath.'/*') ?: [] as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+        }
+
         parent::tearDown();
+    }
+
+    /**
+     * Manda todos los canales de log al directorio de testing.
+     *
+     * App\Contracts\CronCommand::redirectLoggingToFile('cron') empalma los
+     * handlers del canal cron en el logger raiz, que es un singleton: una vez que
+     * un test construye un comando del cron, el resto de la ejecucion escribe en
+     * storage/logs/cron-*.log. Aqui se repuntan las rutas y se rehacen los
+     * handlers para que nada acabe en los logs de produccion.
+     */
+    private function redirectLogsToTesting(): void
+    {
+        $this->logsTestPath = storage_path('framework/testing/logs');
+        if (!is_dir($this->logsTestPath)) {
+            mkdir($this->logsTestPath, 0777, true);
+        }
+
+        config([
+            'logging.channels.daily.path'         => $this->logsTestPath.'/laravel.log',
+            'logging.channels.single.path'        => $this->logsTestPath.'/laravel.log',
+            'logging.channels.cron_rotating.path' => $this->logsTestPath.'/cron.log',
+        ]);
+
+        // Los canales ya resueltos durante el arranque guardan las rutas de
+        // produccion: hay que olvidarlos para que se reconstruyan con las nuevas.
+        foreach (['stack', 'daily', 'single', 'cron', 'cron_rotating'] as $channel) {
+            Log::forgetChannel($channel);
+        }
+
+        $rootLogger = app(\Illuminate\Log\Logger::class);
+
+        try {
+            foreach ($rootLogger->getHandlers() as $handler) {
+                $handler->close();
+            }
+        } catch (\Throwable $e) {
+            // Un handler ya cerrado no debe romper la suite
+        }
+
+        $rootLogger->setHandlers(Log::channel('daily')->getHandlers());
     }
 
     /**
