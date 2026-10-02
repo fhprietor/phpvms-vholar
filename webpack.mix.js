@@ -33,10 +33,13 @@ function buildFrontendAssets()
   mix.sass('resources/sass/now-ui/now-ui-kit.scss', 'public/assets/frontend/css/now-ui-kit.css')
     .sourceMaps();
 
-  // OJO: este bundle lleva Bootstrap 4.3.1 + moment + Popper 1.x, y lo unico que
-  // lo justifica es el tema del nucleo `beta` (Bootstrap 4). El tema activo
-  // (vholar) y `seven`/`Disposable_v3` son Bootstrap 5 y YA NO lo cargan.
-  // Cuando `beta` se migre o se descarte, borrar este mix.scripts() y el fichero.
+  // OJO: este bundle lleva Bootstrap 4.3.1 + moment + Popper 1.x. Lo siguen
+  // cargando dos temas del nucleo: `beta` (que ES Bootstrap 4, correcto) y
+  // `Disposable_v3`, que todavia no se ha migrado (sus vistas usan
+  // data-toggle/data-target/data-dismiss, asi que hay que migrarlas ANTES de
+  // quitarle el bundle). El tema activo (`vholar`) ya no lo carga, ni `seven`.
+  // Cuando `beta` se descarte y `Disposable_v3` se migre, borrar este
+  // mix.scripts() y el fichero.
   mix.scripts([
     'node_modules/moment/moment.js',
     'node_modules/popper.js/dist/umd/popper.js',

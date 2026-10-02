@@ -60,8 +60,8 @@
     }
 
     .btn-primary:hover {
-        background-color: #563a63 !important;
-        border-color: #563a63 !important;
+        background-color: var(--vh-primary-hover) !important;
+        border-color: var(--vh-primary-hover) !important;
     }
 
     /* Inputs */
