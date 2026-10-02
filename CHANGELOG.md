@@ -1,5 +1,25 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Aportes preparados para upstream
+
+- Nuevo `docs/aportes-upstream/` con lo que podemos devolver a los proyectos
+  originales, preparado y verificado (**nada enviado todavia**):
+  - **4 PRs a phpVMS** (base 7.0.10): `GET pireps/{id}/acars/logs` para poder leer
+    los logs ACARS, filtro `?source_name=` en el listado de PIREPs, expansion de
+    unidades en `AcarsRoute` (la API devolvia `distance`/`fuel` **sin valor**) y
+    aislamiento de la suite (KVP + canales de log). Generados en un clon limpio:
+    aplican con `git apply --check` y la suite pasa (211 tests).
+  - **2 PRs de Bootstrap 5** para `DisposableBasic` y `DisposableSpecial`
+    (`data-toggle/target/dismiss/backdrop/keyboard` -> `data-bs-*`), con la via de
+    licencia explicada: un PR al repositorio del autor no es redistribucion nuestra.
+  - **Informe de los 8 defectos de `VmsOpenOps`** como referencia interna: ese
+    modulo es **nuestro** (no tiene upstream) y los ocho se arreglaron en `249abce`.
+- Descartados despues de comprobarlos contra upstream: el `type` de las posiciones
+  ACARS (ya lo fuerza desde 7.0.10), la inferencia de diversion por
+  `alt_airport_id` (upstream exige el campo `diversion-airport`), el comentario del
+  admin antes de `changeState()` (upstream separa `status()` de `comments()`) y
+  CARTO con API key (upstream no usa ese proveedor de teselas).
+
 ## [Vholar] 2026-10-02 — Higiene: modos de fichero alineados con upstream
 
 - Se restauran los **161 modos** que quedaron en `644` donde upstream tiene `755`

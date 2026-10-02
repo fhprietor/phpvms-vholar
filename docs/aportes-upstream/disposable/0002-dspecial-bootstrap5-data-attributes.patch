@@ -1,0 +1,102 @@
+From 1b91092c07e732257fddb08f9b398aeb2d8d02ef Mon Sep 17 00:00:00 2001
+From: Vholar <vholar@outlook.com>
+Date: Fri, 2 Oct 2026 21:34:41 +0000
+Subject: [PATCH] Bootstrap 5: migrate modal and collapse data attributes
+
+Disposable Theme v3 based themes ship Bootstrap 5, but these views still use the
+Bootstrap 4 attribute names, so the tour modals and the NOTAM sections do not
+open:
+
+- Resources/views/tours/index.blade.php
+- Resources/views/tours/show.blade.php
+- Resources/views/widgets/notams.blade.php
+
+data-toggle / data-target are replaced with data-bs-toggle / data-bs-target.
+Note this is a fix for Bootstrap 5 themes and, on its own, would stop working for
+Bootstrap 4 themes rendering these views: tell me if a conditional is preferred.
+---
+ Resources/views/tours/index.blade.php    | 8 ++++----
+ Resources/views/tours/show.blade.php     | 8 ++++----
+ Resources/views/widgets/notams.blade.php | 2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/Resources/views/tours/index.blade.php b/Resources/views/tours/index.blade.php
+index 04ab523..659f259 100644
+--- a/Resources/views/tours/index.blade.php
++++ b/Resources/views/tours/index.blade.php
+@@ -7,22 +7,22 @@
+   @else
+     <ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1 active" id="pills-activet-tab" data-toggle="pill" href="#pills-activet" role="tab" aria-controls="pills-activet" aria-selected="true">
++        <a class="nav-link p-1 active" id="pills-activet-tab" data-bs-toggle="pill" href="#pills-activet" role="tab" aria-controls="pills-activet" aria-selected="true">
+           @lang('DSpecial::tours.current')
+         </a>
+       </li>
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1" id="pills-futuret-tab" data-toggle="pill" href="#pills-futuret" role="tab" aria-controls="pills-futuret" aria-selected="false">
++        <a class="nav-link p-1" id="pills-futuret-tab" data-bs-toggle="pill" href="#pills-futuret" role="tab" aria-controls="pills-futuret" aria-selected="false">
+           @lang('DSpecial::tours.future')
+         </a>
+       </li>
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1" id="pills-closedt-tab" data-toggle="pill" href="#pills-closedt" role="tab" aria-controls="pills-closedt" aria-selected="false">
++        <a class="nav-link p-1" id="pills-closedt-tab" data-bs-toggle="pill" href="#pills-closedt" role="tab" aria-controls="pills-closedt" aria-selected="false">
+           @lang('DSpecial::tours.past')
+         </a>
+       </li>
+       <li class="nav-item mx-1" role="presentation">
+-        <a class="nav-link p-1" id="pills-rulest-tab" data-toggle="pill" href="#pills-rulest" role="tab" aria-controls="pills-rulest" aria-selected="false">
++        <a class="nav-link p-1" id="pills-rulest-tab" data-bs-toggle="pill" href="#pills-rulest" role="tab" aria-controls="pills-rulest" aria-selected="false">
+           @lang('DSpecial::tours.trules')
+         </a>
+       </li>
+diff --git a/Resources/views/tours/show.blade.php b/Resources/views/tours/show.blade.php
+index 0318abc..9aa475d 100644
+--- a/Resources/views/tours/show.blade.php
++++ b/Resources/views/tours/show.blade.php
+@@ -6,11 +6,11 @@
+     @include('DSpecial::tours.table')
+     <div class="col-lg-2">
+       <div class="nav flex-column nav-pills" id="pills-tab" role="tablist" aria-orientation="vertical">
+-        <a class="nav-link mb-2 active" id="pills-legs-tab" data-toggle="pill" href="#pills-legs" role="tab" aria-controls="pills-legs" aria-selected="false">
++        <a class="nav-link mb-2 active" id="pills-legs-tab" data-bs-toggle="pill" href="#pills-legs" role="tab" aria-controls="pills-legs" aria-selected="false">
+           @lang('DSpecial::tours.legs')
+         </a>
+         @if(filled($tour->tour_rules))
+-          <a class="nav-link mb-2" id="pills-rules-tab" data-toggle="pill" href="#pills-rules" role="tab" aria-controls="pills-rules" aria-selected="false">
++          <a class="nav-link mb-2" id="pills-rules-tab" data-bs-toggle="pill" href="#pills-rules" role="tab" aria-controls="pills-rules" aria-selected="false">
+             @lang('DSpecial::tours.trules')
+           </a>
+         @endif
+@@ -20,12 +20,12 @@
+           </button>
+         @endif
+         @if(filled($tour_awards))
+-          <a class="nav-link mb-2" id="pills-awards-tab" data-toggle="pill" href="#pills-awards" role="tab" aria-controls="pills-report" aria-selected="false">
++          <a class="nav-link mb-2" id="pills-awards-tab" data-bs-toggle="pill" href="#pills-awards" role="tab" aria-controls="pills-report" aria-selected="false">
+             @lang('DSpecial::tours.tawards')
+           </a>
+         @endif
+         @ability('admin', 'admin-access')
+-          <a class="nav-link mb-2" id="pills-report-tab" data-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="false">
++          <a class="nav-link mb-2" id="pills-report-tab" data-bs-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="false">
+             @lang('DSpecial::tours.treport')
+           </a>
+         @endability
+diff --git a/Resources/views/widgets/notams.blade.php b/Resources/views/widgets/notams.blade.php
+index d18254d..1e70429 100644
+--- a/Resources/views/widgets/notams.blade.php
++++ b/Resources/views/widgets/notams.blade.php
+@@ -4,7 +4,7 @@
+       <h5 class="m-1">
+         NOTAMs
+         @if($notams->count() > 1)
+-          <i class="fas fa-scroll float-end" title="Show More" data-toggle="collapse" data-target="#notams" aria-expanded="false" aria-controls="notams"></i>
++          <i class="fas fa-scroll float-end" title="Show More" data-bs-toggle="collapse" data-bs-target="#notams" aria-expanded="false" aria-controls="notams"></i>
+         @else
+           <i class="fas fa-clipboard float-end"></i>
+         @endif
+-- 
+2.43.0
+

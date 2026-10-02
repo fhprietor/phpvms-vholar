@@ -1,0 +1,64 @@
+From 0673dbe943e95cbd13aa8ce9f92ca0c2bd0ea423 Mon Sep 17 00:00:00 2001
+From: fhprietor <fhprietor@gmail.com>
+Date: Fri, 2 Oct 2026 21:47:24 +0000
+Subject: [PATCH 1/4] api: add endpoint to read the ACARS log entries of a
+ PIREP
+
+The API could write ACARS log entries (POST pireps/{id}/acars/logs) but there was
+no way to read them back: GET pireps/{id}/acars only returns the flight path
+(type=0), so tools and clients cannot review what was recorded.
+
+Adds GET pireps/{pirep_id}/acars/logs, mirroring acars_get: it returns the
+type=LOG entries ordered by created_at.
+---
+ app/Http/Controllers/Api/AcarsController.php | 21 ++++++++++++++++++++
+ app/Providers/RouteServiceProvider.php       |  1 +
+ 2 files changed, 22 insertions(+)
+
+diff --git a/app/Http/Controllers/Api/AcarsController.php b/app/Http/Controllers/Api/AcarsController.php
+index 241d32f..d9b2214 100644
+--- a/app/Http/Controllers/Api/AcarsController.php
++++ b/app/Http/Controllers/Api/AcarsController.php
+@@ -114,6 +114,27 @@ class AcarsController extends Controller
+         return new AcarsRouteResource($acars);
+     }
+ 
++    /**
++     * Get the ACARS log entries for a PIREP
++     */
++    public function acars_logs_get(string $id, Request $request): AcarsRouteResource
++    {
++        $pirep = $this->pirepRepo->find($id);
++        if (empty($pirep)) {
++            throw new PirepNotFound($id);
++        }
++
++        $acars = Acars::with(['pirep'])
++            ->where([
++                'pirep_id' => $id,
++                'type'     => AcarsType::LOG,
++            ])
++            ->orderBy('created_at', 'asc')
++            ->get();
++
++        return new AcarsRouteResource($acars);
++    }
++
+     /**
+      * Post ACARS updates for a PIREP
+      *
+diff --git a/app/Providers/RouteServiceProvider.php b/app/Providers/RouteServiceProvider.php
+index a539ee3..99a0984 100755
+--- a/app/Providers/RouteServiceProvider.php
++++ b/app/Providers/RouteServiceProvider.php
+@@ -636,6 +636,7 @@ class RouteServiceProvider extends ServiceProvider
+ 
+                 Route::post('pireps/{pirep_id}/acars/events', 'AcarsController@acars_events');
+                 Route::post('pireps/{pirep_id}/acars/logs', 'AcarsController@acars_logs');
++                Route::get('pireps/{pirep_id}/acars/logs', 'AcarsController@acars_logs_get');
+ 
+                 // Route::get('settings', 'SettingsController@index');
+ 
+-- 
+2.43.0
+

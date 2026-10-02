@@ -1,0 +1,68 @@
+From 0947a55852eeed9cab512f2b5bf0678e41d75648 Mon Sep 17 00:00:00 2001
+From: fhprietor <fhprietor@gmail.com>
+Date: Fri, 2 Oct 2026 21:47:24 +0000
+Subject: [PATCH 3/4] api: expand unit fields in the ACARS route resource
+
+distance and fuel are cast to Unit objects (App\Contracts\Unit). The numeric
+value lives in a protected property, so a plain json_encode of those objects only
+sends the unit names:
+
+    "distance": {"localUnit":"nmi","internalUnit":"nmi","responseUnits":[...]}
+
+API consumers get no value at all. The resource now expands those fields into
+unit => value pairs, for a single row and for a collection (the endpoint returns a
+collection).
+---
+ app/Http/Resources/AcarsRoute.php | 34 ++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/app/Http/Resources/AcarsRoute.php b/app/Http/Resources/AcarsRoute.php
+index 8a94a24..d4982ee 100644
+--- a/app/Http/Resources/AcarsRoute.php
++++ b/app/Http/Resources/AcarsRoute.php
+@@ -3,9 +3,41 @@
+ namespace App\Http\Resources;
+ 
+ use App\Contracts\Resource;
++use App\Contracts\Unit;
+ 
+ /**
+  * ACARS table but only include the fields for the routes
+  * Class AcarsRoute
+  */
+-class AcarsRoute extends Resource {}
++class AcarsRoute extends Resource
++{
++    /**
++     * Attributes cast to a Unit object (App\Contracts\Unit). The numeric value is
++     * held in a protected property, so a plain json_encode of them only sends the
++     * unit names. They get expanded into unit => value pairs.
++     */
++    private const UNIT_FIELDS = ['distance', 'fuel'];
++
++    public function toArray($request)
++    {
++        return $this->expandUnitFields(parent::toArray($request));
++    }
++
++    /**
++     * Expand the unit fields of a single row, or of every row of a collection
++     */
++    private function expandUnitFields(array $data): array
++    {
++        if (array_is_list($data)) {
++            return array_map(fn (array $row) => $this->expandUnitFields($row), $data);
++        }
++
++        foreach (self::UNIT_FIELDS as $field) {
++            if (($data[$field] ?? null) instanceof Unit) {
++                $data[$field] = $data[$field]->getResponseUnits();
++            }
++        }
++
++        return $data;
++    }
++}
+-- 
+2.43.0
+

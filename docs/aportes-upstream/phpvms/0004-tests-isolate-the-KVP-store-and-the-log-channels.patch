@@ -1,0 +1,235 @@
+From 9b4daa73bb5e619fb6ffe438a24a3779091336c3 Mon Sep 17 00:00:00 2001
+From: fhprietor <fhprietor@gmail.com>
+Date: Fri, 2 Oct 2026 21:47:37 +0000
+Subject: [PATCH 4/4] tests: isolate the KVP store and the log channels
+
+The suite shared two resources with the running application:
+
+- The KVP store (App\Repositories\KvpRepository) is a JSON file in
+  storage/app/kvp.json. VersionTest leaves "new_version_available = true" with a
+  fake "latest_version_tag", so after running the suite the admin panel announces
+  a version which does not exist (and UtilsTest leaves stray keys behind).
+- Logs: App\Contracts\CronCommand::redirectLoggingToFile('cron') splices the
+  handlers of the "cron" channel into the root logger. Once a test builds a cron
+  command, the rest of the run writes to storage/logs/cron-*.log.
+
+TestCase now uses storage/framework/testing/{kvp.json,logs} and cleans them up in
+tearDown, and a regression test asserts that neither the production KVP file nor
+the production log files receive any write from the suite.
+---
+ tests/TestCase.php              |  84 ++++++++++++++++++++++++++
+ tests/TestCaseIsolationTest.php | 103 ++++++++++++++++++++++++++++++++
+ 2 files changed, 187 insertions(+)
+ create mode 100644 tests/TestCaseIsolationTest.php
+
+diff --git a/tests/TestCase.php b/tests/TestCase.php
+index ae68ac5..b98e7a5 100755
+--- a/tests/TestCase.php
++++ b/tests/TestCase.php
+@@ -57,10 +57,94 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
+     /**
+      * @throws Exception
+      */
++    /**
++     * Path of the isolated KVP store used by the tests (see setUp).
++     */
++    protected string $kvpTestPath;
++
++    /**
++     * Directory where the tests write their logs (see setUp).
++     */
++    protected string $logsTestPath;
++
++    protected function tearDown(): void
++    {
++        if (isset($this->kvpTestPath) && file_exists($this->kvpTestPath)) {
++            unlink($this->kvpTestPath);
++        }
++
++        if (isset($this->logsTestPath) && is_dir($this->logsTestPath)) {
++            foreach (glob($this->logsTestPath.'/*') ?: [] as $file) {
++                if (is_file($file)) {
++                    unlink($file);
++                }
++            }
++        }
++
++        parent::tearDown();
++    }
++
++    /**
++     * Point every log channel to the testing directory.
++     *
++     * App\Contracts\CronCommand::redirectLoggingToFile('cron') splices the
++     * handlers of the "cron" channel into the root logger, which is a singleton:
++     * as soon as a test builds a cron command, the rest of the run writes to
++     * storage/logs/cron-*.log. Here the channel paths are repointed and the root
++     * logger handlers are rebuilt so nothing lands in the production logs.
++     */
++    private function redirectLogsToTesting(): void
++    {
++        $this->logsTestPath = storage_path('framework/testing/logs');
++        if (!is_dir($this->logsTestPath)) {
++            mkdir($this->logsTestPath, 0777, true);
++        }
++
++        config([
++            'logging.channels.daily.path'         => $this->logsTestPath.'/laravel.log',
++            'logging.channels.single.path'        => $this->logsTestPath.'/laravel.log',
++            'logging.channels.cron_rotating.path' => $this->logsTestPath.'/cron.log',
++        ]);
++
++        // Channels resolved during boot keep the production paths: forget them so
++        // they get rebuilt with the new ones.
++        foreach (['stack', 'daily', 'single', 'cron', 'cron_rotating'] as $channel) {
++            Log::forgetChannel($channel);
++        }
++
++        $rootLogger = app(\Illuminate\Log\Logger::class);
++
++        try {
++            foreach ($rootLogger->getHandlers() as $handler) {
++                $handler->close();
++            }
++        } catch (\Throwable $e) {
++            // A handler which was already closed must not break the suite
++        }
++
++        $rootLogger->setHandlers(Log::channel('daily')->getHandlers());
++    }
++
+     protected function setUp(): void
+     {
+         parent::setUp();
+ 
++        // The tests must not touch production state. The KVP store is a JSON file
++        // in storage/app (the admin panel reads it to announce new versions) and
++        // the "cron" log channel ends up spliced into the root logger.
++        $this->kvpTestPath = storage_path('framework/testing/kvp.json');
++        if (!is_dir(dirname($this->kvpTestPath))) {
++            mkdir(dirname($this->kvpTestPath), 0777, true);
++        }
++
++        if (file_exists($this->kvpTestPath)) {
++            unlink($this->kvpTestPath);
++        }
++
++        config(['phpvms.kvp_storage_path' => $this->kvpTestPath]);
++
++        $this->redirectLogsToTesting();
++
+         // Don't throttle requests when running the tests
+         $this->withoutMiddleware(
+             ThrottleRequests::class
+diff --git a/tests/TestCaseIsolationTest.php b/tests/TestCaseIsolationTest.php
+new file mode 100644
+index 0000000..027b0a8
+--- /dev/null
++++ b/tests/TestCaseIsolationTest.php
+@@ -0,0 +1,103 @@
++<?php
++
++namespace Tests;
++
++use App\Repositories\KvpRepository;
++use Illuminate\Support\Facades\Log;
++use Spatie\Valuestore\Valuestore;
++
++/**
++ * The suite must not touch production state.
++ *
++ * Two resources are shared between the web app, the cron and the tests:
++ *
++ * - The KVP store (App\Repositories\KvpRepository) is a JSON file in
++ *   storage/app/kvp.json. Tests used to overwrite it: running the suite left
++ *   `new_version_available = true` with a bogus `latest_version_tag`, so the
++ *   admin panel announced a version which did not exist.
++ * - The logs: App\Contracts\CronCommand splices the "cron" channel handlers into
++ *   the root logger (a singleton), so the suite dumped thousands of `testing.`
++ *   lines into storage/logs/cron-*.log.
++ */
++final class TestCaseIsolationTest extends TestCase
++{
++    private string $productionKvpPath;
++
++    private string $productionLogsPath;
++
++    protected function setUp(): void
++    {
++        parent::setUp();
++
++        $this->productionKvpPath = storage_path('app/kvp.json');
++        $this->productionLogsPath = storage_path('logs');
++    }
++
++    public function test_kvp_store_used_by_tests_is_not_the_production_one(): void
++    {
++        $this->assertNotSame(
++            $this->productionKvpPath,
++            config('phpvms.kvp_storage_path'),
++            'The tests must not write to the production KVP store'
++        );
++
++        $this->assertStringContainsString('testing', config('phpvms.kvp_storage_path'));
++    }
++
++    public function test_kvp_writes_during_tests_do_not_reach_production(): void
++    {
++        $key = 'isolation_probe';
++
++        app(KvpRepository::class)->save($key, 'test');
++
++        // It is written to the test store...
++        $this->assertTrue(Valuestore::make(config('phpvms.kvp_storage_path'))->has($key));
++
++        // ...and not to the production one (read only).
++        if (file_exists($this->productionKvpPath)) {
++            $this->assertFalse(
++                Valuestore::make($this->productionKvpPath)->has($key),
++                'The production KVP store received a write from the tests'
++            );
++        }
++    }
++
++    public function test_log_channels_are_redirected_to_the_testing_directory(): void
++    {
++        foreach (['daily', 'single', 'cron_rotating'] as $channel) {
++            $path = config("logging.channels.$channel.path");
++
++            $this->assertStringContainsString('framework/testing', $path, "Channel '$channel' is not isolated");
++            $this->assertStringNotContainsString(
++                $this->productionLogsPath,
++                $path,
++                "Channel '$channel' writes to the production logs"
++            );
++        }
++    }
++
++    public function test_log_writes_during_tests_do_not_reach_production(): void
++    {
++        $marker = 'isolation_probe_'.uniqid();
++
++        Log::info($marker);
++
++        // The marker must be in the testing log directory...
++        $found = false;
++        foreach (glob(storage_path('framework/testing/logs/*')) ?: [] as $file) {
++            if (str_contains((string) file_get_contents($file), $marker)) {
++                $found = true;
++            }
++        }
++        $this->assertTrue($found, 'The log marker did not reach the testing directory');
++
++        // ...and in none of the production log files.
++        foreach (glob($this->productionLogsPath.'/*.log') ?: [] as $file) {
++            $this->assertStringNotContainsString(
++                $marker,
++                (string) file_get_contents($file),
++                "Production log '$file' received a write from the tests"
++            );
++        }
++    }
++}
+-- 
+2.43.0
+

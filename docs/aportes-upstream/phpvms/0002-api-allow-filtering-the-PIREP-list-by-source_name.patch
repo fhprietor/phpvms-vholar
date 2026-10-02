@@ -1,0 +1,51 @@
+From 20b41fcb77bf9fa308829172c82e85ad38c945f7 Mon Sep 17 00:00:00 2001
+From: fhprietor <fhprietor@gmail.com>
+Date: Fri, 2 Oct 2026 21:47:24 +0000
+Subject: [PATCH 2/4] api: allow filtering the PIREP list by source_name
+
+source_name records which client produced a PIREP (eg. "vmsOpenAcars/0.9.16"),
+but it could not be filtered or searched, so there was no way to answer "which
+PIREPs came from this client/version".
+
+Adds a ?source_name= filter to GET user/pireps (prefix match, so the client name
+alone returns every version) and whitelists the column in the repository so it can
+also be used with searchFields.
+---
+ app/Http/Controllers/Api/UserController.php | 8 ++++++++
+ app/Repositories/PirepRepository.php        | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/app/Http/Controllers/Api/UserController.php b/app/Http/Controllers/Api/UserController.php
+index 8b58e0f..f429682 100644
+--- a/app/Http/Controllers/Api/UserController.php
++++ b/app/Http/Controllers/Api/UserController.php
+@@ -183,6 +183,14 @@ class UserController extends Controller
+             $where[] = ['state', '!=', PirepState::CANCELLED];
+         }
+ 
++        // Filter by the client which produced the PIREP, eg. "vmsOpenAcars" or
++        // "vmsOpenAcars/0.9.16". It's a prefix match, so passing the client name
++        // returns every version of it.
++        $source_name = $request->query('source_name');
++        if (is_string($source_name) && trim($source_name) !== '') {
++            $where[] = ['source_name', 'like', trim($source_name).'%'];
++        }
++
+         $this->pirepRepo->pushCriteria(new WhereCriteria($request, $where));
+ 
+         $pireps = $this->pirepRepo
+diff --git a/app/Repositories/PirepRepository.php b/app/Repositories/PirepRepository.php
+index 7e89a7c..bdf34d0 100644
+--- a/app/Repositories/PirepRepository.php
++++ b/app/Repositories/PirepRepository.php
+@@ -16,6 +16,7 @@ class PirepRepository extends Repository
+         'user_id',
+         'status',
+         'state',
++        'source_name',
+     ];
+ 
+     /**
+-- 
+2.43.0
+
