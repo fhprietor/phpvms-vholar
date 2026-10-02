@@ -25,6 +25,22 @@ El punto de partida y las versiones exactas de cada pieza estan en
 - `vendor/`, `node_modules/`, `storage/` (incluye los configs de cliente con la
   API key de NavData) y `public/uploads` (contenido de pilotos).
 
+## Higiene del clon (modos de fichero)
+
+El clon tiene **`core.fileMode=false`**. Motivo: el arbol mezcla propietarios
+(`www-data` en lo que escribio el instalador de la web, `frank` en el resto) y no
+se puede hacer `chmod` de los ficheros ajenos (sudo esta bloqueado en este
+entorno). Consecuencia: un `git add -A` grababa el bit de ejecucion del arbol de
+trabajo y 161 ficheros quedaron en `644` donde upstream tiene `755`.
+
+- El bit se fija **en el indice**: `git update-index --chmod=+x <fichero>` (no
+  toca el sistema de ficheros).
+- Con `core.fileMode=false`, git no vuelve a detectarlo desde el arbol, asi que el
+  diff frente a upstream no arrastra ruido de modos.
+
+Para comprobarlo: `git diff --summary <tag-upstream>..HEAD | grep "mode change"`
+debe salir vacio.
+
 ## Tags
 
 - Los tags `7.0.x` son de phpVMS upstream (base).

@@ -1,5 +1,17 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Higiene: modos de fichero alineados con upstream
+
+- Se restauran los **161 modos** que quedaron en `644` donde upstream tiene `755`
+  (los grabo `git add -A` desde un arbol de trabajo que mezcla propietarios).
+- Se hace **en el indice** (`git update-index --chmod=+x`), sin `chmod` real: buena
+  parte del arbol es de `www-data` y aqui sudo esta bloqueado.
+- Se activa **`core.fileMode=false`** en el clon para que git no vuelva a
+  registrarlo desde el sistema de ficheros. Documentado en `deploy/README.md`.
+- Efecto: el diff frente a `7.0.10` deja de tener ruido de modos
+  (`git diff --summary 7.0.10..HEAD | grep "mode change"` sale vacio), que hacia
+  falta para preparar parches y PRs limpios hacia upstream.
+
 ## [Vholar] 2026-10-02 — Credito de Disposable en los pies (licencia)
 
 - Los tres pies muestran ya el credito obligatorio del tema:
