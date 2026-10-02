@@ -707,6 +707,42 @@ index a3e43d5..538b9d7 100644
              // Market Admin Routes
              Route::get('dmarket_admin', 'DS_MarketController@index_admin')->name('market_admin')->middleware('ability:admin|admin-access,addons|modules');
              Route::post('dmarket_store', 'DS_MarketController@store')->name('market_store')->middleware('ability:admin|admin-access,addons|modules');
+diff --git a/Resources/lang/en/tours.php b/Resources/lang/en/tours.php
+index 437743e..82b5573 100644
+--- a/Resources/lang/en/tours.php
++++ b/Resources/lang/en/tours.php
+@@ -29,4 +29,13 @@ return [
+     'tpactive'  => 'Active Tours:',
+     'tpnotour'  => 'You have no active Tours... ',
+     'tpclick'   => 'Click for Tours',
++    // Tour rules. El modulo lo tenia hardcodeado en la vista, asi que no se podia
++    // traducir; ahora es una clave (una entrada por parrafo, admite HTML).
++    'trules_text' => [
++        'Tours can be flown and reported either manually or with acars support, for acars supported tour flights pilots can either bid/load a flight from the list or enter required info manually to New Flight window of our acars software. While sending a manual pirep or using acars with manual flight info entry, please do not forget to add correct route code and leg number to your reports. Missing this step may cause problems during route leg checks and award controls.',
++        '<b>Open Tours</b> can be flown with any airline and aircraft according to pilot\'s choice, simply there are no company and/or aircraft restrictions for this type. While on the other hand <b>Airline Tours</b> must be flown with correct airline callsign and if provided with the subfleet assigned to the leg.',
++        'As a general rule, all tour legs must be completed between validity period for earning awards.',
++        '<b>To see the details and legs of a tour, simply click on the Tour Name</b>',
++        'Safe Flights',
++    ],
+ ];
+diff --git a/Resources/lang/es-es/tours.php b/Resources/lang/es-es/tours.php
+index 2883ae0..9829022 100644
+--- a/Resources/lang/es-es/tours.php
++++ b/Resources/lang/es-es/tours.php
+@@ -29,4 +29,13 @@ return [
+     'tpactive'  => 'Tours activos:',
+     'tpnotour'  => 'No tienes Tours activos... ',
+     'tpclick'   => 'Clic para Tours',
++    // Normas del tour. El modulo las tenia hardcodeadas en la vista, asi que no se
++    // podian traducir; ahora es una clave (una entrada por parrafo, admite HTML).
++    'trules_text' => [
++        'Los tours se pueden volar y reportar manualmente o con soporte acars. En los tours con acars el piloto puede reservar/cargar un vuelo de la lista o introducir los datos a mano en la ventana de Nuevo Vuelo de nuestro software acars. Al enviar un pirep manual, o al usar acars con entrada manual de datos, no olvides indicar el codigo de ruta y el numero de tramo correctos. Omitir este paso puede causar problemas en la comprobacion de tramos y en el control de premios.',
++        '<b>Tours abiertos</b>: se pueden volar con cualquier aerolinea y aeronave a eleccion del piloto, es decir, no hay restricciones de compania ni de aeronave. En cambio, los <b>Tours de aerolinea</b> deben volarse con el indicativo correcto y, si se indica, con la subflota asignada al tramo.',
++        'Como norma general, todos los tramos de un tour deben completarse dentro del periodo de validez para obtener los premios.',
++        '<b>Para ver los detalles y los tramos de un tour, basta con pulsar en el nombre del tour</b>',
++        'Buenos vuelos',
++    ],
+ ];
 diff --git a/Resources/views/assignments/admin.blade.php b/Resources/views/assignments/admin.blade.php
 new file mode 100644
 index 0000000..5aac62a
@@ -2120,7 +2156,7 @@ index 84b2774..c395f93 100644
 +  @include('flights.scripts')
 +@endsection
 diff --git a/Resources/views/tours/index.blade.php b/Resources/views/tours/index.blade.php
-index 04ab523..659f259 100644
+index 04ab523..17544a9 100644
 --- a/Resources/views/tours/index.blade.php
 +++ b/Resources/views/tours/index.blade.php
 @@ -7,22 +7,22 @@
@@ -2150,6 +2186,22 @@ index 04ab523..659f259 100644
            @lang('DSpecial::tours.trules')
          </a>
        </li>
+@@ -81,12 +81,9 @@
+                 </h5>
+               </div>
+               <div class="card-body p-1">
+-                <p>&bull;&nbsp;Tours can be flown and reported either manually or with acars support, for acars supported tour flights pilots can either bid/load a flight from the list or enter required info manually to
+-                New Flight window of our acars software. While sending a manual pirep or using acars with manual flight info entry, please do not forget to add correct route code and leg number to your reports. Missing this step may cause problems during route leg checks and award controls.</p>
+-                <p>&bull;&nbsp;<b>Open Tours</b>&nbsp; can be flown with any airline and aircraft according to pilot's choice, simply there are no company and/or aircraft restrictions for this type. While on the other hand <b>Airline Tours</b> must be flown with correct airline callsign and if provided with the subfleet assigned to the leg.</p>
+-                <p>&bull;&nbsp;As a general rule, all tour legs must be completed between validity period for earning awards.</p>
+-                <p>&bull;&nbsp;<b>To see the details and legs of a tour, simply click on the Tour Name</b></p>
+-                <p>Safe Flights</p>
++                @foreach(__('DSpecial::tours.trules_text') as $rule)
++                  <p>&bull;&nbsp;{!! $rule !!}</p>
++                @endforeach
+               </div>
+             </div>
+           </div>
 diff --git a/Resources/views/tours/show.blade.php b/Resources/views/tours/show.blade.php
 index 0318abc..9aa475d 100644
 --- a/Resources/views/tours/show.blade.php

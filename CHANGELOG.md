@@ -1,5 +1,25 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Tours en el menu, reglas traducibles y locale
+
+- **Nav**: "Tours" sale del bloque `@auth` del desplegable **Centro de Operaciones**
+  (estaba ahi, por eso un invitado no lo veia aunque la pagina es publica). Ahora es el
+  primer item del desplegable y lo ven todos.
+- **Las reglas de los tours ya se pueden traducir**: el texto estaba **hardcodeado en
+  la vista** del modulo, en ingles y sin `@lang`, asi que no habia nada que traducir.
+  Ahora es la clave `DSpecial::tours.trules_text` (una entrada por parrafo, admite HTML)
+  con version en **en** y **es-es** dentro del modulo, y la usan tanto la vista del
+  modulo (pestana de reglas) como el override del tema.
+- Las etiquetas que invente el tema (titulos de seccion, badges, "tramos", "Requiere",
+  "Flota"/"Buscar") pasan a `resources/lang/{en,es-es}/vholar_tours.php`, en vez de
+  texto fijo en la vista.
+- Comprobado renderizando la pagina real en los dos idiomas: el sitio arranca en `en`
+  (`APP_LOCALE`), y con `es-es` se ve "Tours en curso", "Reglas de los tours" y las
+  reglas en español. Nota: el tema **no tiene selector de idioma**; el idioma sale de
+  `APP_LOCALE`, del ajuste `general.auto_language_detection` o de la cookie `lang`.
+- `patches/DisposableSpecial-d1d776c.patch` regenerado (el modulo ha cambiado): aplica
+  sobre `d1d776c` y reproduce el modulo byte a byte.
+
 ## [Vholar] 2026-10-02 — Tours: layout de tarjetas por secciones
 
 - `/dtours` deja las pestanas (Current / Future / Past / Rules) y pasa a **secciones

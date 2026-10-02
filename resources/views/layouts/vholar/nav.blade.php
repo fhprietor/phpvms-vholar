@@ -21,8 +21,9 @@
                         <i class="bi bi-gear"></i> @lang('common.operations_centre')
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="operationsDropdown">
+                        {{-- Publico: la pagina de tours no requiere sesion --}}
+                        <li><a class="dropdown-item" href="{{ url('/dtours') }}"><i class="bi bi-map"></i> @lang('common.tours')</a></li>
                         @auth
-                            <li><a class="dropdown-item" href="{{ url('/dtours') }}"><i class="bi bi-map"></i> @lang('common.tours')</a></li>
                             <li><a class="dropdown-item" href="{{ url('/flights') }}"><i class="bi bi-airplane"></i> @lang('common.dispatch')</a></li>
                             <li><a class="dropdown-item" href="{{ url('/vmsopenops/charter/create') }}"><i class="bi bi-rocket"></i> @lang('common.charter')</a></li>
                             <li><a class="dropdown-item" href="{{ url('/flights/bids') }}"><i class="bi bi-airplane"></i> @lang('flights.mybid')</a></li>

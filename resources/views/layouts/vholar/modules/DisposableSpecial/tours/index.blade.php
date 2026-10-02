@@ -30,11 +30,12 @@
       }
   }
 
+  // Los titulos son claves de traduccion (resources/lang/<locale>/vholar_tours.php)
   $sections = [
-      ['Terminan pronto', 'bi-hourglass-split', $endingSoon],
-      ['Tours en curso', 'bi-airplane-engines', $current],
-      ['Proximos tours', 'bi-calendar-plus', $future],
-      ['Tours finalizados', 'bi-archive', $past],
+      ['vholar_tours.section_ending_soon', 'bi-hourglass-split', $endingSoon],
+      ['vholar_tours.section_current', 'bi-airplane-engines', $current],
+      ['vholar_tours.section_future', 'bi-calendar-plus', $future],
+      ['vholar_tours.section_past', 'bi-archive', $past],
   ];
 @endphp
 
@@ -133,19 +134,19 @@
 </style>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-  <h4 class="mb-0"><i class="bi bi-map"></i> Tours</h4>
+  <h4 class="mb-0"><i class="bi bi-map"></i> @lang('common.tours')</h4>
 
   @if($tour_subfleets->count() > 0)
     <form method="GET" action="{{ route('DSpecial.tours') }}">
       <div class="input-group input-group-sm">
-        <span class="input-group-text">Fleet :</span>
+        <span class="input-group-text">@lang('vholar_tours.fleet')</span>
         <select class="form-select form-select-sm" name="sfid">
           <option value="">Please select...</option>
           @foreach($tour_subfleets as $sf)
             <option value="{{ $sf->id }}" @if($sf->id == @request()->input('sfid')) selected @endif>{{ $sf->name.' | '.optional($sf->airline)->code }}</option>
           @endforeach
         </select>
-        <input class="btn btn-sm btn-success" type="submit" value="Search">
+        <input class="btn btn-sm btn-success" type="submit" value="@lang('vholar_tours.search')">
       </div>
     </form>
   @endif
@@ -157,7 +158,7 @@
   @foreach($sections as [$title, $icon, $list])
     @if(count($list))
       <h5 class="vh-tour-section">
-        <i class="bi {{ $icon }}"></i> {{ $title }}
+        <i class="bi {{ $icon }}"></i> {{ __($title) }}
         <span class="badge">{{ count($list) }}</span>
       </h5>
       <div class="row g-3 mb-4">
@@ -168,15 +169,14 @@
     @endif
   @endforeach
 
-  <h5 class="vh-tour-section"><i class="bi bi-question-circle"></i> Reglas de los tours</h5>
+  <h5 class="vh-tour-section"><i class="bi bi-question-circle"></i> @lang('vholar_tours.section_rules')</h5>
   <div class="card mb-2">
     <div class="card-body p-3" style="font-size: 0.82rem;">
-      <p>&bull;&nbsp;Tours can be flown and reported either manually or with acars support, for acars supported tour flights pilots can either bid/load a flight from the list or enter required info manually to
-      New Flight window of our acars software. While sending a manual pirep or using acars with manual flight info entry, please do not forget to add correct route code and leg number to your reports. Missing this step may cause problems during route leg checks and award controls.</p>
-      <p>&bull;&nbsp;<b>Open Tours</b>&nbsp; can be flown with any airline and aircraft according to pilot's choice, simply there are no company and/or aircraft restrictions for this type. While on the other hand <b>Airline Tours</b> must be flown with correct airline callsign and if provided with the subfleet assigned to the leg.</p>
-      <p>&bull;&nbsp;As a general rule, all tour legs must be completed between validity period for earning awards.</p>
-      <p>&bull;&nbsp;<b>To see the details and legs of a tour, simply click on the Tour Name</b></p>
-      <p>Safe Flights</p>
+      {{-- El texto de las reglas vive en el modulo (DSpecial::tours.trules_text), en
+           todos los idiomas: antes estaba hardcodeado en la vista y no se traducia. --}}
+      @foreach(__('DSpecial::tours.trules_text') as $rule)
+        <p>&bull;&nbsp;{!! $rule !!}</p>
+      @endforeach
     </div>
   </div>
 @endif

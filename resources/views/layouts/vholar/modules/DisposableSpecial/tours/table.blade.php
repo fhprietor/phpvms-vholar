@@ -16,13 +16,13 @@
   $daysLeft = $carbon_now->lte($tour->end_date) ? (int) $carbon_now->diffInDays($tour->end_date) : 0;
 
   if ($carbon_now > $tour->end_date) {
-      $badge = ['Finalizado', 'is-past'];
+      $badge = [__('vholar_tours.badge_past'), 'is-past'];
   } elseif ($carbon_now < $tour->start_date) {
-      $badge = ['Proximo', 'is-next'];
+      $badge = [__('vholar_tours.badge_next'), 'is-next'];
   } elseif ($daysLeft <= 30) {
-      $badge = ['Termina en '.$daysLeft.' d', 'is-soon'];
+      $badge = [__('vholar_tours.badge_soon', ['days' => $daysLeft]), 'is-soon'];
   } else {
-      $badge = ['En curso', 'is-now'];
+      $badge = [__('vholar_tours.badge_now'), 'is-now'];
   }
 
   $nm = isset($leg_distance) && $leg_distance !== null ? (float) $leg_distance : null;
@@ -66,7 +66,7 @@
     </div>
 
     <div class="card-footer vh-tour-footer p-2">
-      <span><i class="bi bi-signpost-2"></i> {{ $tour->legs_count }} legs</span>
+      <span><i class="bi bi-signpost-2"></i> {{ $tour->legs_count }} @lang('vholar_tours.legs')</span>
       @if($nm)
         <span>{{ number_format($nm) }} nm ({{ number_format($nm * 1.852) }} km)</span>
       @endif
@@ -74,7 +74,7 @@
 
     @if($tour->tour_token > 0 && isset($user_tokens) && !in_array($tour->tour_token, $user_tokens))
       <div class="card-footer vh-tour-footer p-2 justify-content-end">
-        Requiere <a class="ms-1" href="{{ route('DSpecial.market').'?cat='.$market_cat }}"><i class="bi bi-bag"></i> {{ optional($tour->token)->name }}</a>
+        @lang('vholar_tours.requires') <a class="ms-1" href="{{ route('DSpecial.market').'?cat='.$market_cat }}"><i class="bi bi-bag"></i> {{ optional($tour->token)->name }}</a>
       </div>
     @endif
   </div>
