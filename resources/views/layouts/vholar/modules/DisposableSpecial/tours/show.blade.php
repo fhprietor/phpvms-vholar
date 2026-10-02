@@ -204,6 +204,8 @@
                 aria-controls="leg-body-{{ $leg->route_leg }}">
           <span>@lang('vholar_tours.leg', ['number' => $leg->route_leg]) :
             <b>{{ $leg->dpt_airport_id }} - {{ $leg->arr_airport_id }}</b></span>
+          {{-- Numero del vuelo real de la aerolinea que hay que volar en este tramo --}}
+          <span class="ms-2 badge text-bg-secondary p-1" title="@lang('vholar_tours.view_flight')">{{ $leg->flight_number }}</span>
           <span class="ms-auto me-2 d-flex align-items-center gap-2 vh-tour-meta">
             @if($nmi > 0) <span>{{ number_format($nmi) }} nm</span> @endif
             @if($isFlown)

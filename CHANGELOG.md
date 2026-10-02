@@ -2,18 +2,25 @@
 
 ## [Vholar] 2026-10-02 — Tour VHOLAR 2026 montado (18 tramos)
 
-- Creado el **Tour VHOLAR 2026**, codigo **`VHR26`**: 18 tramos, **7.871 nm (14.577 km)**,
-  vigencia 2026-10-02 a 2026-12-31, con las reglas del tour (aeronaves autorizadas,
-  METAR/TAF reales, callsign VHR** obligatorio e IVAO RMK/VHOLAR26 en el FPL remark).
-- Aeronaves validas: **A20N, A21N, A319, A320, A321 y B38M, B737, B738** (subflotas del
-  pivote de cada tramo) = 144 asignaciones. (El 2026-10-02 se corrigio: la familia Boeing
-  autorizada es la **737**, no la 787; el tour se creo primero con B789 por un error de
-  transcripcion.) Bloque estimado con ~450 kt de crucero + 15 min de rodaje.
-- Los tramos **son vuelos** (`Flight` con `route_code` = codigo del tour y `route_leg` = N),
-  numerados **2603-2620** para no chocar con los del tour ANDES (2601-2602). Se deja
-  `alt_airport_id` a NULL a proposito: con alterno, la logica de diversion lo tomaria como
-  diversion en PIREPs manuales.
-- Script reproducible e idempotente en `deploy/scripts/tour-vholar26.php`.
+- Creado el **Tour VHOLAR 2026**, codigo **`VHR26`**: 18 tramos, **7.879 nm (14.592 km)**
+  (distancias reales de los vuelos), vigencia 2026-10-02 a 2026-12-31, con las reglas del
+  tour (aeronaves autorizadas, METAR/TAF reales, callsign VHR** obligatorio e IVAO
+  RMK/VHOLAR26 en el FPL remark).
+- Los tramos **son vuelos de la aerolinea**: 16 se **enlazaron a vuelos ya programados**
+  (1265, 8180, 8320, 4271, 1111, 1244, 7994, 4152, 193, 9320, 9509, 30, 5, 2150, 2151,
+  8428) marcandolos con `route_code = VHR26`, `route_leg = N` y `owner = DS_Tour` (la
+  accion `normalize` del modulo los libera al terminar el tour), y solo se crearon los 2
+  tramos sin vuelo programado (SKSM-SKPE = 2604 y SKCG-MROC = 2612). Antes se habian creado
+  18 vuelos nuevos numerados 2603-2620: se borraron por duplicar la programacion.
+- Aeronaves: a los vuelos enlazados **no se les tocan sus subflotas** (son las de su
+  operacion real); los 2 creados llevan las familias autorizadas (A20N, A21N, A319, A320,
+  A321, B38M, B737, B738). La regla de "aeronaves autorizadas" queda como norma para el
+  piloto: phpVMS no la aplica. (El 2026-10-02 se corrigio que la familia Boeing autorizada
+  es la **737**, no la 787.) Los 2 creados llevan bloque estimado a ~450 kt + 15 min y
+  `alt_airport_id` NULL, para que la logica de diversion no lo tome como diversion.
+- En la ficha de cada tramo (override del tema) se muestra el **numero de vuelo real**.
+- Script reproducible e idempotente en `deploy/scripts/tour-vholar26.php`: enlaza los
+  vuelos existentes y crea solo los que faltan.
 - Limitacion aprendida: `flights.route_code` y `disposable_tours.tour_code` son
   **varchar(5)**, asi que el codigo del tour no puede pasar de 5 caracteres (con
   `VHOLAR26` MySQL lo truncaba a `VHOLA` y quedaba feo, aunque la relacion seguia
