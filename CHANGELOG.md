@@ -1,5 +1,26 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Tour VHOLAR 2026 montado (18 tramos)
+
+- Creado el **Tour VHOLAR 2026**, codigo **`VHR26`**: 18 tramos, **7.871 nm (14.577 km)**,
+  vigencia 2026-10-02 a 2026-12-31, con las reglas del tour (aeronaves autorizadas,
+  METAR/TAF reales, callsign VHR** obligatorio e IVAO RMK/VHOLAR26 en el FPL remark).
+- Aeronaves validas: **A20N, A21N, A319, A320, A321 y B789** (subflotas del pivote de cada
+  tramo) = 108 asignaciones. Bloque estimado con ~450 kt de crucero + 15 min de rodaje.
+- Los tramos **son vuelos** (`Flight` con `route_code` = codigo del tour y `route_leg` = N),
+  numerados **2603-2620** para no chocar con los del tour ANDES (2601-2602). Se deja
+  `alt_airport_id` a NULL a proposito: con alterno, la logica de diversion lo tomaria como
+  diversion en PIREPs manuales.
+- Script reproducible e idempotente en `deploy/scripts/tour-vholar26.php`.
+- Limitacion aprendida: `flights.route_code` y `disposable_tours.tour_code` son
+  **varchar(5)**, asi que el codigo del tour no puede pasar de 5 caracteres (con
+  `VHOLAR26` MySQL lo truncaba a `VHOLA` y quedaba feo, aunque la relacion seguia
+  casando porque truncaba igual en las dos tablas). El remark del FPL es varchar(100) y
+  conserva `VHOLAR26`.
+- Pendiente (mantenedor): portada del tour en
+  `public/assets/themes/vholar/tours/VHR26.jpg`; sin imagen se pinta el degradado con el
+  codigo.
+
 ## [Vholar] 2026-10-02 — Detalle del tour con el layout de referencia
 
 - `/dtours/{code}` deja las pestanas (Legs / Rules / Map modal / Awards / Report) y pasa
