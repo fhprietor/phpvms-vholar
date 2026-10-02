@@ -155,8 +155,8 @@
                                     <div class="text-center">
                                         <div class="position-relative d-inline-block">
                                             <svg width="80" height="80" viewBox="0 0 120 120">
-                                                <circle cx="60" cy="60" r="54" fill="none" stroke="#e9ecef" stroke-width="12"/>
-                                                <circle cx="60" cy="60" r="54" fill="none" stroke="#28a745" 
+                                                <circle cx="60" cy="60" r="54" fill="none" stroke="#3A3142" stroke-width="12"/>
+                                                <circle cx="60" cy="60" r="54" fill="none" stroke="#4CAF76" 
                                                         stroke-width="12" 
                                                         stroke-dasharray="{{ ($overall_ratio * 339) / 100 }} 339" 
                                                         stroke-dashoffset="0"
@@ -324,7 +324,7 @@
 {{-- Modal de edición de asignación --}}
 <div class="modal fade" id="editAssignmentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%); border: 1px solid #412c4d;">
+        <div class="modal-content" style="background: linear-gradient(135deg, var(--vh-surface-2) 0%, var(--vh-surface) 100%); border: 1px solid var(--vh-primary);">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title">
                     <i class="bi bi-pencil-square me-2"></i>
@@ -421,7 +421,7 @@
   {{-- Modal para añadir nueva asignación --}}
   <div class="modal fade" id="addAssignmentModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg">
-          <div class="modal-content" style="background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%); border: 1px solid #412c4d;">
+          <div class="modal-content" style="background: linear-gradient(135deg, var(--vh-surface-2) 0%, var(--vh-surface) 100%); border: 1px solid var(--vh-primary);">
               <div class="modal-header border-0 pb-0">
                   <h5 class="modal-title">
                       <i class="fas fa-plus-circle me-2"></i>

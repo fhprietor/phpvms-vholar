@@ -1,0 +1,75 @@
+/* ==========================================================================
+   VHOLAR · TOKENS DE COLOR  ·  FUENTE ÚNICA DE VERDAD
+   --------------------------------------------------------------------------
+   Este es el ÚNICO sitio donde se declaran los colores del producto.
+   Lo cargan las tres superficies:
+
+     · el frontend      (layouts/vholar/app.blade.php, antes de theme.css)
+     · el panel admin   (admin/app.blade.php, antes de vholar-admin.css)
+     · la página login  (layouts/vholar/auth/login_layout.blade.php)
+
+   Ninguna hoja debe volver a declarar un :root propio ni un color de la
+   paleta escrito a mano. Si se añade un token, se añade SOLO aquí.
+
+   Paleta derivada de los assets institucionales:
+     Púrpura VHolar .. #412C4D  (38,2 % de logo.png · 60 % del wordmark)
+     Plata Vholar .... #BDBFC1  (anillo exterior del logo)
+     Gris CARGO ...... #B1B0B5  (wordmark CARGO)
+     Blanco .......... #FFFFFF  (ave del logo)
+   Contraste verificado con la fórmula de luminancia relativa WCAG 2.1.
+
+   Reglas de uso:
+     <color>          texto, iconos, bordes  ·  AA >= 4.5:1 sobre superficie oscura
+     <color>-soft     fondo de pastilla o badge, con <color> como texto
+     <color>-strong   SOLO fondo sólido, para texto BLANCO encima
+   El alfa de los -soft es 0.10: por encima de eso el texto del mismo color
+   deja de llegar a 4.5:1 sobre su propia pastilla.
+   ========================================================================== */
+
+:root {
+  /* ---- Marca ----------------------------------------------------------- */
+  --vh-primary: #412C4D;
+  --vh-primary-hover: #563A63;
+  --vh-primary-active: #2D1E36;
+  --vh-primary-soft: rgba(65, 44, 77, 0.30);
+  --vh-silver: #BDBFC1;
+  --vh-silver-dim: #B1B0B5;
+  --vh-accent-lite: #DFC8F5;    /* enlaces y acentos */
+
+  /* ---- Texto ----------------------------------------------------------- */
+  --vh-text: #EDEAF1;           /* 13.08:1 sobre --vh-surface-2 */
+  --vh-text-muted: #A79FB2;     /*  6.11:1 sobre --vh-surface-2 */
+
+  /* Blanco PURO. Se distingue a proposito de --vh-text: se usa para texto
+     sobre fondos de color (botones, cabeceras) y en estados de hover,
+     donde el blanco calido de --vh-text perderia fuerza. */
+  --vh-white: #FFFFFF;
+
+  /* ---- Semánticos ------------------------------------------------------ */
+  --vh-success: #4CAF76;              /* 5.71:1 sobre --vh-surface-2 */
+  --vh-warning: #E0A82E;              /* 7.27:1 */
+  --vh-danger: #E86A78;               /* 5.01:1 */
+  --vh-info: #8FA6D9;                 /* 6.39:1 */
+
+  --vh-success-soft: rgba(76, 175, 118, 0.10);
+  --vh-warning-soft: rgba(224, 168, 46, 0.10);
+  --vh-danger-soft: rgba(232, 106, 120, 0.10);
+  --vh-info-soft: rgba(143, 166, 217, 0.10);
+
+  /* Solo para fondos sólidos con texto blanco encima */
+  --vh-success-strong: #2F7A50;       /* blanco encima: 5.22:1 */
+  --vh-warning-strong: #8A6D00;       /* blanco encima: 4.92:1 */
+  --vh-danger-strong: #B8444F;        /* blanco encima: 5.28:1 */
+
+  /* ---- Superficies -----------------------------------------------------
+     Tres niveles con tinte purpura (H 265-270) para que acompanen al
+     purpura de marca (H 278) en lugar de competir con el.
+     ---------------------------------------------------------------------- */
+  --vh-bg: #16121B;             /* fondo de pagina */
+  --vh-surface: #1E1925;        /* tarjeta y panel */
+  --vh-surface-2: #28212F;      /* cabecera de tarjeta, modal, dropdown */
+
+  /* ---- Bordes y foco --------------------------------------------------- */
+  --vh-border: #3A3142;
+  --vh-focus-ring: rgba(189, 191, 193, 0.35);
+}

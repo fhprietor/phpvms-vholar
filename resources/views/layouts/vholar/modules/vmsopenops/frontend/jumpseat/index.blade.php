@@ -9,7 +9,7 @@
 <div class="row mb-3">
   <div class="col d-flex align-items-center justify-content-between">
     <div>
-      <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:#9898b0;">
+      <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:var(--vh-text-muted);">
         ✈ &nbsp;@lang('common.jumpseat_requests')
       </h4>
     </div>
@@ -30,11 +30,11 @@
 @include('flash::message')
 
 @if($pendingRequest)
-  <div class="alert alert-warning d-flex gap-3 mb-3" style="background:rgba(200,160,30,0.12);border:1px solid rgba(200,160,30,0.3);color:#e8d080;border-radius:8px;">
+  <div class="alert alert-warning d-flex gap-3 mb-3" style="background:var(--vh-warning-soft);border:1px solid rgba(224,168,46,0.35);color:var(--vh-text);border-radius:8px;">
     <div style="font-size:1.4rem;line-height:1;">⚠</div>
     <div>
       <div style="font-weight:700;margin-bottom:4px;">@lang('common.pending_jumpseat')</div>
-      <div style="font-size:0.8rem;color:#b8a060;">
+      <div style="font-size:0.8rem;color:var(--vh-warning);">
         <span class="lb-icao">{{ $pendingRequest->from_airport_id }}</span>
         <span class="lb-route-arrow">→</span>
         <span class="lb-icao">{{ $pendingRequest->to_airport_id }}</span>
@@ -91,12 +91,12 @@
               {{-- Distance --}}
               <td class="text-end">
                 <span class="lb-stat-val" style="font-size:0.92rem;">{{ number_format($request->distance, 0) }}</span>
-                <span style="font-size:0.65rem;color:#9090a8;margin-left:2px;">NM</span>
+                <span style="font-size:0.65rem;color:var(--vh-text-muted);margin-left:2px;">NM</span>
               </td>
 
               {{-- Cost --}}
               <td class="text-end">
-                <span style="font-size:0.88rem;font-weight:700;color:#c8d8ff;font-variant-numeric:tabular-nums;">{{ $request->cost_formatted }}</span>
+                <span style="font-size:0.88rem;font-weight:700;color:var(--vh-text);font-variant-numeric:tabular-nums;">{{ $request->cost_formatted }}</span>
               </td>
 
               {{-- Type --}}
@@ -128,12 +128,12 @@
                   </button>
                   <div class="modal fade" id="notesModal{{ $request->id }}" tabindex="-1">
                     <div class="modal-dialog">
-                      <div class="modal-content" style="background:#1a1828;border:1px solid rgba(120,100,180,0.3);">
-                        <div class="modal-header" style="border-bottom:1px solid rgba(120,100,180,0.2);">
-                          <h5 class="modal-title" style="color:#c0c8e8;">@lang('common.admin_notes')</h5>
+                      <div class="modal-content" style="background:var(--vh-surface);border:1px solid var(--vh-border);">
+                        <div class="modal-header" style="border-bottom:1px solid var(--vh-border);">
+                          <h5 class="modal-title" style="color:var(--vh-text);">@lang('common.admin_notes')</h5>
                           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="modal-body" style="color:#a0a8c0;">
+                        <div class="modal-body" style="color:var(--vh-text-muted);">
                           {{ $request->admin_notes }}
                         </div>
                       </div>
@@ -155,10 +155,10 @@
     {{ $requests->links('pagination.bootstrap-5') }}
   </div>
 @else
-  <div class="vholar-logbook-wrap" style="padding:2rem;text-align:center;color:#9090a8;">
+  <div class="vholar-logbook-wrap" style="padding:2rem;text-align:center;color:var(--vh-text-muted);">
     <div style="font-size:2rem;margin-bottom:0.5rem;">✈</div>
     <div style="font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase;">@lang('common.no_jumpseat_requests')</div>
-    <a href="{{ route('vmsopenops.jumpseat.create') }}" style="display:inline-block;margin-top:1rem;font-size:0.8rem;color:#7a6aaa;">
+    <a href="{{ route('vmsopenops.jumpseat.create') }}" style="display:inline-block;margin-top:1rem;font-size:0.8rem;color:var(--vh-silver-dim);">
       @lang('common.create_first_jumpseat')
     </a>
   </div>

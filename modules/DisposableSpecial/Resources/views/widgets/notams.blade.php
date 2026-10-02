@@ -4,7 +4,7 @@
       <h5 class="m-1">
         NOTAMs
         @if($notams->count() > 1)
-          <i class="fas fa-scroll float-end" title="Show More" data-toggle="collapse" data-target="#notams" aria-expanded="false" aria-controls="notams"></i>
+          <i class="fas fa-scroll float-end" title="Show More" data-bs-toggle="collapse" data-bs-target="#notams" aria-expanded="false" aria-controls="notams"></i>
         @else
           <i class="fas fa-clipboard float-end"></i>
         @endif

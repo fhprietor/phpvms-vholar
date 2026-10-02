@@ -9,11 +9,11 @@
       padding: 15px 20px;
       min-height: 100px;
       z-index: 1000 !important;
-      background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%);
-      border-top: 2px solid #412c4d;
+      background: linear-gradient(135deg, var(--vh-surface-2) 0%, var(--vh-surface) 100%);
+      border-top: 2px solid var(--vh-primary);
       backdrop-filter: blur(8px);
       border-radius: 12px 12px 0 0;
-      color: #e5e5e5;
+      color: var(--vh-text);
     }
 
     /* POPUP - z-index extremadamente alto */
@@ -31,9 +31,9 @@
 
     /* POPUP COMPACTO */
     .leaflet-popup-content-wrapper {
-      background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%) !important;
+      background: linear-gradient(135deg, var(--vh-surface-2) 0%, var(--vh-surface) 100%) !important;
       border-radius: 8px !important;
-      border: 1px solid #412c4d !important;
+      border: 1px solid var(--vh-primary) !important;
       padding: 0 !important;
     }
 
@@ -65,7 +65,7 @@
 <div class="row">
   <div class="col-md-12">
     <div class="box-body">
-      <div id="map" style="width: {{ $config['width'] }}; height: {{ $config['height'] }}; border-radius: 12px; overflow: hidden; border: 1px solid #412c4d;">
+      <div id="map" style="width: {{ $config['width'] }}; height: {{ $config['height'] }}; border-radius: 12px; overflow: hidden; border: 1px solid var(--vh-primary);">
         <div id="map-info-box" class="map-info-box" rv-show="pirep.id" style="width: {{ $config['width'] }};">
           <div style="float: left; width: 50%;">
             <h3 style="margin: 0" id="map_flight_id">
@@ -130,7 +130,7 @@
             </thead>
             <tbody>
               <tr rv-each-pirep="pireps">
-                <td><a href="#top_anchor" rv-on-click="controller.focusMarker" style="color: #c9a6db;">{ pirep.ident }</a></td>
+                <td><a href="#top_anchor" rv-on-click="controller.focusMarker" style="color: var(--vh-accent-lite);">{ pirep.ident }</a></td>
                 <td>{ pirep.user.name_private | fallback pirep.user.name }</td>
                 <td><span rv-title="pirep.dpt_airport.name">{ pirep.dpt_airport.icao }</span></td>
                 <td><span rv-title="pirep.arr_airport.name">{ pirep.arr_airport.icao }</span></td>
@@ -152,18 +152,20 @@
 @section('scripts')
   <script>
     // Colores por estado (estilo FR24)
+    // Literales a proposito: getFr24StatusColor() alimenta estilos que no
+    // siempre pasan por el arbol CSS (marcadores y lienzo de Leaflet).
     const fr24StatusColors = {
-        'SCHEDULED': '#6c757d',
-        'ENROUTE': '#28a745',
-        'ARRIVED': '#17a2b8',
-        'CANCELLED': '#dc3545',
-        'TAKEOFF': '#17a2b8',
-        'APPROACH': '#ffc107',
-        'LANDING': '#dc3545'
+        'SCHEDULED': '#A79FB2',
+        'ENROUTE':   '#4CAF76',
+        'ARRIVED':   '#8FA6D9',
+        'CANCELLED': '#E86A78',
+        'TAKEOFF':   '#8FA6D9',
+        'APPROACH':  '#E0A82E',
+        'LANDING':   '#E86A78'
     };
 
     function getFr24StatusColor(status) {
-        return fr24StatusColors[status] || '#6c757d';
+        return fr24StatusColors[status] || '#A79FB2';
     }
 
     function formatTime(timeStr) {
@@ -286,7 +288,7 @@
                 console.error('Error loading flight info:', error);
                 modalBody.innerHTML = `
                     <div class="text-center py-5">
-                        <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem; color: #dc3545;"></i>
+                        <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem; color: #E86A78;"></i>
                         <p class="mt-3 text-danger">Error loading flight information</p>
                     </div>
                 `;
@@ -335,7 +337,7 @@
         aircraft_icon: '{!! public_asset('/assets/img/acars/aircraft.png') !!}',
         refresh_interval: {{ setting('acars.update_interval', 60) }},
         units: '{{ setting('units.distance') }}',
-        flown_route_color: '#067ec1',
+        flown_route_color: '#8FA6D9',
         leafletOptions: {
             scrollWheelZoom: false,
         }
@@ -399,7 +401,7 @@ function compactPopupContent() {
         popup.innerHTML = `
             <div style="padding: 4px;">
                 <div style="font-weight: 700; font-size: 0.8rem;">${ident}</div>
-                <div style="font-size: 0.65rem; color: #2c7be5;">${dpt}→${arr}</div>
+                <div style="font-size: 0.65rem; color: #8FA6D9;">${dpt}→${arr}</div>
                 <a href="${link}" style="display: block; margin-top: 3px; font-size: 0.6rem; color: #c9a6db; text-decoration: none;">Details →</a>
             </div>
         `;

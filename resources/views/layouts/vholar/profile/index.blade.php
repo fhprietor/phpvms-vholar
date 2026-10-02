@@ -8,7 +8,7 @@
                 <div class="text-center pt-4">
                     @if ($user->avatar == null)
                         <img src="{{ public_asset('images/logo.png') }}" class="img-fluid card-img-top rounded-circle"
-                            style="width: 123px; object-fit: contain; background: #1f1c27; padding: 8px;">
+                            style="width: 123px; object-fit: contain; background: var(--vh-surface); padding: 8px;">
                     @else
                         <img src="{{ $user->avatar->url }}" class="img-fluid card-img-top rounded-circle"
                             style="width: 123px;">

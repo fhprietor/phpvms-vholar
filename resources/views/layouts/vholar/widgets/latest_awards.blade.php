@@ -16,7 +16,7 @@
                     style="width:34px;height:34px;object-fit:cover;">
               @else
                 <img src="{{ public_asset('images/logo.png') }}" class="rounded-circle"
-                    style="width:34px;height:34px;object-fit:contain;background:#1f1c27;padding:3px;">
+                    style="width:34px;height:34px;object-fit:contain;background:var(--vh-surface);padding:3px;">
               @endif
             </td>
             <td>{{ optional($a->user)->ident }}</td>

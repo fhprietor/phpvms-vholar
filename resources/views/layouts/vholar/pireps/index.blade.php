@@ -5,10 +5,10 @@
   <div class="row mb-3">
     <div class="col-md-12 d-flex align-items-center justify-content-between">
       <div>
-        <h4 class="mb-0" style="font-weight:800; letter-spacing:0.04em; text-transform:uppercase; font-size:0.85rem; color:#9898b0;">
+        <h4 class="mb-0" style="font-weight:800; letter-spacing:0.04em; text-transform:uppercase; font-size:0.85rem; color:var(--vh-text-muted);">
           ✈ &nbsp;Pilot Logbook
         </h4>
-        <p class="mb-0" style="font-size:0.75rem; color:#9090a8; letter-spacing:0.05em;">
+        <p class="mb-0" style="font-size:0.75rem; color:var(--vh-text-muted); letter-spacing:0.05em;">
           {{ $user->name }} &mdash; {{ trans_choice('pireps.pilotreport', 2) }}
         </p>
       </div>

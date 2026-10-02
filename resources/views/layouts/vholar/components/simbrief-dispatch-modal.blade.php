@@ -1,7 +1,7 @@
 <div class="modal fade" id="simbriefDispatchModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content" style="background:#1f1c27; color:#e0d6f0; border:1px solid #412c4d;">
-            <div class="modal-header" style="background:#412c4d; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div class="modal-content" style="background:var(--vh-surface); color:var(--vh-text); border:1px solid var(--vh-primary);">
+            <div class="modal-header" style="background:var(--vh-primary); border-bottom:1px solid rgba(255,255,255,0.1);">
                 <h5 class="modal-title fw-bold">
                     <i class="bi bi-cloud-upload me-2"></i>SimBrief Dispatch
                     <span class="ms-2 fw-normal" style="color:rgba(255,255,255,0.6); font-size:0.9rem;" id="sb-modal-ident"></span>
@@ -10,14 +10,14 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex align-items-center justify-content-center gap-4 mb-4 p-3"
-                     style="background:#2a1f33; border-radius:10px;">
+                     style="background:var(--vh-primary-active); border-radius:10px;">
                     <div class="text-center">
-                        <div style="font-size:2rem; font-weight:700; color:#fff;" id="sb-orig-code"></div>
+                        <div style="font-size:2rem; font-weight:700; color:var(--vh-white);" id="sb-orig-code"></div>
                         <div class="text-muted small" id="sb-orig-name-disp"></div>
                     </div>
-                    <i class="bi bi-arrow-right" style="font-size:1.5rem; color:#8b5cf6;"></i>
+                    <i class="bi bi-arrow-right" style="font-size:1.5rem; color:var(--vh-silver-dim);"></i>
                     <div class="text-center">
-                        <div style="font-size:2rem; font-weight:700; color:#fff;" id="sb-dest-code"></div>
+                        <div style="font-size:2rem; font-weight:700; color:var(--vh-white);" id="sb-dest-code"></div>
                         <div class="text-muted small" id="sb-dest-name-disp"></div>
                     </div>
                 </div>
@@ -94,9 +94,9 @@
 </div>
 
 <style>
-.sb-readonly { background:#2a1f33 !important; color:#b0a0cc !important; border-color:#412c4d !important; cursor:default !important; }
-.sb-editable { background:#2a263380 !important; color:#e0d6f0 !important; border-color:#412c4d !important; }
-.sb-editable:focus { background:#2a2633 !important; border-color:#8b5cf6 !important; box-shadow:0 0 0 2px #8b5cf640 !important; }
+.sb-readonly { background:var(--vh-primary-active) !important; color:var(--vh-text-muted) !important; border-color:var(--vh-primary) !important; cursor:default !important; }
+.sb-editable { background:#28212F80 !important; color:var(--vh-text) !important; border-color:var(--vh-primary) !important; }
+.sb-editable:focus { background:var(--vh-surface-2) !important; border-color:var(--vh-silver-dim) !important; box-shadow:0 0 0 2px var(--vh-focus-ring) !important; }
 </style>
 
 @push('scripts')

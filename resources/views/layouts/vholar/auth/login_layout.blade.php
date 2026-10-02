@@ -30,24 +30,22 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
   <link href="{{ public_asset('/assets/vendor/tomselect/tom-select.bootstrap5.css') }}" rel="stylesheet">
+  {{-- TOKENS VHOLAR · fuente unica de verdad, compartida con el frontend --}}
+  <link rel="stylesheet" href="{{ public_asset('/assets/themes/vholar/css/tokens.css') }}"/>
   <style>
-    :root {
-        --vh-primary: #412c4d;
-        --vh-dark: #1e1b24;
-    }
 
     /* Fondo */
     body {
-        background: linear-gradient(rgba(30,27,36,0.9), rgba(30,27,36,0.95)),
+        background: linear-gradient(rgba(22,18,27,0.9), rgba(22,18,27,0.95)),
                     url('/images/banner.jpg');
         background-size: cover;
         background-position: center;
-        color: #e5e5e5;
+        color: var(--vh-text);
     }
 
     /* Card */
     .card {
-        background-color: #2a2633;
+        background-color: var(--vh-surface-2);
         border-radius: 14px;
         border: 1px solid rgba(255,255,255,0.05);
         box-shadow: 0 20px 40px rgba(0,0,0,0.5);
@@ -55,8 +53,8 @@
 
     /* Botón */
     .btn-primary {
-        background-color: #412c4d !important;
-        border-color: #412c4d !important;
+        background-color: var(--vh-primary) !important;
+        border-color: var(--vh-primary) !important;
         font-weight: 600;
         border-radius: 8px;
     }
@@ -68,35 +66,35 @@
 
     /* Inputs */
     .form-control {
-        background-color: #1f1c27 !important;
+        background-color: var(--vh-surface) !important;
         border: 1px solid rgba(255,255,255,0.08) !important;
-        color: #fff !important;
+        color: var(--vh-white) !important;
         border-radius: 8px;
     }
 
     .form-control:focus {
-        border-color: #412c4d !important;
-        box-shadow: 0 0 0 0.2rem rgba(65,44,77,0.3) !important;
+        border-color: var(--vh-primary) !important;
+        box-shadow: 0 0 0 0.2rem var(--vh-primary-soft) !important;
     }
 
     /* Labels */
     label {
-        color: #bbb;
+        color: var(--vh-text-muted);
     }
     /* Links login VHolar */
     .link {
-        color: #c9a6db !important;
+        color: var(--vh-accent-lite) !important;
         text-decoration: none;
         font-weight: 500;
     }
 
     .link:hover {
-        color: #ffffff !important;
+        color: var(--vh-white) !important;
         text-decoration: underline;
     }
 
     .bg-brand {
-      background-color: #067EC1;
+      background-color: var(--vh-primary);
     }
     [data-bs-theme="dark"] .bg-brand {
       background-color: var(--bs-body-bg);

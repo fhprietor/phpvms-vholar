@@ -52,19 +52,22 @@
     </div>
 
     {{-- TARJETAS --}}
-    {{-- TARJETAS DE ESTADÍSTICAS con fondo claro --}}
-<div class="py-4" style="background-color: #F8F5FA;">
+    {{-- OJO: el data-target de .counter NO es un atributo de Bootstrap.
+         Lo lee el IntersectionObserver de mas abajo (getAttribute('data-target'))
+         para animar el contador. No renombrar a data-bs-target. --}}
+    {{-- TARJETAS DE ESTADÍSTICAS --}}
+<div class="py-4" style="background-color: var(--vh-surface);">
     <div class="container">
         <div class="row g-3">
             {{-- Total Flights --}}
             <div class="col-6 col-md-3">
-                <div class="card text-center py-2 shadow-sm" style="background-color: #F3EFF5; border: 1px solid rgba(65,44,77,0.15); border-radius: 12px;">
+                <div class="card text-center py-2 shadow-sm" style="background-color: var(--vh-surface-2); border: 1px solid var(--vh-border); border-radius: 12px;">
                     <div class="card-body py-2">
-                        <h5 class="mb-2" style="color: #5a4a66;">@lang('home.total_flights')</h5>
-                        <h3 class="fw-bold mb-1" style="color: #2c1e35;">
+                        <h5 class="mb-2" style="color: var(--vh-text-muted);">@lang('home.total_flights')</h5>
+                        <h3 class="fw-bold mb-1" style="color: var(--vh-text);">
                             <span class="counter" data-target="{{ $totalFlightsAllTime ?? 0 }}">0</span>
                         </h3>
-                        <small style="color: #7b6a87;">
+                        <small style="color: var(--vh-text-muted);">
                             <span class="counter-small" data-target="{{ $totalFlightsThisMonth ?? 0 }}">0</span> @lang('home.flights_this_month')
                         </small>
                     </div>
@@ -73,14 +76,14 @@
 
             {{-- Total Distance --}}
             <div class="col-6 col-md-3">
-                <div class="card text-center py-2 shadow-sm" style="background-color: #F3EFF5; border: 1px solid rgba(65,44,77,0.15); border-radius: 12px;">
+                <div class="card text-center py-2 shadow-sm" style="background-color: var(--vh-surface-2); border: 1px solid var(--vh-border); border-radius: 12px;">
                     <div class="card-body py-2">
-                        <h5 class="mb-2" style="color: #5a4a66;">@lang('home.total_distance')</h5>
-                        <h3 class="fw-bold mb-1" style="color: #2c1e35;">
+                        <h5 class="mb-2" style="color: var(--vh-text-muted);">@lang('home.total_distance')</h5>
+                        <h3 class="fw-bold mb-1" style="color: var(--vh-text);">
                             <span class="counter" data-target="{{ $totalDistanceAllTime ?? 0 }}">0</span>
                             <small style="font-size: 0.9rem;">mi</small>
                         </h3>
-                        <small style="color: #7b6a87;">
+                        <small style="color: var(--vh-text-muted);">
                             <span class="counter-small" data-target="{{ $totalDistanceThisMonth ?? 0 }}">0</span> @lang('home.miles_this_month')
                         </small>
                     </div>
@@ -89,13 +92,13 @@
 
             {{-- Total Hours --}}
             <div class="col-6 col-md-3">
-                <div class="card text-center py-2 shadow-sm" style="background-color: #F3EFF5; border: 1px solid rgba(65,44,77,0.15); border-radius: 12px;">
+                <div class="card text-center py-2 shadow-sm" style="background-color: var(--vh-surface-2); border: 1px solid var(--vh-border); border-radius: 12px;">
                     <div class="card-body py-2">
-                        <h5 class="mb-2" style="color: #5a4a66;">@lang('home.total_hours')</h5>
-                        <h3 class="fw-bold mb-1" style="color: #2c1e35;">
+                        <h5 class="mb-2" style="color: var(--vh-text-muted);">@lang('home.total_hours')</h5>
+                        <h3 class="fw-bold mb-1" style="color: var(--vh-text);">
                             <span class="counter-hours" data-minutes="{{ $totalHoursAllTime ?? 0 }}">0</span>
                         </h3>
-                        <small style="color: #7b6a87;">
+                        <small style="color: var(--vh-text-muted);">
                             <span class="counter-hours-small" data-minutes="{{ $totalHoursThisMonth ?? 0 }}">0</span> @lang('home.hours_this_month')
                         </small>
                     </div>
@@ -104,13 +107,13 @@
 
             {{-- Total Pilots --}}
             <div class="col-6 col-md-3">
-                <div class="card text-center py-2 shadow-sm" style="background-color: #F3EFF5; border: 1px solid rgba(65,44,77,0.15); border-radius: 12px;">
+                <div class="card text-center py-2 shadow-sm" style="background-color: var(--vh-surface-2); border: 1px solid var(--vh-border); border-radius: 12px;">
                     <div class="card-body py-2">
-                        <h5 class="mb-2" style="color: #5a4a66;">@lang('home.total_pilots')</h5>
-                        <h3 class="fw-bold mb-1" style="color: #2c1e35;">
+                        <h5 class="mb-2" style="color: var(--vh-text-muted);">@lang('home.total_pilots')</h5>
+                        <h3 class="fw-bold mb-1" style="color: var(--vh-text);">
                             <span class="counter" data-target="{{ $totalPilotsAllTime ?? 0 }}">0</span>
                         </h3>
-                        <small style="color: #7b6a87;">
+                        <small style="color: var(--vh-text-muted);">
                             <span class="counter-small" data-target="{{ $totalPilotsActive ?? 0 }}">0</span> @lang('home.active_this_month')
                         </small>
                     </div>
@@ -121,7 +124,7 @@
 </div>
 
     {{-- HERO --}}
-    <div class="bg-dark py-5" style="background: linear-gradient(rgba(30,27,36,0.95), rgba(30,27,36,0.98));">
+    <div class="bg-dark py-5" style="background: linear-gradient(rgba(22,18,27,0.95), rgba(22,18,27,0.98));">
         <div class="container">
             <div class="row text-center">
                 <div class="col-12">
@@ -285,14 +288,14 @@
         </div>
     </div>
     {{-- SECCIÓN DE LLAMADA A LA ACCIÓN (CTA) --}}
-    <section id="join" class="join section py-3" style="background-color: #DDD3E4;">
+    <section id="join" class="join section py-3" style="background-color: var(--vh-surface);">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-auto d-flex align-items-center gap-4">
-                    <h4 class="title fw-bold mb-0" style="color: #412c4d;">
+                    <h4 class="title fw-bold mb-0" style="color: var(--vh-text);">
                         <b>¿Estás listo para VHOLAR?</b>
                     </h4>
-                    <a href="{{ url('/register') }}" class="btn btn-primary px-4 py-1" style="background-color: #412c4d !important; border-color: #412c4d !important; font-size: 0.9rem;">
+                    <a href="{{ url('/register') }}" class="btn btn-primary px-4 py-1" style="background-color: var(--vh-primary) !important; border-color: var(--vh-primary) !important; font-size: 0.9rem;">
                         Escríbenos
                     </a>
                 </div>

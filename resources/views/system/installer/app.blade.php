@@ -19,8 +19,7 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"/>
 
-  <link href="{{ public_asset('/assets/frontend/css/bootstrap.min.css') }}" rel="stylesheet"/>
-  <link href="{{ public_asset('/assets/frontend/css/now-ui-kit.css') }}" rel="stylesheet"/>
+  {{-- Bootstrap 4.3.1 y now-ui-kit ya van DENTRO de installer/vendor.css: no repetirlos. --}}
   <link href="{{ public_asset('/assets/installer/css/vendor.css') }}" rel="stylesheet"/>
   <link href="{{ public_asset('/assets/frontend/css/styles.css') }}" rel="stylesheet"/>
 

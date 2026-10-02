@@ -9,7 +9,7 @@
 <div class="row mb-3">
   <div class="col d-flex align-items-center justify-content-between">
     <div>
-      <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:#9898b0;">
+      <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:var(--vh-text-muted);">
         ✈ &nbsp;@lang('common.new_jumpseat')
       </h4>
     </div>
@@ -29,18 +29,18 @@
     {{-- Info panel --}}
     <div class="vholar-logbook-wrap mb-3" style="padding:1.1rem 1.4rem;">
       @php $currentAirport = \App\Models\Airport::find($user->curr_airport_id); @endphp
-      <div style="font-size:0.8rem;color:#9898b0;margin-bottom:0.5rem;">
-        <i class="bi bi-geo-alt" style="color:#7a6aaa;margin-right:4px;"></i>
-        <span style="font-weight:600;color:#a8a8c0;">@lang('common.current_location'):</span>
+      <div style="font-size:0.8rem;color:var(--vh-text-muted);margin-bottom:0.5rem;">
+        <i class="bi bi-geo-alt" style="color:var(--vh-silver-dim);margin-right:4px;"></i>
+        <span style="font-weight:600;color:var(--vh-text-muted);">@lang('common.current_location'):</span>
         &nbsp;<span class="lb-icao">{{ $user->curr_airport_id }}</span>
         @if($currentAirport)
-          <span style="color:#9090a8;font-size:0.72rem;"> — {{ $currentAirport->name }}</span>
+          <span style="color:var(--vh-text-muted);font-size:0.72rem;"> — {{ $currentAirport->name }}</span>
         @endif
       </div>
-      <div style="font-size:0.8rem;color:#9898b0;">
-        <i class="bi bi-wallet2" style="color:#7a6aaa;margin-right:4px;"></i>
-        <span style="font-weight:600;color:#a8a8c0;">@lang('common.current_balance'):</span>
-        &nbsp;<span style="color:#c8d8ff;font-weight:700;">{{ $user->journal->balance->money->format() ?? '$0.00' }}</span>
+      <div style="font-size:0.8rem;color:var(--vh-text-muted);">
+        <i class="bi bi-wallet2" style="color:var(--vh-silver-dim);margin-right:4px;"></i>
+        <span style="font-weight:600;color:var(--vh-text-muted);">@lang('common.current_balance'):</span>
+        &nbsp;<span style="color:var(--vh-text);font-weight:700;">{{ $user->journal->balance->money->format() ?? '$0.00' }}</span>
       </div>
     </div>
 
@@ -53,13 +53,13 @@
         <div class="mb-4">
           <div class="form-check mb-2">
             <input class="form-check-input" type="radio" name="type" value="0" id="typeRequest">
-            <label class="form-check-label" for="typeRequest" style="color:#a0a8c0;font-size:0.85rem;">
+            <label class="form-check-label" for="typeRequest" style="color:var(--vh-text-muted);font-size:0.85rem;">
               @lang('vmsopenops.make_jumpseat_request')
             </label>
           </div>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="type" id="typeImmediate" value="1" checked>
-            <label class="form-check-label" for="typeImmediate" style="color:#a0a8c0;font-size:0.85rem;">
+            <label class="form-check-label" for="typeImmediate" style="color:var(--vh-text-muted);font-size:0.85rem;">
               @lang('vmsopenops.pay_immediate_jumpseat') (<span id="immediateCostLabel">$0.00</span>)
             </label>
           </div>
@@ -67,7 +67,7 @@
 
         {{-- Destination airport --}}
         <div class="mb-4">
-          <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:#9090a8;margin-bottom:6px;display:block;">
+          <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--vh-text-muted);margin-bottom:6px;display:block;">
             @lang('common.airport')
           </label>
           <select class="custom-select airport_search" name="to_airport_id" required style="width:100%;"></select>
@@ -75,25 +75,25 @@
 
         {{-- Preview panel --}}
         <div id="previewPanel" style="display:none;margin-bottom:1.25rem;">
-          <div style="background:rgba(40,60,100,0.18);border:1px solid rgba(80,120,200,0.2);border-radius:8px;padding:1rem;">
-            <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#7a8aaa;margin-bottom:0.75rem;">
+          <div style="background:var(--vh-surface);border:1px solid var(--vh-border);border-radius:8px;padding:1rem;">
+            <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--vh-text-muted);margin-bottom:0.75rem;">
               @lang('vmsopenops.jumpseat_preview')
             </div>
             <div class="d-flex gap-4 mb-1">
               <div>
-                <div style="font-size:0.62rem;text-transform:uppercase;color:#9090a8;letter-spacing:0.06em;">@lang('common.distance')</div>
+                <div style="font-size:0.62rem;text-transform:uppercase;color:var(--vh-text-muted);letter-spacing:0.06em;">@lang('common.distance')</div>
                 <span id="distanceDisplay" class="lb-time" style="font-size:0.92rem;">0</span>
-                <span style="font-size:0.65rem;color:#9090a8;"> NM</span>
+                <span style="font-size:0.65rem;color:var(--vh-text-muted);"> NM</span>
               </div>
               <div>
-                <div style="font-size:0.62rem;text-transform:uppercase;color:#9090a8;letter-spacing:0.06em;">@lang('common.cost')</div>
+                <div style="font-size:0.62rem;text-transform:uppercase;color:var(--vh-text-muted);letter-spacing:0.06em;">@lang('common.cost')</div>
                 <span id="costDisplay" class="lb-time" style="font-size:0.92rem;">$0.00</span>
               </div>
             </div>
-            <div id="sameAirportWarning" style="display:none;margin-top:8px;font-size:0.78rem;color:#e8d080;">
+            <div id="sameAirportWarning" style="display:none;margin-top:8px;font-size:0.78rem;color:var(--vh-warning);">
               <i class="bi bi-exclamation-triangle"></i> @lang('vmsopenops.already_at_airport')
             </div>
-            <div id="insufficientFundsWarning" style="display:none;margin-top:8px;font-size:0.78rem;color:#e08080;">
+            <div id="insufficientFundsWarning" style="display:none;margin-top:8px;font-size:0.78rem;color:var(--vh-danger);">
               <i class="bi bi-exclamation-circle"></i> @lang('vmsopenops.insufficient_funds_jumpseat')
             </div>
           </div>
@@ -101,12 +101,12 @@
 
         {{-- Reason --}}
         <div class="mb-4">
-          <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:#9090a8;margin-bottom:6px;display:block;">
+          <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--vh-text-muted);margin-bottom:6px;display:block;">
             @lang('common.reason_optional')
           </label>
           <input class="form-control" name="reason"
                  placeholder="{{ __('common.optional_reason_placeholder') }}"
-                 style="background:#1a1828;border:1px solid rgba(120,100,180,0.3);color:#c0c8e8;border-radius:6px;font-size:0.85rem;padding:7px 12px;"/>
+                 style="background:var(--vh-surface);border:1px solid var(--vh-border);color:var(--vh-text);border-radius:6px;font-size:0.85rem;padding:7px 12px;"/>
         </div>
 
         {{-- Submit --}}
@@ -133,25 +133,25 @@
 
 <style>
 .select2-container--default .select2-selection--single {
-    background-color: #1a1828 !important; border: 1px solid rgba(120,100,180,0.3) !important;
+    background-color: var(--vh-surface) !important; border: 1px solid var(--vh-border) !important;
     border-radius: 6px !important; height: 36px !important;
 }
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #c0c8e8 !important; line-height: 36px !important; font-size: 0.85rem;
+    color: var(--vh-text) !important; line-height: 36px !important; font-size: 0.85rem;
 }
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
-    border-color: #7a6aaa transparent transparent transparent !important;
+    border-color: var(--vh-border) transparent transparent transparent !important;
 }
-.select2-dropdown { background-color: #1a1828 !important; border: 1px solid rgba(120,100,180,0.3) !important; }
-.select2-search--dropdown { background-color: #1a1828 !important; }
+.select2-dropdown { background-color: var(--vh-surface) !important; border: 1px solid var(--vh-border) !important; }
+.select2-search--dropdown { background-color: var(--vh-surface) !important; }
 .select2-search--dropdown .select2-search__field {
-    background-color: #12101e !important; border: 1px solid rgba(120,100,180,0.3) !important; color: #c0c8e8 !important;
+    background-color: var(--vh-bg) !important; border: 1px solid var(--vh-border) !important; color: var(--vh-text) !important;
 }
-.select2-results__options { background-color: #1a1828 !important; }
-.select2-results__option { color: #a0a8c0 !important; background-color: #1a1828 !important; }
+.select2-results__options { background-color: var(--vh-surface) !important; }
+.select2-results__option { color: var(--vh-text-muted) !important; background-color: var(--vh-surface) !important; }
 .select2-results__option--highlighted,
-.select2-results__option--highlighted[aria-selected] { background-color: rgba(80,60,140,0.5) !important; color: #dce4ff !important; }
-.select2-results__option[aria-selected="true"] { background-color: rgba(60,40,100,0.5) !important; color: #90aaff !important; }
+.select2-results__option--highlighted[aria-selected] { background-color: var(--vh-primary-soft) !important; color: var(--vh-text) !important; }
+.select2-results__option[aria-selected="true"] { background-color: var(--vh-primary-soft) !important; color: var(--vh-silver) !important; }
 </style>
 
 <script>

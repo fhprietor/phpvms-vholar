@@ -11,8 +11,9 @@
   display: inline-block;
   font-size: 0.65rem;
   font-weight: 700;
-  color: #7a6a9a;
-  background: rgba(100,70,140,0.18);
+  /* Era #7a6a9a sobre badge violeta: 3.06:1, bajo AA para 10px. */
+  color: var(--vh-silver);
+  background: var(--vh-primary-soft);
   border-radius: 4px;
   padding: 2px 6px;
   letter-spacing: 0.04em;
@@ -23,7 +24,7 @@
   font-family: 'Courier New', monospace;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #7a8aaa;
+  color: var(--vh-text-muted);
   letter-spacing: 0.03em;
 }
 .lb-as-status {
@@ -48,12 +49,12 @@
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.1);
   background: rgba(255,255,255,0.04);
-  color: #a0a8c0 !important;
+  color: var(--vh-text-muted) !important;
   vertical-align: middle;
 }
-.lb-action-btn:hover { background: rgba(100,80,140,0.25); color: #dce4ff !important; }
-.lb-action-btn.btn-bid-add  { border-color: rgba(40,167,69,0.4); color: #4caf76 !important; }
-.lb-action-btn.btn-bid-rem  { border-color: rgba(220,53,69,0.4); color: #e05060 !important; }
+.lb-action-btn:hover { background: var(--vh-primary-soft); color: var(--vh-text) !important; }
+.lb-action-btn.btn-bid-add  { border-color: rgba(76,175,118,0.4); color: var(--vh-success) !important; }
+.lb-action-btn.btn-bid-rem  { border-color: rgba(232,106,120,0.4); color: var(--vh-danger) !important; }
 /* Always-visible secondary row (aircraft + actions) */
 .lb-as-sub td { padding: 0 !important; border: none !important; }
 .lb-as-sub-inner {
@@ -73,10 +74,10 @@
   border-top: 1px solid rgba(255,255,255,0.05);
   background: rgba(0,0,0,0.35);
   font-size: 0.75rem;
-  color: #9898b0;
+  color: var(--vh-text-muted);
 }
-.lb-detail-inner a { color: #8898cc; text-decoration: none; }
-.lb-detail-inner a:hover { color: #90aaff; }
+.lb-detail-inner a { color: var(--vh-text-muted); text-decoration: none; }
+.lb-detail-inner a:hover { color: var(--vh-silver); }
 /* Full map button overlaid top-right on the inline map */
 .vholar-fullmap-btn {
   position: absolute;
@@ -89,23 +90,23 @@
   padding: 4px 11px;
   border-radius: 6px;
   border: none;
-  background: rgba(200, 40, 50, 0.85);
-  color: #fff;
+  background: var(--vh-danger-strong);
+  color: var(--vh-white);
   cursor: pointer;
   backdrop-filter: blur(4px);
   transition: background 0.15s;
 }
-.vholar-fullmap-btn:hover { background: rgba(220, 50, 60, 1); }
+.vholar-fullmap-btn:hover { background: #9C3945; }
 .lb-detail-label {
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #9090a8;
+  color: var(--vh-text-muted);
   margin-bottom: 2px;
 }
 .lb-detail-val {
   font-size: 0.78rem;
-  color: #a0a8c0;
+  color: var(--vh-text-muted);
   font-weight: 600;
 }
 /* Month section header */
@@ -122,7 +123,7 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #9080b0;
+  color: var(--vh-text-muted);
 }
 </style>
 @endonce
@@ -189,14 +190,17 @@
               icon: L.divIcon({
                 className: '',
                 html: '<div style="width:'+aptW+'px;text-align:center;">' +
-                  '<span style="display:inline-block;white-space:nowrap;font-family:\'Courier New\',monospace;font-size:0.62rem;font-weight:800;color:#0d0b18;background:#c8d8ff;border:1.5px solid rgba(80,100,200,0.5);border-radius:4px;padding:1px 5px;box-shadow:0 2px 4px rgba(0,0,0,0.6);letter-spacing:0.03em;">&#9992; ' + aptLabel + '</span>' +
+                  '<span style="display:inline-block;white-space:nowrap;font-family:\'Courier New\',monospace;font-size:0.62rem;font-weight:800;color:#0d0b18;background:#BDBFC1;border:1.5px solid rgba(13,11,24,0.35);border-radius:4px;padding:1px 5px;box-shadow:0 2px 4px rgba(0,0,0,0.6);letter-spacing:0.03em;">&#9992; ' + aptLabel + '</span>' +
                 '</div>',
                 iconSize: [aptW, 20],
                 iconAnchor: [aptW/2, 10]
               })
             }).bindPopup('<strong>'+aptLabel+'</strong><br>'+(apt.name||'')).addTo(map);
           }
-          var colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#2c3e50'];
+          // Escala CATEGORICA (no semantica): colores distintos para distinguir rutas.
+          // Armonizada con la paleta de marca; los 7 mantienen 5.5:1 o mas
+          // sobre el fondo del mapa. Deben seguir siendo distinguibles entre si.
+          var colors = ['#4CAF76','#8FA6D9','#E0A82E','#C9A6DB','#E86A78','#5FBFB0','#BDBFC1'];
           var midCounts = {}, midIdx = {};
           routes.forEach(function(r) {
             var k = ((r.latlngs[0][0]+r.latlngs[1][0])/2).toFixed(3)+','+((r.latlngs[0][1]+r.latlngs[1][1])/2).toFixed(3);
@@ -238,9 +242,9 @@
       {{-- Full-screen map modal (native BS5, independent of DBasic widget) --}}
       <div class="modal fade" id="vholarFullMapModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
-          <div class="modal-content" style="background:#0d0b14;">
-            <div class="modal-header" style="background:#1a1828;border-bottom:1px solid rgba(120,100,180,0.2);padding:10px 16px;">
-              <h5 class="modal-title" style="color:#c0c8e8;font-size:0.85rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;">
+          <div class="modal-content" style="background:var(--vh-bg);">
+            <div class="modal-header" style="background:var(--vh-surface);border-bottom:1px solid var(--vh-border);padding:10px 16px;">
+              <h5 class="modal-title" style="color:var(--vh-text);font-size:0.85rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;">
                 <i class="bi bi-map me-2"></i>@lang('common.full_assignments_map')
               </h5>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -259,7 +263,7 @@
 
       {{-- Page header --}}
       <div class="mb-3 d-flex align-items-center justify-content-between">
-        <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:#9898b0;">
+        <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:var(--vh-text-muted);">
           ✈ &nbsp;@lang('common.flight_assignments')
         </h4>
       </div>
@@ -276,7 +280,7 @@
         <div class="card vholar-logbook-wrap mb-4">
           <div class="lb-month-header">
             <span class="lb-month-title">{{ $monthLabel }}</span>
-            <span style="font-size:0.68rem;color:#9898b2;letter-spacing:0.05em;">
+            <span style="font-size:0.68rem;color:var(--vh-text-muted);letter-spacing:0.05em;">
               {{ $completedCount }}/{{ $tas->count() }} @lang('common.completed')
             </span>
           </div>
@@ -471,7 +475,7 @@
                     <td class="text-center lb-blocktime">
                       @if($displayBt)
                         <span class="lb-blocktime-icon">✈</span>
-                        <span class="lb-blocktime-val" style="{{ !$bt ? 'color:#9898b2;' : '' }}">
+                        <span class="lb-blocktime-val" style="{{ !$bt ? 'color:var(--vh-text-muted);' : '' }}">
                           {{ $btH }}:{{ str_pad($btM, 2, '0', STR_PAD_LEFT) }}h
                         </span>
                       @else
@@ -637,11 +641,11 @@
                 <table class="table table-sm table-borderless align-middle text-center mb-0">
                   @if($month !== 'Overall')
                     <thead><tr><th class="text-start fw-semibold ps-3" colspan="3"
-                      style="font-size:0.72rem;letter-spacing:0.06em;color:#9898b0;text-transform:uppercase;">
+                      style="font-size:0.72rem;letter-spacing:0.06em;color:var(--vh-text-muted);text-transform:uppercase;">
                       {{ $month }}</th></tr></thead>
                   @endif
                   <thead>
-                    <tr style="font-size:0.65rem;color:#9898b2;letter-spacing:0.06em;text-transform:uppercase;">
+                    <tr style="font-size:0.65rem;color:var(--vh-text-muted);letter-spacing:0.06em;text-transform:uppercase;">
                       <th>@lang('DSpecial::common.assignments')</th>
                       <th>@lang('DSpecial::common.completed')</th>
                       <th>@lang('DSpecial::common.earnings')<sup>¹</sup></th>
@@ -658,14 +662,14 @@
                         <div class="progress" style="height:6px;border-radius:3px;">
                           <div class="progress-bar bg-success" style="width:{{ $stat['ratio'] }}%;"></div>
                         </div>
-                        <small style="font-size:0.62rem;color:#9090a8;">{{ $stat['ratio'] }}% @lang('common.completed')</small>
+                        <small style="font-size:0.62rem;color:var(--vh-text-muted);">{{ $stat['ratio'] }}% @lang('common.completed')</small>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               @endforeach
             </div>
-            <div class="card-footer" style="font-size:0.65rem;color:#9090a8;">
+            <div class="card-footer" style="font-size:0.65rem;color:var(--vh-text-muted);">
               <sup>¹</sup> @lang('DSpecial::common.earning_note')
             </div>
           </div>
@@ -724,14 +728,17 @@
             icon: L.divIcon({
               className: '',
               html: '<div style="width:'+aptW+'px;text-align:center;">' +
-                '<span style="display:inline-block;white-space:nowrap;font-family:\'Courier New\',monospace;font-size:0.72rem;font-weight:800;color:#0d0b18;background:#c8d8ff;border:1.5px solid rgba(80,100,200,0.5);border-radius:4px;padding:2px 7px;box-shadow:0 2px 5px rgba(0,0,0,0.7);letter-spacing:0.04em;">&#9992; ' + aptLabel + '</span>' +
+                '<span style="display:inline-block;white-space:nowrap;font-family:\'Courier New\',monospace;font-size:0.72rem;font-weight:800;color:#0d0b18;background:#BDBFC1;border:1.5px solid rgba(13,11,24,0.35);border-radius:4px;padding:2px 7px;box-shadow:0 2px 5px rgba(0,0,0,0.7);letter-spacing:0.04em;">&#9992; ' + aptLabel + '</span>' +
               '</div>',
               iconSize: [aptW, 22],
               iconAnchor: [aptW/2, 11]
             })
           }).bindPopup('<strong>'+aptLabel+'</strong><br>'+(apt.name||'')).addTo(fmap);
         }
-        var colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#2c3e50'];
+        // Escala CATEGORICA (no semantica): colores distintos para distinguir rutas.
+          // Armonizada con la paleta de marca; los 7 mantienen 5.5:1 o mas
+          // sobre el fondo del mapa. Deben seguir siendo distinguibles entre si.
+          var colors = ['#4CAF76','#8FA6D9','#E0A82E','#C9A6DB','#E86A78','#5FBFB0','#BDBFC1'];
         // First pass: count how many badges share the same midpoint
         var midCounts = {}, midIdx = {};
         routes.forEach(function(r) {

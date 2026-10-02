@@ -2,7 +2,7 @@
 .vholar-logbook-wrap {
   border-radius: 10px;
   overflow: hidden;
-  background-color: #141118 !important;
+  background-color: var(--vh-bg) !important;
 }
 .vholar-logbook {
   margin-bottom: 0;
@@ -16,7 +16,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: #9898b0;
+  color: var(--vh-text-muted);
   padding: 10px 14px;
   font-weight: 700;
   white-space: nowrap;
@@ -44,7 +44,7 @@
   font-size: 1.45rem;
   font-weight: 800;
   line-height: 1;
-  color: #e0e0f0;
+  color: var(--vh-text);
   font-variant-numeric: tabular-nums;
 }
 .lb-date .lb-monyear {
@@ -52,7 +52,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #9898b2;
+  color: var(--vh-text-muted);
   margin-top: 2px;
 }
 .lb-fltnum {
@@ -60,13 +60,13 @@
   font-weight: 800;
   letter-spacing: 0.04em;
   text-decoration: none;
-  color: #c0c8e8 !important;
+  color: var(--vh-text) !important;
 }
-.lb-fltnum:hover { color: #90aaff !important; text-decoration: none; }
+.lb-fltnum:hover { color: var(--vh-silver) !important; text-decoration: none; }
 .lb-airline {
   display: block;
   font-size: 0.65rem;
-  color: #9898b2;
+  color: var(--vh-text-muted);
   letter-spacing: 0.04em;
   margin-top: 1px;
 }
@@ -81,12 +81,13 @@
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #dce4ff;
+  color: var(--vh-text);
 }
 .lb-route-arrow {
   display: flex;
   align-items: center;
-  color: #7878a0;
+  /* Era #7878a0 sobre fondo oscuro: 4.45:1, bajo AA para 12px. */
+  color: var(--vh-silver-dim);
   font-size: 0.75rem;
   flex-shrink: 0;
 }
@@ -98,7 +99,7 @@
 }
 .lb-cities small {
   font-size: 0.62rem;
-  color: #9090a8;
+  color: var(--vh-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   max-width: 110px;
@@ -111,8 +112,8 @@
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  background: rgba(100,120,200,0.15);
-  color: #8898cc;
+  background: var(--vh-primary-soft);
+  color: var(--vh-text-muted);
   border-radius: 4px;
   padding: 2px 6px;
   text-transform: uppercase;
@@ -122,21 +123,21 @@
   display: block;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #a0a8c0;
+  color: var(--vh-text-muted);
   margin-top: 2px;
   letter-spacing: 0.04em;
 }
 .lb-stat-val {
   font-size: 1rem;
   font-weight: 800;
-  color: #c8d8ff;
+  color: var(--vh-text);
   font-variant-numeric: tabular-nums;
 }
 .lb-time {
   font-family: 'Courier New', monospace;
   font-size: 0.88rem;
   font-weight: 600;
-  color: #a0a8c0;
+  color: var(--vh-text-muted);
   letter-spacing: 0.03em;
 }
 .lb-blocktime { white-space: nowrap; }
@@ -144,11 +145,11 @@
   font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: 0.02em;
-  color: #c8d8ff;
+  color: var(--vh-text);
   font-variant-numeric: tabular-nums;
 }
 .lb-blocktime-icon {
-  color: #7080b8;
+  color: var(--vh-text-muted);
   font-size: 0.75rem;
   margin-right: 4px;
 }
@@ -157,9 +158,9 @@
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
-.lb-score-good { color: #4caf76; }
-.lb-score-ok   { color: #e6a817; }
-.lb-score-bad  { color: #e05060; }
+.lb-score-good { color: var(--vh-success); }
+.lb-score-ok   { color: var(--vh-warning); }
+.lb-score-bad  { color: var(--vh-danger); }
 .lb-state {
   font-size: 0.65rem;
   font-weight: 700;
@@ -180,12 +181,12 @@
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #9898b2;
+  color: var(--vh-text-muted);
 }
 .lb-totals-row .lb-total-val {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #c8d8ff;
+  color: var(--vh-text);
   letter-spacing: 0.02em;
 }
 @media (max-width: 768px) {

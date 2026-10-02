@@ -33,6 +33,10 @@ function buildFrontendAssets()
   mix.sass('resources/sass/now-ui/now-ui-kit.scss', 'public/assets/frontend/css/now-ui-kit.css')
     .sourceMaps();
 
+  // OJO: este bundle lleva Bootstrap 4.3.1 + moment + Popper 1.x, y lo unico que
+  // lo justifica es el tema del nucleo `beta` (Bootstrap 4). El tema activo
+  // (vholar) y `seven`/`Disposable_v3` son Bootstrap 5 y YA NO lo cargan.
+  // Cuando `beta` se migre o se descarte, borrar este mix.scripts() y el fichero.
   mix.scripts([
     'node_modules/moment/moment.js',
     'node_modules/popper.js/dist/umd/popper.js',
@@ -68,9 +72,8 @@ function buildAdminAssets()
     'node_modules/lodash/lodash.js',
     'node_modules/jquery/dist/jquery.js',
     'node_modules/moment/moment.js',
+    // bootstrap.js YA incluye Collapse y Transition: no volver a listarlos aqui.
     'node_modules/bootstrap3/dist/js/bootstrap.js',
-    'node_modules/bootstrap3/js/collapse.js',
-    'node_modules/bootstrap3/js/transition.js',
     'node_modules/popper.js/dist/umd/popper.js',
     'node_modules/popper.js/dist/umd/popper-utils.js',
     'node_modules/select2/dist/js/select2.js',

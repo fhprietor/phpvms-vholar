@@ -11,13 +11,13 @@
 .lb-pilot-entry:hover { background:rgba(255,255,255,0.03); }
 .lb-pilot-ident {
   font-size:0.88rem;font-weight:800;letter-spacing:0.04em;
-  text-decoration:none;color:#c0c8e8 !important;
+  text-decoration:none;color:var(--vh-text) !important;
 }
-.lb-pilot-ident:hover { color:#90aaff !important; }
-.lb-pilot-name { font-size:0.75rem;color:#9090a8;letter-spacing:0.03em;margin-top:1px; }
+.lb-pilot-ident:hover { color:var(--vh-silver) !important; }
+.lb-pilot-name { font-size:0.75rem;color:var(--vh-text-muted);letter-spacing:0.03em;margin-top:1px; }
 .lb-pilot-rank {
-  font-size:0.62rem;font-weight:700;color:#8898cc;letter-spacing:0.04em;
-  white-space:nowrap;background:rgba(100,120,200,0.15);border-radius:4px;
+  font-size:0.62rem;font-weight:700;color:var(--vh-text-muted);letter-spacing:0.04em;
+  white-space:nowrap;background:var(--vh-primary-soft);border-radius:4px;
   padding:2px 7px;flex-shrink:0;
 }
 </style>
@@ -32,7 +32,7 @@
                          style="width:36px;height:36px;object-fit:cover;">
                 @else
                     <img src="{{ public_asset('images/logo.png') }}" class="rounded-circle"
-                         style="width:36px;height:36px;object-fit:contain;background:#1f1c27;padding:3px;">
+                         style="width:36px;height:36px;object-fit:contain;background:var(--vh-surface);padding:3px;">
                 @endif
             </div>
             <div style="flex:1;min-width:0;">

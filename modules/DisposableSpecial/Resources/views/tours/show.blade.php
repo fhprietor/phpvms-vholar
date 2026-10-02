@@ -6,11 +6,11 @@
     @include('DSpecial::tours.table')
     <div class="col-lg-2">
       <div class="nav flex-column nav-pills" id="pills-tab" role="tablist" aria-orientation="vertical">
-        <a class="nav-link mb-2 active" id="pills-legs-tab" data-toggle="pill" href="#pills-legs" role="tab" aria-controls="pills-legs" aria-selected="false">
+        <a class="nav-link mb-2 active" id="pills-legs-tab" data-bs-toggle="pill" href="#pills-legs" role="tab" aria-controls="pills-legs" aria-selected="false">
           @lang('DSpecial::tours.legs')
         </a>
         @if(filled($tour->tour_rules))
-          <a class="nav-link mb-2" id="pills-rules-tab" data-toggle="pill" href="#pills-rules" role="tab" aria-controls="pills-rules" aria-selected="false">
+          <a class="nav-link mb-2" id="pills-rules-tab" data-bs-toggle="pill" href="#pills-rules" role="tab" aria-controls="pills-rules" aria-selected="false">
             @lang('DSpecial::tours.trules')
           </a>
         @endif
@@ -20,12 +20,12 @@
           </button>
         @endif
         @if(filled($tour_awards))
-          <a class="nav-link mb-2" id="pills-awards-tab" data-toggle="pill" href="#pills-awards" role="tab" aria-controls="pills-report" aria-selected="false">
+          <a class="nav-link mb-2" id="pills-awards-tab" data-bs-toggle="pill" href="#pills-awards" role="tab" aria-controls="pills-report" aria-selected="false">
             @lang('DSpecial::tours.tawards')
           </a>
         @endif
         @ability('admin', 'admin-access')
-          <a class="nav-link mb-2" id="pills-report-tab" data-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="false">
+          <a class="nav-link mb-2" id="pills-report-tab" data-bs-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="false">
             @lang('DSpecial::tours.treport')
           </a>
         @endability

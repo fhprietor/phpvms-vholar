@@ -6,7 +6,7 @@
 {{-- Header --}}
 <div class="row mb-4">
     <div class="col-12">
-        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #1a1035 0%, #2d1b69 100%);">
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, var(--vh-primary-active) 0%, var(--vh-primary) 100%);">
             <div class="card-body py-4 px-4">
                 <div class="d-flex align-items-center gap-3">
                     <div><i class="bi bi-journal-richtext text-warning" style="font-size:2.5rem;"></i></div>

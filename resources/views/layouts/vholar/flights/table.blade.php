@@ -1,7 +1,7 @@
 <div class="flights-container">
     {{-- Mapa de rutas disponibles --}}
     <div class="flights-map-container mb-4">
-        <div id="availableRoutesMap" style="height: 450px; width: 100%; border-radius: 12px; overflow: hidden; background: #1a1a2e;"></div>
+        <div id="availableRoutesMap" style="height: 450px; width: 100%; border-radius: 12px; overflow: hidden; background: var(--vh-surface);"></div>
     </div>
     @php
         $isBidsPage = request()->routeIs('frontend.flights.bids');
@@ -104,7 +104,8 @@
     
     // Estado del vuelo
     $status = __('flights.scheduled');
-    $statusColor = '#2c7be5';
+    // Va como literal: se concatena el alfa en linea ('{{ $statusColor }}20').
+    $statusColor = '#8FA6D9';
 @endphp
             
             <div class="flight-card" data-flight-id="{{ $flight->id }}">
@@ -580,8 +581,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 var aptLabel = apt.iata ? apt.id + '/' + apt.iata : apt.id;
                 var aptW = Math.max(72, aptLabel.length * 8 + 20);
                 var isBase = userAirport && apt.id === userAirport.id;
-                var badgeBg     = isBase ? '#f1c40f' : '#c8d8ff';
-                var badgeBorder = isBase ? 'rgba(180,140,0,0.5)' : 'rgba(80,100,200,0.5)';
+                var badgeBg     = isBase ? '#f1c40f' : '#BDBFC1';
+                var badgeBorder = isBase ? 'rgba(180,140,0,0.5)' : 'rgba(13,11,24,0.35)';
                 var symbol      = isBase ? '&#11088; ' : '&#9992; ';
                 var popupExtra  = isBase ? '<br><span>&#11088; Tu base actual</span>' : '';
                 L.marker([apt.lat, apt.lon], {
@@ -605,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Dibujar rutas con badge de vuelo
             routes.forEach(function(route) {
-                var color   = route.isUserAirport ? '#2ecc71' : '#3498db';
+                var color   = route.isUserAirport ? '#4CAF76' : '#8FA6D9';
                 var weight  = route.isUserAirport ? 3.5 : 2;
                 var opacity = route.isUserAirport ? 0.9 : 0.55;
                 L.geodesic(route.latlngs, {

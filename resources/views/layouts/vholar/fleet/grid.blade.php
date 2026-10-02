@@ -10,10 +10,10 @@
 
     {{-- Page header --}}
     <div class="mb-4 d-flex align-items-center justify-content-between">
-        <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:#9898b0;">
+        <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:var(--vh-text-muted);">
             <i class="bi bi-grid-3x3-gap-fill me-2"></i>@lang('common.fleet')
         </h4>
-        <div style="font-size:0.72rem;color:#7878a0;">
+        <div style="font-size:0.72rem;color:var(--vh-silver-dim);">
             {{ $subfleets->sum(fn($sf) => $sf->aircraft->count()) }} @lang('common.aircraft') &middot; {{ $subfleets->count() }} @lang('common.subfleet')
         </div>
     </div>
@@ -59,7 +59,7 @@
                                     <td class="text-nowrap">
                                         @if($ac->airport_id)
                                             <a href="{{ route('frontend.airports.show', $ac->airport_id) }}"
-                                               style="font-family:'Courier New',monospace;font-size:0.88rem;font-weight:700;color:#8898c8;text-decoration:none;letter-spacing:0.02em;">
+                                               style="font-family:'Courier New',monospace;font-size:0.88rem;font-weight:700;color:var(--vh-text-muted);text-decoration:none;letter-spacing:0.02em;">
                                                 {{ $ac->airport_id }}
                                             </a>
                                         @else
@@ -72,7 +72,7 @@
                                         </span>
                                     </td>
                                     <td class="text-nowrap">
-                                        <span style="font-size:0.78rem;color:#9090a8;">
+                                        <span style="font-size:0.78rem;color:var(--vh-text-muted);">
                                             {{ $ac->landing_time ? \Carbon\Carbon::parse($ac->landing_time)->diffForHumans() : __('common.never') }}
                                         </span>
                                     </td>

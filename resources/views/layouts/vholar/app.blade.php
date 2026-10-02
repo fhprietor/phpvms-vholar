@@ -60,6 +60,8 @@
         L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.9.4/dist/images/';
     </script>
 
+    {{-- TOKENS VHOLAR · fuente unica de verdad. Debe ir ANTES que theme.css --}}
+    <link href="{{ public_asset('/assets/themes/vholar/css/tokens.css') }}?v={{ time() }}" rel="stylesheet">
     {{-- TEMA VHOLAR CSS --}}
     <link href="{{ public_asset('/assets/themes/vholar/css/theme.css') }}?v={{ time() }}" rel="stylesheet">
     
@@ -93,7 +95,7 @@
         </div>
 
         {{-- SECCIÓN DE LOGOS IVAO --}}
-        <div style="background-color: #16131c; border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <div style="background-color: var(--vh-bg); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);">
             <div class="container py-4">
                 <div class="row align-items-center justify-content-center g-4">
                     <div class="col-md-3 col-6 text-center">
@@ -115,7 +117,7 @@
             </div>
         </div>
 
-        <footer class="py-3 border-top" style="background-color: #16131c; border-color: rgba(255,255,255,0.05);">
+        <footer class="py-3 border-top" style="background-color: var(--vh-bg); border-color: rgba(255,255,255,0.05);">
             <div class="container d-flex flex-wrap justify-content-between align-items-center">
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="mb-3 mb-md-0 text-body-secondary">Copyright {{ date('Y') }}
@@ -178,7 +180,13 @@
 
     {{-- Start of the required tags block --}}
     <script src="{{ public_mix('/assets/global/js/vendor.js') }}"></script>
-    <script src="{{ public_mix('/assets/frontend/js/vendor.js') }}"></script>
+    {{-- NO se carga /assets/frontend/js/vendor.js: ese bundle lleva Bootstrap 4.3.1
+         (junto a moment y Popper 1.x) y Bootstrap 5 ya viene del CDN de arriba.
+         Tener las dos librerias en la misma pagina duplicaba el JS y hacia que
+         cualquier llamada jQuery tipo $(...).modal() ejecutase la implementacion
+         de Bootstrap 4 contra markup de Bootstrap 5.
+         El bundle SIGUE existiendo porque el tema del nucleo `beta` (Bootstrap 4)
+         si lo necesita; simplemente este tema ya no lo usa. --}}
     <script src="{{ public_mix('/assets/frontend/js/app.js') }}"></script>
     @yield('scripts')
     @stack('scripts')
@@ -192,8 +200,10 @@
             if (typeof window.cookieconsent !== 'undefined') {
                 window.cookieconsent.initialise({
                     palette: {
-                        popup: { background: "#edeff5", text: "#838391" },
-                        button: { background: "#067ec1" }
+                        /* Oscurecido: el banner claro daba 3.25:1 (#838391 sobre #edeff5), por debajo
+                           de AA, y era la unica superficie clara que quedaba en el tema. */
+                        popup: { background: "#28212F", text: "#A79FB2" },
+                        button: { background: "#412C4D" }
                     },
                     position: "top",
                 });
@@ -385,7 +395,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="bi bi-airplane-fill" style="color: #2c7be5;"></i> FLIGHT INFORMATION
+                    <i class="bi bi-airplane-fill" style="color: var(--vh-info);"></i> FLIGHT INFORMATION
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -412,15 +422,15 @@
 {{-- Global Vholar confirm modal (Bootstrap 5) --}}
 <div class="modal fade" id="vhConfirmModal" tabindex="-1" aria-labelledby="vhConfirmTitle" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content" style="background:var(--vh-surface,#1f1c27);border:1px solid var(--vh-border,#412c4d);color:var(--vh-text,#e5e5e5);">
-            <div class="modal-header" style="background:var(--vh-surface2,#2a2633);border-bottom:1px solid var(--vh-border,#412c4d);">
-                <h5 class="modal-title" id="vhConfirmTitle" style="color:var(--vh-text,#e5e5e5);">Confirmar acción</h5>
+        <div class="modal-content" style="background:var(--vh-surface);border:1px solid var(--vh-border);color:var(--vh-text);">
+            <div class="modal-header" style="background:var(--vh-surface-2);border-bottom:1px solid var(--vh-border);">
+                <h5 class="modal-title" id="vhConfirmTitle" style="color:var(--vh-text);">Confirmar acción</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p id="vhConfirmMessage" style="color:var(--vh-text,#e5e5e5);margin:0;"></p>
+                <p id="vhConfirmMessage" style="color:var(--vh-text);margin:0;"></p>
             </div>
-            <div class="modal-footer" style="background:var(--vh-surface2,#2a2633);border-top:1px solid var(--vh-border,#412c4d);">
+            <div class="modal-footer" style="background:var(--vh-surface-2);border-top:1px solid var(--vh-border);">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-danger" id="vhConfirmBtn">
                     <i class="bi bi-check-lg"></i> Confirmar

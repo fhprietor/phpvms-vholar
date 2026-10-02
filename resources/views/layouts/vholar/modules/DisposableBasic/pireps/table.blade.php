@@ -7,7 +7,7 @@
 .lb-toggle-icon {
   display: inline-block;
   font-size: 0.65rem;
-  color: #7878a0;
+  color: var(--vh-silver-dim);
   margin-right: 5px;
   transition: transform 0.18s ease;
   vertical-align: middle;
@@ -28,14 +28,14 @@
 }
 .lb-pilot-name {
   font-size: 0.78rem;
-  color: #a0a8c0;
+  color: var(--vh-text-muted);
   text-decoration: none;
 }
-.lb-pilot-name:hover { color: #90aaff; text-decoration: none; }
+.lb-pilot-name:hover { color: var(--vh-silver); text-decoration: none; }
 /* Landing rate coloring */
-.lrate-good    { color: #4caf76; }
-.lrate-ok      { color: #e6a817; }
-.lrate-hard    { color: #e05060; }
+.lrate-good    { color: var(--vh-success); }
+.lrate-ok      { color: var(--vh-warning); }
+.lrate-hard    { color: var(--vh-danger); }
 /* Secondary collapsed row */
 .lb-detail-row td { padding: 0 !important; border: none !important; }
 .lb-detail-inner {
@@ -46,10 +46,10 @@
   border-top: 1px solid rgba(255,255,255,0.05);
   background: rgba(0,0,0,0.35);
   font-size: 0.75rem;
-  color: #9898b0;
+  color: var(--vh-text-muted);
 }
-.lb-detail-inner a { color: #8898cc; text-decoration: none; }
-.lb-detail-inner a:hover { color: #90aaff; }
+.lb-detail-inner a { color: var(--vh-text-muted); text-decoration: none; }
+.lb-detail-inner a:hover { color: var(--vh-silver); }
 </style>
 @endonce
 
@@ -109,7 +109,7 @@
               @ability('admin', 'admin-access')
                 <a href="{{ route('frontend.pireps.show', [$pirep->id]) }}"
                    class="me-1"
-                   style="color:#5a6a9a;font-size:0.75rem;"
+                   style="color:var(--vh-text-muted);font-size:0.75rem;"
                    title="@lang('common.view')"
                    onclick="event.stopPropagation()">&#9432;</a>
               @endability
@@ -125,11 +125,11 @@
             <td>
               <div class="lb-route">
                 <a href="{{ route('frontend.airports.show', [$pirep->dpt_airport_id]) }}"
-                   class="lb-icao" style="color:#dce4ff;text-decoration:none;"
+                   class="lb-icao" style="color:var(--vh-text);text-decoration:none;"
                    onclick="event.stopPropagation()">{{ $pirep->dpt_airport_id }}</a>
                 <span class="lb-route-arrow">✈</span>
                 <a href="{{ route('frontend.airports.show', [$pirep->arr_airport_id]) }}"
-                   class="lb-icao" style="color:#dce4ff;text-decoration:none;"
+                   class="lb-icao" style="color:var(--vh-text);text-decoration:none;"
                    onclick="event.stopPropagation()">{{ $pirep->arr_airport_id }}</a>
               </div>
               <div class="lb-cities">
@@ -160,7 +160,7 @@
                   <img src="{{ $pirep->user->avatar->url }}" alt="">
                 @else
                   <img src="{{ public_asset('images/logo.png') }}"
-                       style="object-fit:contain;background:#1f1c27;padding:2px;" alt="">
+                       style="object-fit:contain;background:var(--vh-surface);padding:2px;" alt="">
                 @endif
                 <a href="{{ route('frontend.users.show.public', [$pirep->user_id]) }}"
                    class="lb-pilot-name"
@@ -198,7 +198,7 @@
                 <div class="lb-detail-inner">
                   @if(!isset($ac_page))
                     <span>
-                      <span style="color:#7878a0;margin-right:3px;">&#9992;</span>
+                      <span style="color:var(--vh-silver-dim);margin-right:3px;">&#9992;</span>
                       @if(optional($pirep->aircraft)->registration)
                         <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration]) }}"
                            onclick="event.stopPropagation()">{{ optional($pirep->aircraft)->ident }}</a>
@@ -209,7 +209,7 @@
                   @endif
 
                   <span>
-                    <span style="color:#7878a0;margin-right:3px;">&#9981;</span>
+                    <span style="color:var(--vh-silver-dim);margin-right:3px;">&#9981;</span>
                     {{ DB_ConvertWeight($pirep->fuel_used, $units['fuel']) }}
                     @ability('admin', 'admin-access')
                       @if(filled($pirep->simbrief) && ($pirep->fuel_used->local() - ($pirep->simbrief->xml->fuel->enroute_burn + ($pirep->simbrief->xml->fuel->contingency * 1.15) + ($pirep->simbrief->xml->fuel->taxi * 2)) > 100))
@@ -224,7 +224,7 @@
                         $lrClass = $pirep->landing_rate < -300 ? 'lrate-hard' : ($pirep->landing_rate < -200 ? 'lrate-ok' : 'lrate-good');
                       @endphp
                       <span class="{{ $lrClass }}">
-                        {{ $pirep->landing_rate }}<span style="color:#7878a0;margin-left:2px;">ft/m</span>
+                        {{ $pirep->landing_rate }}<span style="color:var(--vh-silver-dim);margin-left:2px;">ft/m</span>
                       </span>
                     @endif
                   @endability

@@ -3,10 +3,10 @@
 
 @section('content')
 <div class="mb-3 d-flex align-items-center justify-content-between">
-  <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:#9898b0;">
+  <h4 class="mb-0" style="font-weight:800;letter-spacing:0.04em;text-transform:uppercase;font-size:0.85rem;color:var(--vh-text-muted);">
     &#9992; &nbsp;@lang('common.fleet_map')
   </h4>
-  <div style="font-size:0.72rem;color:#7878a0;">
+  <div style="font-size:0.72rem;color:var(--vh-silver-dim);">
     {{ array_sum(array_column($airportFleet, 'total')) }} aircraft &middot; {{ count($airportFleet) }} airports
   </div>
 </div>
@@ -54,14 +54,14 @@
       var h = 20 + typeLines.length * 16 + 4;
 
       var typesHtml = typeLines.map(function(t) {
-        return '<div style="font-size:0.6rem;font-weight:700;color:#e0e8ff;letter-spacing:0.03em;line-height:1.5;">' + t + '</div>';
+        return '<div style="font-size:0.6rem;font-weight:700;color:#EDEAF1;letter-spacing:0.03em;line-height:1.5;">' + t + '</div>';
       }).join('');
 
       var html =
         '<div style="width:' + w + 'px;text-align:center;">' +
           '<span style="display:inline-block;white-space:nowrap;font-family:\'Courier New\',monospace;' +
-            'font-size:0.68rem;font-weight:800;color:#0d0b18;background:#c8d8ff;' +
-            'border:1.5px solid rgba(80,100,200,0.5);border-radius:4px;padding:1px 6px;' +
+            'font-size:0.68rem;font-weight:800;color:#0d0b18;background:#BDBFC1;' +
+            'border:1.5px solid rgba(13,11,24,0.35);border-radius:4px;padding:1px 6px;' +
             'box-shadow:0 2px 4px rgba(0,0,0,0.6);letter-spacing:0.04em;">&#9992; ' + aptLabel + '</span>' +
           (typeLines.length ? '<div style="margin-top:3px;">' + typesHtml + '</div>' : '') +
         '</div>';

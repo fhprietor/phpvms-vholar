@@ -7,22 +7,22 @@
   @else
     <ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
       <li class="nav-item mx-1" role="presentation">
-        <a class="nav-link p-1 active" id="pills-activet-tab" data-toggle="pill" href="#pills-activet" role="tab" aria-controls="pills-activet" aria-selected="true">
+        <a class="nav-link p-1 active" id="pills-activet-tab" data-bs-toggle="pill" href="#pills-activet" role="tab" aria-controls="pills-activet" aria-selected="true">
           @lang('DSpecial::tours.current')
         </a>
       </li>
       <li class="nav-item mx-1" role="presentation">
-        <a class="nav-link p-1" id="pills-futuret-tab" data-toggle="pill" href="#pills-futuret" role="tab" aria-controls="pills-futuret" aria-selected="false">
+        <a class="nav-link p-1" id="pills-futuret-tab" data-bs-toggle="pill" href="#pills-futuret" role="tab" aria-controls="pills-futuret" aria-selected="false">
           @lang('DSpecial::tours.future')
         </a>
       </li>
       <li class="nav-item mx-1" role="presentation">
-        <a class="nav-link p-1" id="pills-closedt-tab" data-toggle="pill" href="#pills-closedt" role="tab" aria-controls="pills-closedt" aria-selected="false">
+        <a class="nav-link p-1" id="pills-closedt-tab" data-bs-toggle="pill" href="#pills-closedt" role="tab" aria-controls="pills-closedt" aria-selected="false">
           @lang('DSpecial::tours.past')
         </a>
       </li>
       <li class="nav-item mx-1" role="presentation">
-        <a class="nav-link p-1" id="pills-rulest-tab" data-toggle="pill" href="#pills-rulest" role="tab" aria-controls="pills-rulest" aria-selected="false">
+        <a class="nav-link p-1" id="pills-rulest-tab" data-bs-toggle="pill" href="#pills-rulest" role="tab" aria-controls="pills-rulest" aria-selected="false">
           @lang('DSpecial::tours.trules')
         </a>
       </li>

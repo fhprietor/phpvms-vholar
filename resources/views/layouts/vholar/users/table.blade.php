@@ -5,8 +5,9 @@
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #7a6a9a;
-  background: rgba(100,70,140,0.18);
+  /* Era #7a6a9a sobre badge violeta: 3.06:1, bajo AA para 10px. */
+  color: var(--vh-silver);
+  background: var(--vh-primary-soft);
   border-radius: 4px;
   padding: 2px 6px;
   display: inline-block;
@@ -17,18 +18,18 @@
   font-size: 0.92rem;
   font-weight: 700;
   text-decoration: none;
-  color: #c0c8e8 !important;
+  color: var(--vh-text) !important;
   letter-spacing: 0.02em;
 }
-.lb-pilot-link:hover { color: #90aaff !important; }
+.lb-pilot-link:hover { color: var(--vh-silver) !important; }
 .lb-rank {
   display: inline-block;
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  background: rgba(60,80,160,0.18);
-  color: #7a90cc;
+  background: var(--vh-primary-soft);
+  color: var(--vh-text-muted);
   border-radius: 4px;
   padding: 2px 7px;
   vertical-align: middle;
@@ -37,13 +38,13 @@
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #8898c8;
+  color: var(--vh-text-muted);
   letter-spacing: 0.02em;
 }
 .lb-location-name {
   display: block;
   font-size: 0.62rem;
-  color: #9090a8;
+  color: var(--vh-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   margin-top: 1px;
@@ -51,7 +52,7 @@
 .lb-stat-val {
   font-size: 1rem;
   font-weight: 800;
-  color: #c8d8ff;
+  color: var(--vh-text);
   font-variant-numeric: tabular-nums;
 }
 .lb-stat-label {
@@ -59,7 +60,7 @@
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #9090a8;
+  color: var(--vh-text-muted);
   margin-top: 1px;
 }
 </style>
@@ -95,7 +96,7 @@
                        style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">
                 @else
                   <img src="{{ public_asset('images/logo.png') }}" alt=""
-                       style="width:36px;height:36px;border-radius:50%;object-fit:contain;background:#1f1c27;padding:3px;flex-shrink:0;">
+                       style="width:36px;height:36px;border-radius:50%;object-fit:contain;background:var(--vh-surface);padding:3px;flex-shrink:0;">
                 @endif
                 <div>
                   <div>

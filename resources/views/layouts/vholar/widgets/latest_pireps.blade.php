@@ -32,27 +32,27 @@
   font-weight: 800;
   letter-spacing: 0.04em;
   text-decoration: none;
-  color: #c0c8e8 !important;
+  color: var(--vh-text) !important;
   white-space: nowrap;
 }
-.lb-widget-fltnum:hover { color: #90aaff !important; }
+.lb-widget-fltnum:hover { color: var(--vh-silver) !important; }
 .lb-widget-btime {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #c8d8ff;
+  color: var(--vh-text);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-.lb-widget-btime-icon { color: #7080b8; font-size: 0.65rem; margin-right: 2px; }
+.lb-widget-btime-icon { color: var(--vh-text-muted); font-size: 0.65rem; margin-right: 2px; }
 .lb-widget-route {
   font-family: 'Courier New', monospace;
   font-size: 0.82rem;
   font-weight: 700;
-  color: #8898c8;
+  color: var(--vh-text-muted);
   letter-spacing: 0.02em;
   margin-top: 1px;
 }
-.lb-widget-route-arrow { color: #3a3a52; margin: 0 3px; font-size: 0.68rem; }
+.lb-widget-route-arrow { color: var(--vh-silver-dim); margin: 0 3px; font-size: 0.68rem; }
 .lb-widget-bottom {
   display: flex;
   align-items: center;
@@ -61,7 +61,7 @@
 }
 .lb-widget-pilot {
   font-size: 0.62rem;
-  color: #9090a8;
+  color: var(--vh-text-muted);
   letter-spacing: 0.03em;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -98,7 +98,7 @@
                     <img src="{{ $p->user->avatar->url }}" alt="">
                 @else
                     <img src="{{ public_asset('images/logo.png') }}"
-                         style="object-fit:contain;background:#1f1c27;padding:3px;" alt="">
+                         style="object-fit:contain;background:var(--vh-surface);padding:3px;" alt="">
                 @endif
             </div>
             <div class="lb-widget-body">

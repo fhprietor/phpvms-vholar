@@ -487,8 +487,8 @@ new Chart(document.getElementById('altitudeChart'), {
         datasets: [{
             label: 'Altitude (ft)',
             data: altitudeData.map(d => d.altitude_msl),
-            borderColor: '#2c7be5',
-            backgroundColor: 'rgba(44, 123, 229, 0.1)',
+            borderColor: '#8FA6D9',
+            backgroundColor: 'rgba(143, 166, 217, 0.1)',
             fill: true,
             tension: 0.4
         }]
@@ -497,7 +497,7 @@ new Chart(document.getElementById('altitudeChart'), {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-            legend: { labels: { color: '#fff' } },
+            legend: { labels: { color: '#EDEAF1' } },
             tooltip: {
                 callbacks: {
                     label: function(context) {
@@ -513,14 +513,14 @@ new Chart(document.getElementById('altitudeChart'), {
         },
         scales: {
             y: {
-                title: { display: true, text: 'Altitude (ft)', color: '#aaa' },
+                title: { display: true, text: 'Altitude (ft)', color: '#A79FB2' },
                 grid: { color: 'rgba(255,255,255,0.1)' },
-                ticks: { color: '#aaa' }
+                ticks: { color: '#A79FB2' }
             },
             x: {
-                title: { display: true, text: 'Sequence', color: '#aaa' },
+                title: { display: true, text: 'Sequence', color: '#A79FB2' },
                 grid: { color: 'rgba(255,255,255,0.1)' },
-                ticks: { color: '#aaa' }
+                ticks: { color: '#A79FB2' }
             }
         }
     }
@@ -541,7 +541,7 @@ new Chart(document.getElementById('altitudeChart'), {
       <div class="card-body p-0">
         <ul class="list-group list-group-flush">
           @foreach($pirep->comments as $comment)
-            <li class="list-group-item" style="background:transparent; border-color:rgba(255,255,255,0.07); color:#ccc;">
+            <li class="list-group-item" style="background:transparent; border-color:var(--vh-border); color:var(--vh-text);">
               <div class="d-flex justify-content-between align-items-start">
                 <span>{{ $comment->comment }}</span>
                 <small class="text-muted ms-3 text-nowrap">{{ $comment->created_at->format('d M Y H:i') }}</small>
@@ -559,17 +559,17 @@ new Chart(document.getElementById('altitudeChart'), {
 @once
 <style>
 .vholar-card {
-    background: linear-gradient(135deg, #2a2633 0%, #1f1c27 100%);
-    border: 1px solid #412c4d;
+    background: linear-gradient(135deg, var(--vh-surface-2) 0%, var(--vh-surface) 100%);
+    border: 1px solid var(--vh-primary);
     border-radius: 12px;
     overflow: hidden;
 }
 .vholar-card .card-header {
-    background: rgba(65,44,77,0.3);
+    background: var(--vh-primary-soft);
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .vholar-card .card-header h5 {
-    color: #fff;
+    color: var(--vh-white);
 }
 </style>
 @endonce

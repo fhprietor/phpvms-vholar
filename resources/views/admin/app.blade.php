@@ -23,8 +23,10 @@
 
   <link rel="stylesheet" href="{{ public_mix('/assets/global/css/vendor.css') }}"/>
   <link rel="stylesheet" href="{{ public_mix('/assets/admin/css/vendor.css') }}"/>
-  <link rel="stylesheet" href="{{ public_asset('/assets/admin/css/admin.css') }}"/>
-  <link rel="stylesheet" href="{{ public_asset('/assets/admin/css/vholar-admin.css') }}?v=20260918b"/>
+  <link rel="stylesheet" href="{{ public_asset('/assets/admin/css/admin.css') }}?v=20261002a"/>
+  {{-- TOKENS VHOLAR · fuente unica de verdad, compartida con el frontend --}}
+  <link rel="stylesheet" href="{{ public_asset('/assets/themes/vholar/css/tokens.css') }}"/>
+  <link rel="stylesheet" href="{{ public_asset('/assets/admin/css/vholar-admin.css') }}?v=20261002a"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 
   <style type="text/css">
