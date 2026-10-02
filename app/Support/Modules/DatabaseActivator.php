@@ -147,15 +147,18 @@ class DatabaseActivator implements ActivatorInterface
      */
     public function setActive(Module $module, bool $active): void
     {
-        $module = $this->getModuleByName($module->getName());
+        $name = $module->getName();
+        $module = $this->getModuleByName($name);
         if (!$module) {
             $module = \App\Models\Module::create([
-                'name' => $module->name,
+                'name' => $name,
             ]);
         }
 
         $module->enabled = $active;
         $module->save();
+
+        self::flushCaches($name);
     }
 
     /**
@@ -170,6 +173,8 @@ class DatabaseActivator implements ActivatorInterface
 
         $module->enabled = $status;
         $module->save();
+
+        self::flushCaches($name);
     }
 
     /**
@@ -187,6 +192,24 @@ class DatabaseActivator implements ActivatorInterface
             Log::error('Module '.$module.' Delete failed! Exception : '.$e->getMessage());
 
             return;
+        }
+
+        self::flushCaches($name);
+    }
+
+    public static function flushCaches(string $name): void
+    {
+        if (app()->environment('production')) {
+            $cache = config('cache.keys.MODULES');
+            if ($cache) {
+                Cache::forget($cache['key']);
+                Cache::forget($cache['key'].'.'.$name);
+            }
+        }
+
+        $nwidartKey = config('modules.cache.key');
+        if ($nwidartKey) {
+            Cache::store(config('modules.cache.driver'))->forget($nwidartKey);
         }
     }
 }
