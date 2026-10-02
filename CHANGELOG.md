@@ -1,5 +1,19 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Aislar el KVP de los tests (adios al aviso fantasma)
+
+- `tests/TestCase` usa ahora un KVP propio (`storage/framework/testing/kvp.json`)
+  en lugar de `storage/app/kvp.json`. La suite compartia ese fichero con la web:
+  `VersionTest` dejaba `new_version_available = true` con
+  `latest_version_tag = 7.0.0-beta`, asi que el panel de admin avisaba de
+  "New version 7.0.0-beta is available!" (¡una version **anterior** a la
+  instalada!), y `UtilsTest` dejaba claves sueltas (`testkey`, `intval`).
+- Nuevo `tests/TestCaseIsolationTest.php`: falla si el KVP de los tests apunta al
+  de produccion o si una escritura de test llega al fichero real.
+- KVP de produccion limpiado y recalculado: `latest_version_tag = 7.0.10` y
+  `new_version_available = false` (el aviso desaparece del panel).
+- Suite completa: `OK (214 tests, 1202 assertions)`.
+
 ## [Vholar] 2026-10-02 — Manifiesto, limpieza de datos y ruta a phpVMS 8
 
 - `deploy/versions.yml` **no era YAML valido**: `caveats:` estaba anidado dentro

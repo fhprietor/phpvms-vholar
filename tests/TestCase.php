@@ -45,6 +45,12 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
     protected array $connectionsToTransact = ['test'];
 
+    /**
+     * Ruta del KVP aislado que usan los tests (ver setUp). El KVP real es un
+     * fichero JSON en storage/app y la suite no debe escribir ahi.
+     */
+    protected string $kvpTestPath;
+
     /** @var User */
     protected $user;
 
@@ -60,6 +66,22 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Aislar el KVP (Spatie Valuestore: un fichero JSON) del de produccion.
+        // Los tests lo compartian y lo sobrescribian: VersionTest dejaba
+        // 'new_version_available => true' con 'latest_version_tag => 7.0.0-beta'
+        // (y UtilsTest claves sueltas), asi que el panel de admin avisaba de una
+        // version inexistente.
+        $this->kvpTestPath = storage_path('framework/testing/kvp.json');
+        if (!is_dir(dirname($this->kvpTestPath))) {
+            mkdir(dirname($this->kvpTestPath), 0777, true);
+        }
+
+        if (file_exists($this->kvpTestPath)) {
+            unlink($this->kvpTestPath);
+        }
+
+        config(['phpvms.kvp_storage_path' => $this->kvpTestPath]);
 
         // Don't throttle requests when running the tests
         $this->withoutMiddleware(
@@ -87,6 +109,15 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         Factory::guessFactoryNamesUsing(function (string $modelName) {
             return 'App\\Database\\Factories\\'.class_basename($modelName).'Factory';
         });
+    }
+
+    protected function tearDown(): void
+    {
+        if (isset($this->kvpTestPath) && file_exists($this->kvpTestPath)) {
+            unlink($this->kvpTestPath);
+        }
+
+        parent::tearDown();
     }
 
     /**
