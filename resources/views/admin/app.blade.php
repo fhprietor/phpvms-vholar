@@ -94,6 +94,14 @@
           <ul>
           </ul>
         </nav>
+        @php
+          $DBasic = isset($DBasic) ? $DBasic : check_module('DisposableBasic');
+          $DSpecial = isset($DSpecial) ? $DSpecial : check_module('DisposableSpecial');
+        @endphp
+        {{-- Credito obligatorio del tema Disposable (partial copiado SIN alterar) --}}
+        <div class="pull-left text-muted" style="padding-left: 15px; font-size: 12px;">
+          @include('vholar::theme_version')
+        </div>
         <div class="pull-right text-muted" style="padding-right: 15px; font-size: 12px;">
           phpVMS {{ vholar_versions() }}
         </div>

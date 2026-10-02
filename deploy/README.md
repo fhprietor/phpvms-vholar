@@ -93,11 +93,13 @@ con sus modificaciones locales ya aplicadas. No revertir sin hablarlo antes.
   no se podian empujar alli. Parche:
   `patches/DisposableBasic-f0b03db.patch`.
 
-> **Pendiente de licencia**: los pies de pagina **no** muestran el nombre ni el
-> enlace de Disposable (ni `DisposableBasic` ni el tema `Disposable_v3`), y la
-> condicion de su licencia es que sean visibles en el pie de todas las paginas
-> (salvo permiso escrito del autor). El tema `Disposable_v3` original tampoco lo
-> ponia. Decidir: anadirlo al pie o pedir el permiso.
+> **Credito de Disposable (obligatorio por licencia)**: los tres pies incluyen
+> `resources/views/layouts/vholar/theme_version.blade.php`, copia **verbatim** del
+> partial del tema original (`Disposable_v3/theme_version.blade.php`), que enlaza a
+> https://github.com/FatihKoz. Su licencia exige el nombre y el enlace visibles en
+> el pie de **todas** las paginas, y el propio partial avisa de que **no debe
+> alterarse**: no tocar ese fichero. La etiqueta la decide el partial con
+> `$DBasic`/`$DSpecial` (con ambos packs activos muestra "Extended Pack").
 
 ### Actualizar un modulo vendorizado
 

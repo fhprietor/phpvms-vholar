@@ -1,5 +1,20 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Credito de Disposable en los pies (licencia)
+
+- Los tres pies muestran ya el credito obligatorio del tema:
+  **`Disposable Extended Pack v3.x`** enlazado a https://github.com/FatihKoz. La
+  licencia de Disposable (tema y modulo) exige que el nombre y el enlace del
+  software sean visibles en el pie de **todas** las paginas, y el tema `vholar` lo
+  habia perdido al derivar de `Disposable_v3`.
+- `theme_version.blade.php` se copia **verbatim** del tema original
+  (`resources/views/layouts/Disposable_v3/`) a `vholar/` y se incluye sin
+  alterarlo, como pide su propio aviso. `$DBasic`/`$DSpecial` se calculan con
+  `check_module()` igual que en el tema original: con DisposableBasic y
+  DisposableSpecial activos, la etiqueta es "Extended Pack".
+- La nota de "pendiente de licencia" de `deploy/README.md` pasa a documentar el
+  credito y el aviso de no alterar ese partial.
+
 ## [Vholar] 2026-10-02 — Pie de pagina unificado
 
 - El pie deja de repetir la atribucion: pasa de dos textos

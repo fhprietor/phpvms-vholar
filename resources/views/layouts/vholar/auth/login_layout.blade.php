@@ -134,6 +134,13 @@
                 <span class="mb-3 mb-md-0">Copyright {{ date('Y') }}
                     {{ config('app.name') }}</span>
             </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                @php
+                    $DBasic = isset($DBasic) ? $DBasic : check_module('DisposableBasic');
+                    $DSpecial = isset($DSpecial) ? $DSpecial : check_module('DisposableSpecial');
+                @endphp
+                <span class="mb-3 mb-md-0 text-center">@include('vholar::theme_version')</span>
+            </div>
             <div class="col-md-4 d-flex align-items-center justify-content-end">
                 <span class="mb-3 mb-md-0 text-end">Powered by <a style="color: orange" href="https://www.phpvms.net"
                         target="_blank">phpVMS</a> {{ vholar_versions() }}</span>

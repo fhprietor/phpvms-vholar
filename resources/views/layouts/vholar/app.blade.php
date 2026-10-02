@@ -123,6 +123,15 @@
                     <span class="mb-3 mb-md-0 text-body-secondary">Copyright {{ date('Y') }}
                         {{ config('app.name') }}</span>
                 </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                    @php
+                        $DBasic = isset($DBasic) ? $DBasic : check_module('DisposableBasic');
+                        $DSpecial = isset($DSpecial) ? $DSpecial : check_module('DisposableSpecial');
+                    @endphp
+                    {{-- Credito obligatorio del tema Disposable (su licencia exige nombre y enlace
+                         visibles en el pie de todas las paginas). El partial se copia SIN alterar. --}}
+                    <span class="mb-3 mb-md-0 text-body-secondary text-center">@include('vholar::theme_version')</span>
+                </div>
                 <div class="col-md-4 d-flex align-items-center justify-content-end">
                     <span class="mb-3 mb-md-0 text-body-secondary text-end">Powered by <a href="https://www.phpvms.net"
                             target="_blank">phpVMS</a> {{ vholar_versions() }}</span>
