@@ -1,0 +1,75 @@
+diff --git a/Resources/views/ranks/index.blade.php b/Resources/views/ranks/index.blade.php
+index e3755e9..89205f9 100644
+--- a/Resources/views/ranks/index.blade.php
++++ b/Resources/views/ranks/index.blade.php
+@@ -34,8 +34,8 @@
+             <td>
+               @if($rank->subfleets->count() > 0)
+                 @lang('DBasic::common.allowed_sf') {{ $rank->subfleets->count() }}
+-                <i class="fas fa-angle-double-down mx-2" type="button" data-toggle="collapse" aria-expanded="false"
+-                    data-target="#sfr_{{ $rank->id }}" aria-controls="sfr_{{ $rank->id }}"
++                <i class="fas fa-angle-double-down mx-2" type="button" data-bs-toggle="collapse" aria-expanded="false"
++                    data-bs-target="#sfr_{{ $rank->id }}" aria-controls="sfr_{{ $rank->id }}"
+                     title="@lang('DBasic::common.allowed_sh')">
+                 </i>
+               @else
+diff --git a/Resources/views/widgets/fuel_calculator.blade.php b/Resources/views/widgets/fuel_calculator.blade.php
+index 99cb047..c607a49 100644
+--- a/Resources/views/widgets/fuel_calculator.blade.php
++++ b/Resources/views/widgets/fuel_calculator.blade.php
+@@ -3,7 +3,7 @@
+   <div class="row">
+     <div class="col">
+       <div class="card p-0 mb-2 bg-transparent border-0">
+-        <button type="button" class="btn btn-sm bg-warning text-black p-1" data-toggle="modal" data-target="#fuel_calc">
++        <button type="button" class="btn btn-sm bg-warning text-black p-1" data-bs-toggle="modal" data-bs-target="#fuel_calc">
+           <b>Fuel Calculator</b>
+           <i class="fas fa-gas-pump mx-1"></i>
+         </button>
+@@ -12,13 +12,13 @@
+   </div>
+ 
+   {{-- Modal Body --}}
+-  <div class="modal" id="fuel_calc" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="Fuel Calculator" aria-hidden="true">
++  <div class="modal" id="fuel_calc" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="Fuel Calculator" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered modal-lg">
+       <div class="modal-content shadow-none p-0" style="border-radius: 5px;">
+         <div class="modal-header border-1 p-1">
+           <h5 class="m-1">Fuel Calculator</h5>
+           <span class="close m-1">
+-            <i class="fas fa-times-circle" title="Close" data-dismiss="modal" aria-label="Close" aria-hidden="true"></i>
++            <i class="fas fa-times-circle" title="Close" data-bs-dismiss="modal" aria-label="Close" aria-hidden="true"></i>
+           </span>
+         </div>
+         <div class="modal-body border-1 p-1">
+diff --git a/Resources/views/widgets/map.blade.php b/Resources/views/widgets/map.blade.php
+index aa73d1d..e876474 100644
+--- a/Resources/views/widgets/map.blade.php
++++ b/Resources/views/widgets/map.blade.php
+@@ -2,7 +2,7 @@
+   {{-- Map Modal Button --}}
+   <div class="row">
+     <div class="col d-grid">
+-      <button type="button" class="btn btn-sm btn-danger p-0 px-1" data-toggle="modal" data-target="{{ '#modal'.$mapsource }}" onclick="{{ $mapsource }}ExpandMap()">
++      <button type="button" class="btn btn-sm btn-danger p-0 px-1" data-bs-toggle="modal" data-bs-target="{{ '#modal'.$mapsource }}" onclick="{{ $mapsource }}ExpandMap()">
+         @if($mapsource === 'user')
+           @lang('DBasic::widgets.personal_map')
+         @elseif($mapsource === 'fleet')
+@@ -23,7 +23,7 @@
+   </div>
+ 
+   {{-- Map Modal --}}
+-  <div class="modal" id="modal{{ $mapsource }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="{{ $mapsource.'Title' }}" aria-hidden="true">
++  <div class="modal" id="modal{{ $mapsource }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="{{ $mapsource.'Title' }}" aria-hidden="true">
+     <div class="modal-dialog mx-auto" style="max-width: 80%;">
+       <div class="modal-content shadow-none p-0">
+         <div class="modal-header border-0 p-1">
+@@ -45,7 +45,7 @@
+             @endif
+           </h5>
+           <span class="close">
+-            <i class="fas fa-times-circle" data-dismiss="modal" aria-label="Close" aria-hidden="true"></i>
++            <i class="fas fa-times-circle" data-bs-dismiss="modal" aria-label="Close" aria-hidden="true"></i>
+           </span>
+         </div>
+         <div class="modal-body border-0 p-0">

@@ -65,15 +65,22 @@ Ver la seccion `deploy` de [versions.yml](versions.yml). Resumen:
 
 ## Modulos de terceros con parches locales
 
-`DisposableSpecial` y `CHJumpSeat` **si** se versionan aqui, con sus
-modificaciones locales ya aplicadas. Es una **decision expresa del mantenedor**:
-sus licencias prohiben redistribuir el codigo, pero el repositorio central es
-privado y la responsabilidad se asume. No revertir sin hablarlo antes.
+`DisposableSpecial`, `DisposableBasic` y `CHJumpSeat` **si** se versionan aqui,
+con sus modificaciones locales ya aplicadas. No revertir sin hablarlo antes.
 
 - **DisposableSpecial** (B.Fatih KOZ): "Redistributions NOT allowed WITHOUT
-  written approval of copyright holder".
+  written approval of copyright holder". Es una **decision expresa del
+  mantenedor**: el repositorio central es privado y la responsabilidad se asume.
 - **CHJumpSeat** (Cardinal Horizon): licencia comercial cuyo proposito explicito
-  es evitar que el software y sus modificaciones se redistribuyan.
+  es evitar que el software y sus modificaciones se redistribuyan; misma decision
+  expresa del mantenedor.
+- **DisposableBasic** (B.Fatih KOZ): **BSD-3-Clause**, redistribuible conservando
+  el aviso de copyright, con dos condiciones extra (nombre y enlace visibles en el
+  pie de todas las paginas, y una lista de aerolineas virtuales excluidas donde
+  Vholar no esta). Pasa de **submodulo a vendorizado** el 2026-10-02: su remoto es
+  upstream (`FatihKoz/DisposableBasic`), asi que las vistas migradas a Bootstrap 5
+  no se podian empujar alli. Parche:
+  `patches/DisposableBasic-f0b03db.patch`.
 
 `DisposableBasic` se versiona como **submodulo** que apunta a su repo upstream:
 no redistribuye nada.
@@ -95,7 +102,6 @@ del repo), asi que ya no son clones actualizables in situ. Para subir de version
 
 | Submodulo | Repo | Para que |
 |---|---|---|
-| `modules/DisposableBasic` | `FatihKoz/DisposableBasic` | tercero, sin cambios propios |
 | `modules/VmsOpenOps` | `fhprietor/vmsOpenOps` | modulo propio |
 | `modules/VmsOpenFileManager` | `fhprietor/vmsOpenFileManager` | modulo propio |
 

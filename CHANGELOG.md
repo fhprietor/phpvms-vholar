@@ -1,5 +1,17 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — DisposableBasic pasa a modulo vendorizado
+
+- Sale del modo **submodulo** (su remoto es upstream, `FatihKoz/DisposableBasic`,
+  asi que las vistas migradas a Bootstrap 5 no se podian empujar alli) y se
+  versiona en el central con su parche:
+  `patches/DisposableBasic-f0b03db.patch` (3 vistas: `data-toggle/target/dismiss`
+  -> `data-bs-*`).
+- Verificado: el parche aplica limpio sobre `f0b03db` y reproduce el modulo byte a
+  byte (227 ficheros). `.gitmodules` queda con los dos submodulos propios y
+  `deploy/versions.yml` lo declara `vendored` con su licencia (BSD-3-Clause con
+  atribucion en el pie y una lista de aerolineas excluidas donde Vholar no esta).
+
 ## [Vholar] 2026-10-02 — Paleta en tokens y migracion a Bootstrap 5
 
 - **Paleta**: nuevo `resources/views/layouts/vholar/css/tokens.css` con la paleta

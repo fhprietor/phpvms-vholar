@@ -1,0 +1,27 @@
+{
+    "name": "fatihkoz/disposablebasic",
+    "type": "phpvms-module",
+    "description": "phpVMS v7 module for Basic VA features",
+    "authors": [
+        {
+            "name": "B.Fatih KOZ",
+            "email": "fatih.koz@gmail.com"
+        }
+    ],
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\DisposableBasic\\Providers\\DB_ServiceProvider",
+                "Modules\\DisposableBasic\\Providers\\DB_EventProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\DisposableBasic\\": "."
+        }
+    }
+}

@@ -48,11 +48,24 @@ modules:
     - TestABC
   items:
     DisposableBasic:
-      origin: submodule
-      url: https://github.com/FatihKoz/DisposableBasic.git
-      commit: f0b03db5bef7a5b7ea08e93ef07e3e86d9f3cbfd
-      describe: v3.7.4-2-gf0b03db
+      origin: vendored
+      upstream: https://github.com/FatihKoz/DisposableBasic.git
+      base_commit: f0b03db5bef7a5b7ea08e93ef07e3e86d9f3cbfd
       module_json_version: 3.7.4
+      local_patch: patches/DisposableBasic-f0b03db.patch
+      local_changes:
+        - Resources/views/ranks/index.blade.php
+        - Resources/views/widgets/fuel_calculator.blade.php
+        - Resources/views/widgets/map.blade.php
+          (data-toggle/data-target/data-dismiss -> data-bs-*: los modales son
+          Bootstrap 5; con los atributos de BS4 no se abrian)
+      license: >
+        BSD-3-Clause con dos condiciones extra: el nombre y enlace del software
+        deben ser visibles en el pie de todas las paginas (salvo permiso escrito
+        del autor) y una lista de aerolineas virtuales tiene prohibido usarlo,
+        modificarlo o redistribuirlo (EuroLot, LATAM, Pacific, Hangar, Atak Air y
+        Pegasus). Vholar no esta en esa lista, asi que se vendoriza conservando el
+        aviso de copyright.
     DisposableSpecial:
       origin: vendored
       upstream: https://github.com/FatihKoz/DisposableSpecial.git
