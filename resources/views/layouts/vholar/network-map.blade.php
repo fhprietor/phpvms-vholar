@@ -61,12 +61,26 @@
 .vh-tour-meta { font-size: 0.75rem; color: var(--vh-text-muted, #9898b0); }
 .vh-net-map { height: 72vh; min-height: 420px; width: 100%; }
 .vh-net-dot { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
-.vh-net-popup { font-size: 0.78rem; line-height: 1.45; }
-.vh-net-popup .vh-net-title { font-size: 0.86rem; font-weight: 700; }
-.vh-net-popup .vh-net-sub { color: #6c757d; }
+/* Popup de Leaflet en oscuro: por defecto es blanco y los enlaces del tema (claros)
+   quedaban invisibles. Colores de los tokens, con respaldo. */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: var(--vh-surface-2, #2b2333);
+  color: var(--vh-text, #EDEAF1);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+.leaflet-popup-content { margin: 10px 12px; color: var(--vh-text, #EDEAF1); }
+.leaflet-container a.leaflet-popup-close-button { color: var(--vh-text-muted, #A79FB2); }
+.vh-net-popup { font-size: 0.8rem; line-height: 1.5; color: var(--vh-text, #EDEAF1); }
+.vh-net-popup .vh-net-title { font-size: 0.9rem; font-weight: 700; color: var(--vh-white, #FFFFFF); }
+.vh-net-popup .vh-net-sub { color: var(--vh-text-muted, #A79FB2); }
 .vh-net-popup .vh-net-flights { margin-top: 6px; }
-.vh-net-popup a { text-decoration: none; }
+.vh-net-popup a { color: var(--vh-accent-lite, #DFC8F5); text-decoration: none; font-weight: 600; }
+.vh-net-popup a:hover { color: var(--vh-white, #FFFFFF); text-decoration: underline; }
 .leaflet-container { background: #1f1c27; }
+.leaflet-control-layers {
+  background: var(--vh-surface-2, #2b2333);
+  color: var(--vh-text, #EDEAF1);
+}
 </style>
 @endsection
 
@@ -117,13 +131,54 @@
 
           line.bindPopup(html, {maxWidth: 340, autoPan: false});
 
+          // Al pasar el raton se abre; al salir se cierra con un respiro, para que de
+          // tiempo a llegar al popup y pulsar el numero de vuelo. Con click se queda
+          // fijado (y en movil es la unica forma).
+          var closeTimer = null;
+
+          function cancelClose() {
+            if (closeTimer) {
+              clearTimeout(closeTimer);
+              closeTimer = null;
+            }
+          }
+
           line.on('mouseover', function (e) {
+            cancelClose();
             e.target.setStyle({weight: 4, opacity: 1});
             e.target.openPopup();
           });
+
           line.on('mouseout', function (e) {
             e.target.setStyle({weight: 2, opacity: 0.7});
-            e.target.closePopup();
+
+            if (e.target.netPinned) {
+              return;
+            }
+
+            var layer = e.target;
+            closeTimer = setTimeout(function () { layer.closePopup(); }, 450);
+          });
+
+          line.on('click', function (e) {
+            cancelClose();
+            e.target.netPinned = true;
+            e.target.openPopup();
+          });
+
+          line.on('popupopen', function (e) {
+            var el = e.popup.getElement();
+
+            if (!el) {
+              return;
+            }
+
+            el.addEventListener('mouseenter', cancelClose);
+            el.addEventListener('mouseleave', function () {
+              if (!line.netPinned) {
+                line.closePopup();
+              }
+            });
           });
 
           line.addTo(groups[route.category]);
