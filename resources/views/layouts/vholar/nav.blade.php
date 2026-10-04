@@ -37,9 +37,6 @@
                         <li><a class="dropdown-item" href="{{ url('/fleetgrid') }}"><i class="bi bi-airplane-engines"></i> @lang('common.fleet')</a></li>
                         <li><a class="dropdown-item" href="{{ url('/fleetmap') }}"><i class="bi bi-map"></i> @lang('common.fleet_map')</a></li>
                         <li><a class="dropdown-item" href="{{ url('/networkmap') }}"><i class="bi bi-diagram-3"></i> @lang('vholar_network.nav')</a></li>
-                        @ability('admin', 'admin-access')
-                            <li><a class="dropdown-item" href="{{ url('/economics') }}"><i class="bi bi-graph-up-arrow"></i> Economía</a></li>
-                        @endability
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ route('frontend.livemap.index') }}"><i class="bi bi-globe"></i> @lang('common.livemap')</a></li>
                     </ul>

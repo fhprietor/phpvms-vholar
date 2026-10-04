@@ -1,5 +1,19 @@
 # Changelog
 
+## [Vholar] 2026-10-04 — Los graficos de utilidad pasan a /admin/finances (y /economics desaparece)
+
+- Los tres graficos (utilidad anual, mensual del año en curso y diaria del mes en curso),
+  los totales de año y mes y la tabla de cobertura se muestran ahora en la pagina de
+  finanzas del admin (`/admin/finances`), encima de las sumas del mes que ya traia phpVMS.
+  Es la misma fuente (el libro diario), asi que el resumen y el detalle del mes no pueden
+  discrepar.
+- Se elimina la pagina `/economics` (ruta, controlador y vista) y su enlace en la nav: su
+  sitio natural era la pagina de finanzas que ya existia y que ya esta protegida por el
+  permiso `finances`.
+- `ProfitabilityService` se mantiene: lo usan los graficos y la tarjeta "Mi economia" del
+  tablero del piloto.
+
+
 ## [Vholar] 2026-10-04 — Economia: graficos de utilidad (staff) y "Mi economia" en el tablero
 
 - Nueva pagina **/economics** (solo staff, `ability:admin,admin-access`; enlace en el

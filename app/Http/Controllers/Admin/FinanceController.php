@@ -6,6 +6,7 @@ use App\Contracts\Controller;
 use App\Models\Enums\JournalType;
 use App\Models\Journal;
 use App\Services\FinanceService;
+use App\Services\ProfitabilityService;
 use App\Support\Dates;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,8 @@ use Illuminate\View\View;
 class FinanceController extends Controller
 {
     public function __construct(
-        private readonly FinanceService $financeSvc
+        private readonly FinanceService $financeSvc,
+        private readonly ProfitabilityService $profitability
     ) {}
 
     /**
@@ -38,6 +40,9 @@ class FinanceController extends Controller
             'current_month'      => $month,
             'months_list'        => Dates::getMonthsList($first_journal->created_at),
             'transaction_groups' => $transaction_groups,
+            // Series de utilidad (misma fuente: el libro diario) para los graficos
+            'series'             => $this->profitability->series(),
+            'coverage'           => $this->profitability->telemetryCoverage(),
         ]);
     }
 
