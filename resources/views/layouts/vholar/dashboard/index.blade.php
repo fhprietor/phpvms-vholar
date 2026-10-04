@@ -86,6 +86,59 @@
 
             @include('components.pirep-ai-feedback', ['aiFeedback' => $aiFeedback])
 
+            {{-- MI ECONOMIA: ingresos y costes de los vuelos del propio piloto --}}
+            @php $myEco = app(\App\Services\ProfitabilityService::class)->series($user->id); @endphp
+            <div class="card vholar-card mb-3">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <h5 class="mb-0"><i class="bi bi-wallet2"></i> Mi economía</h5>
+                    <span class="ms-auto" style="font-size:0.72rem;color:var(--vh-text-muted);">
+                        ingresos por tarifas menos costes de mis vuelos
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center g-2 mb-3">
+                        <div class="col-4">
+                            <div style="font-size:0.7rem;text-transform:uppercase;color:var(--vh-text-muted);">Año {{ $myEco['year'] }}</div>
+                            <div class="fs-5 fw-bold {{ $myEco['totals']['year']['profit'] >= 0 ? 'text-success' : 'text-danger' }}">
+                                {{ number_format($myEco['totals']['year']['profit']) }} USD
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div style="font-size:0.7rem;text-transform:uppercase;color:var(--vh-text-muted);">Mes {{ $myEco['month'] }}</div>
+                            <div class="fs-5 fw-bold {{ $myEco['totals']['month']['profit'] >= 0 ? 'text-success' : 'text-danger' }}">
+                                {{ number_format($myEco['totals']['month']['profit']) }} USD
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div style="font-size:0.7rem;text-transform:uppercase;color:var(--vh-text-muted);">Ingresos/Costes del año</div>
+                            <div style="font-size:0.85rem;">
+                                {{ number_format($myEco['totals']['year']['income']) }} / {{ number_format($myEco['totals']['year']['cost']) }}
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="chartMyMonthly" height="90"></canvas>
+                </div>
+            </div>
+
+            @push('scripts')
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+            <script type="text/javascript">
+              document.addEventListener('DOMContentLoaded', function () {
+                var rows = @json($myEco['monthly']);
+                var el = document.getElementById('chartMyMonthly');
+                if (!el || !rows.length || typeof Chart === 'undefined') return;
+                new Chart(el, {
+                  type: 'bar',
+                  data: {
+                    labels: rows.map(function (r) { return r.label.slice(5); }),
+                    datasets: [{label: 'Utilidad', data: rows.map(function (r) { return r.profit; }), backgroundColor: 'rgba(74,144,217,0.9)'}]
+                  },
+                  options: {responsive: true, plugins: {legend: {display: false}, tooltip: {callbacks: {label: function (c) { return c.parsed.y.toLocaleString() + ' USD'; }}}}}
+                });
+              });
+            </script>
+            @endpush
+
             {{-- MIS ÚLTIMOS 5 VUELOS --}}
             @once
             @include('vholar::pireps.logbook-styles')

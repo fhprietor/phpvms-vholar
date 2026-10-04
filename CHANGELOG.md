@@ -1,5 +1,21 @@
 # Changelog
 
+## [Vholar] 2026-10-04 — Economia: graficos de utilidad (staff) y "Mi economia" en el tablero
+
+- Nueva pagina **/economics** (solo staff, `ability:admin,admin-access`; enlace en el
+  desplegable Centro de Operaciones visible solo para staff): tres graficos de barras con
+  ingresos, costes y utilidad — **anual**, **mensual del año en curso** y **diaria del mes
+  en curso** — mas los totales de año y mes y una tabla de **cobertura del dato**.
+- **"Mi economia"** en el tablero del piloto (bajo el informe del instructor): utilidad del
+  año y del mes de sus propios vuelos, ingresos/costes y un grafico mensual.
+- `ProfitabilityService`: series de utilidad desde el libro diario (ingresos = apuntes de
+  tarifas; costes = todos los apuntes al debe, mismo criterio que
+  `PirepEconomicsService::costs()`), acotables a un piloto.
+- Calidad del dato, avisada tambien en pantalla: 5.945 PIREPs (5.718 importados del
+  CrewSystem + 227 manuales) **no tienen telemetria ACARS**, asi que no se les puede
+  derivar el ingreso con `phpvms:pireps-revenue` y sus periodos salen peor de lo real.
+
+
 ## [Vholar] 2026-10-02 — Mapa publico de la red de rutas (`/networkmap`)
 
 - Pagina **publica** nueva: `/networkmap` (enlace en el desplegable *Centro de
