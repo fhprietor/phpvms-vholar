@@ -1,0 +1,725 @@
+id_vuelo,origen,destino,numero_actual,numero_nuevo,tipo,diagnostico,callsign_actual,motivo
+B9wBKe9o3LqmXA15,SKBO,KMIA,5,4,adopta_ava,INVERSO,,par ida/vuelta con el sentido inverso
+3ONwVGL23YozGBYm,KMIA,SKBO,6,173,adopta_ava,INVERSO,,par ida/vuelta con el sentido inverso
+xyV1KkP1BeEpn85Z,SKBO,KMIA,7,172,adopta_ava,INVERSO,,par ida/vuelta con el sentido inverso
+AN1L0yLPw3laV1nE,KMIA,SKBO,8,353,propio_libre,INVERSO,,par propio consecutivo; Avianca no usa estos numeros
+y0ZOyre63Y87Oqp9,KMIA,SKBO,9,9,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+16k6nrlXxG2JMkxm,SKBO,LEMD,10,10,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+rvEMxzNP4BX4g30Y,LEMD,SKBO,11,11,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+AyY1paR7ve2jQ5Qg,LEMD,SKCL,15,15,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+oWGvl0M3147nVrVv,SKRG,LEMD,16,16,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+VGnZBA03xEKJYnDl,SKBO,LEBL,18,18,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+JwrmJkR8zYPznAka,KJFK,SKBO,21,21,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+lG6PkKzYxEl1Qbo5,SKBO,MMMX,22,22,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+ZXj5RqG1zpg2E7NP,MMMX,SKBO,23,23,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+9wnmO4yR8275YL4b,SKBO,LEMD,26,26,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+N6rpzzbL81Kl3pQ2,KMCO,SKBO,29,29,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+3wjMy2D5JxR3vjAD,KMCO,SKBO,30,388,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+83jv62oZwVDA8jV2,SKRG,KMIA,31,363,propio_libre,INVERSO,,par propio consecutivo; Avianca no usa estos numeros
+JeLljRpE89yjj7Wa,KMIA,SKRG,32,364,propio_libre,INVERSO,,par propio consecutivo; Avianca no usa estos numeros
+qNLk63N4J1nW0YlG,SKRG,MMMX,33,399,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+VqZ0p95EjzYlxZ3n,MMMX,SKRG,34,235,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+bz6eow17MjPgrexL,KFLL,SKBO,37,37,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+6VkAKP7J9MWN8maQ,SKBO,MPTO,40,40,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+KMjMWVBYNv5NmaQy,SKRG,KJFK,41,42,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+9APXLn2rKdRw5P0V,MMMX,SKBO,45,45,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+GKlmRYngm1WkYEXO,SKBO,LEMD,46,46,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+XBlyaMvLxJk0dl96,LEMD,SKBO,47,47,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+mYVn5AoelYG0Pr1a,SPJC,SKBO,48,48,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+8LnBo01QMNoEbe1y,SKBO,SPJC,49,49,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+3479d570-a2e6-4886-bd96-3fa153abf1a4,SPJC,SKBO,50,50,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+28edf8a5-d46c-4e53-93d1-cd05f37e7ac4,SKBO,SPJC,51,51,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+0ErY1y87xR4RBr3N,SKBO,SPJC,53,53,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+51KA96PewDmjWKGr,MPTO,SKBO,56,412,propio_libre,INVERSO,,par propio consecutivo; Avianca no usa estos numeros
+dG1Jmw50l7r46yxM,SKBO,MPTO,57,413,propio_libre,INVERSO,,par propio consecutivo; Avianca no usa estos numeros
+gqNWmA3kX89j4OYD,MPTO,SKBO,58,515,propio_libre,INVERSO,,numero propio en el bloque correcto; Avianca no lo usa
+ZQmJROVP7Z4PJmqL,SKCG,KMCO,59,351,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+rvKjY4BaodyP4Oam,KMCO,SKCG,60,352,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+Lp0ovNQ9Y5zOMoJ6,SKCL,KJFK,62,62,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+l0rMlPe1gYk70KPJ,SKBO,KFLL,66,66,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+RMKXywAORd7LroxX,SKBO,MMUN,67,264,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+exmvKnbMP5pLG3dl,MMUN,SKBO,69,69,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+o58JJ5zrMob6x89B,SKBO,MSLP,70,70,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+kO3EpkADLR5DDjmb,SKBO,MMMX,71,44,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+9YzA8PeqxBO6mGZW,MMMX,SKBO,73,73,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+6DE9nJk0Z7xRpYjw,TNCC,SKBO,79,79,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+20RD0mkXq4ZOrR1O,SKBO,KLAX,83,347,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+6kReb6M3VeZMgYep,KLAX,SKBO,84,348,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+8bnYMvLDxowlNnd4,SKBO,SBGR,85,85,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+b0o24Olk7yXV4jqK,SBGR,SKBO,86,86,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+z8R6Lekz4MJaml3K,SKBO,SAEZ,87,87,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+2jkQ6LVQGEYayZPg,SAEZ,SKBO,88,88,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+x0zWJL6Q1NeGkPgw,SKBO,TNCC,92,92,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+9184e192-5c9d-49d8-be31-1450cf538578,TNCC,SKBO,93,93,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LPpQ6Kn5R2GJ2oxb,SKBO,KORD,95,262,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+ERp5WZeJQ6WgD9jX,KORD,SKBO,96,263,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+om5j7dlRA878KgMK,SKBO,SCEL,97,97,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+xB0b6zeMJQ6w30k3,SCEL,SKBO,98,98,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+nAgYZ5jaLoROMV4y,SPJC,SKBO,102,102,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+yWOZYk4x0e3pDG3a,SKBO,SUMU,107,109,adopta_ava,OTRA_RUTA,NULL,par ida/vuelta con el sentido inverso
+QYlk9Ky5rz7GdgOa,SUMU,SKBO,108,110,adopta_ava,OTRA_RUTA,NULL,par ida/vuelta con el sentido inverso
+BL3V9dp4BPj9VRo2,SKCG,KMIA,111,357,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+jk89DKnwXNLODzBl,KMIA,SKCG,112,358,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+G07yBmkaVnV2DozV,SKBO,SCEL,115,115,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+9dmkyAV1pGpllaqB,SCEL,SKBO,116,116,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+qr81ApWanr9W98QJ,SKBO,KMCO,118,118,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+p7Jb7werpbWYlqrn,SKBO,MDPC,119,128,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+jOB6Y0ZQqGnqk14n,SKBO,KDFW,121,176,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+No0wmV4gBry1NW9R,KDFW,SKBO,122,177,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+OoEPkROB037qJKeV,SEQM,SKBO,124,124,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+VgOvv0JrVybw7O2n,SKBO,SEQM,125,125,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+YKrzYgE9q7pAJemq,SKBO,KMIA,126,126,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+37MNvmqgOlVzVMvA,SKBO,MDPC,127,373,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+logEjealOWG0zYW9,MDPC,SKBO,129,129,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+xOVWZqJ2oyGLnmaP,SKCG,SCEL,131,468,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+RQmNQjLAWKJWLoG0,SCEL,SKCG,132,132,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+Qw1Gojb4l0Qbx1Ng,SKPE,KMIA,133,361,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+g8KPDVb2d98GwKGd,KMIA,SKPE,134,362,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+BM1YX7YzKoZoRqzb,SEGU,SKRG,136,8398,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+aOBn4pZjvk6XRn1G,KMIA,SKBO,138,354,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+zq54N1O4DJB2gY7d,KIAD,SKBO,140,345,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+NrlEwPjq961kgX7V,SKBO,KMIA,141,545,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+yX1ZbMdpwxpOG1Nl,SKRG,MMUN,143,404,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+549ElAd0KNkWJznj,MMUN,SKRG,144,405,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+Oz74pgdYrlYpk7NM,SBGL,SKBO,146,146,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+b90f2dc1-ec69-4bfb-b936-f4a01ec5dcc6,SKBO,SBGL,147,147,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+AgmOjJVw3xkWqMna,SKBO,KIAD,148,148,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+WKXKyEOv0Zaj3A2q,SKRG,MPTO,149,436,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+oz6knMxbwq1DmOge,MPTO,SKRG,150,437,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+RbkNBvQRdMA6rknx,SKRG,MPPA,151,409,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+bwVdnQva8gEg0ZrL,MPPA,SKRG,152,410,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+4jEGM617zNqQWX95,KJFK,SKRG,153,153,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+OQj1Az7oZEBbPj84,SKRG,SCEL,154,472,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+81gjZqKW6lvJQ0MR,SCEL,SKRG,155,473,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+W7AKQkNXvO9ZNnXR,SEQM,SKRG,158,158,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+kxlzvQE0BpjRWlM7,SKBO,KBOS,159,543,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+Nn9z6qkG3AKdY9z7,KBOS,SKBO,160,227,adopta_ava,OTRA_RUTA,,numero real de Avianca en servicio en esta ruta
+6174e16c-26be-4137-bebd-049fa76885d4,SKBO,SBGR,161,161,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+jywVDMmVlQ8YYkMp,SKBO,MGGT,164,164,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+e9kGvQLo2eoeLlxp,MGGT,SKBO,165,165,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+y53lp7lgN77Z53E8,SLVR,SKBO,166,166,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+yp514jn0WNd869R4,SKBO,SLVR,167,167,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+8l78V3DNaqxZ9eRB,SKBO,KATL,179,326,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+OvQ143MR4b0PYLK9,KATL,SKBO,180,327,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+866e9abd-11f9-4c50-8178-c35214597b5d,SBGR,SKBO,184,184,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+wVjaE80m6L6e9jAG,SKRG,SBGR,185,466,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+BOeJazjok5kJvwv9,SBGR,SKRG,186,467,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+095eca39-ef18-4d01-971d-935d55ffffcd,MMMX,SKBO,187,187,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+O19QAamYrp8ep9wd,SKBO,KDFW,188,188,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+plgYJeK0M2qwj56D,KDFW,SKBO,189,189,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+j0J40A4Mmdw1oJXb,SKRG,KFLL,190,190,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+a4G65exYvw5AMVKE,SKBO,CYUL,196,196,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+Olj5DmlLqEXXeVEa,SKPE,MPTO,199,419,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+W2eZJP59EkjWPelx,MPTO,SKPE,200,420,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+x5g6zJYKp0zwZgrd,CYUL,SKBO,201,201,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+PlgewN7Oea2M3A0j,CYYZ,SKBO,204,302,propio_libre,INVERSO,,numero propio en el bloque correcto; Avianca no lo usa
+zw7jdQRP5z0agEaQ,SKRG,TNCA,205,496,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+axyqX8RgZMoaN0oZ,TNCA,SKRG,206,497,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+Gy0YQOwkl99Dn0l9,SKRG,TNCC,207,498,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+3eBE6EDGNRRy49P7,TNCC,SKRG,208,499,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+e2kGrdyqmZ9Pk1nN,SKBO,KJFK,210,210,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+QbM3BZwGYzzAGRXE,SGAS,SKBO,212,212,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+vwy6k8QDj66QW54z,SKBO,SGAS,213,213,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+ZbyeE307Omd1LyB2,SKBO,TJSJ,214,214,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+G4QXgMpmy55WOkbY,TJSJ,SKBO,215,215,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+QJ6XBQq5ERY3NgLx,SKRG,MDPC,217,375,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+vMyOpkZN58kz7wXD,MDPC,SKRG,218,376,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+dbqZNx42LBBp6q2x,SKRG,KMIA,219,777,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+OpEGrY2dqQYQyJoD,KMIA,SKRG,220,474,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+3kmqbXq8vPXldVgv,SKRG,MDSD,221,379,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+mOpG2B1RexBaXzED,MDSD,SKRG,222,380,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+2Mg0vwjepZwDDA5w,SKBO,SVMI,223,552,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+x9KJ6ZObNeDE6KNa,SVMI,SKBO,224,123,adopta_ava,OTRA_RUTA,NULL,par ida/vuelta con el sentido inverso
+Q1BgwOl1bEEYPgbP,SKSP,MPTO,229,438,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+q09WYz02jkKmrljV,MPTO,SKSP,230,439,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+abAe7K1obdZk1OjZ,SKBO,TNCA,232,232,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+VNAV67dzYGOgRAdy,SKCL,MDSD,233,377,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+yz0o45ER36N4kaOA,MDSD,SKCL,234,378,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+V63Nbop1M9aJZ3Lm,KFLL,SKRG,236,191,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+Q9WXBVzJ9KQgD0KM,SKCG,SPJC,237,494,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+Rp8lN3po9rn3v5Qb,SPJC,SKCG,238,495,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+4dbR5dlPv42Dz8wZ,SKBO,SLLP,239,239,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+eJY2GPR6Qlon8Kq1,SLLP,SKBO,240,876,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+DmM9gbRoD4Xjead9,KJFK,SKBO,242,211,adopta_ava,OTRA_RUTA,NULL,par ida/vuelta con el sentido inverso
+LAmvYbOLAVZM13Y4,TNCA,SKBO,243,243,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+bPw6j8Q3AYN3jw1e,SKBO,KJFK,244,244,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+r16q9z13MmE9k6ZB,SKBO,KIAD,245,346,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+yGB3zEJ8OQ0QZr7m,KIAD,SKBO,247,247,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+J4a0kvYZ6wWJWmyA,SKBO,MDPC,251,374,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+4zNnApoxR3gqbkWM,MDPC,SKBO,252,504,propio_libre,INVERSO,,numero propio en el bloque correcto; Avianca no lo usa
+3vev1ZbWyaoDVRb0,MDPC,SKBO,253,253,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+7K3VoqzgEVvAdp0R,SKBO,CYYZ,254,254,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LYg34YBPLxO9PjaG,SKCG,MPTO,255,416,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+10lr35OVMjq8265A,MPTO,SKCG,256,417,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+jvwz942rkpNqv0bm,SKBO,MMUN,257,68,adopta_ava,INVERSO,,par ida/vuelta con el sentido inverso
+WEeVaWOdbo1xmGky,MMUN,SKBO,258,402,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+zM3o1JA5byyQ5LqN,SKBO,SBGL,261,261,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+xvQrd43JKzzDdr3O,SKBO,MWCR,265,464,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+lag60DavAwBZlkBN,MWCR,SKBO,266,465,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+mKJYq1Rly7lN2J47,SKCL,KMIA,267,359,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+E9eBv6OVRxV93ejd,KMIA,SKCL,268,360,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+V1879oXPGzjmMZDl,SKRG,MUHA,271,461,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+gv68dVpO0yDNd6XK,MUHA,SKRG,272,462,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+nqRr351qJ66vZmWd,SKBO,MHTG,273,386,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+VAw0GLne5kkW5zxg,MHTG,SKBO,274,387,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+xKgn5A7E23LpwVBv,SKBQ,MUHA,275,459,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+pzjQPY2856ngAkrY,MUHA,SKBQ,276,460,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+7x0qkOJnZ6QGAmaD,SKRG,KATL,283,329,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+5m78BjxeXyENYPNp,KATL,SKRG,284,330,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+54a8Y6qrgEJ1vzYJ,SKCL,SECU,289,476,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+w8pdrwXAndL8Qo3K,SECU,SKCL,290,477,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+p5Ej2p3R90nVAEmr,SKCL,MPTO,307,586,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+yQ6d0d4x7Rv1D6R1,MPTO,SKCL,308,308,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+kbqYg2YRlZvJ4mL0,SKCG,MDSD,341,341,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+X4YVvpJ0jDLjAYog,MDSD,SKCG,342,505,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+d7e9dB53Pv0mJw9a,MSLP,SKBO,383,383,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+YjmBAq9XQnjPzNW1,SKRG,SEQM,385,856,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+dGPmgzL6p7KzzyBw,SKCL,SPJC,389,389,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+NojmRQy8x1PwaAy6,SPJC,SKCL,390,390,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ojO3XMKE0ZnYxJW8,SKRG,SPJC,393,875,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+rlR9KwPgQJ71X9xX,SPJC,SKRG,394,394,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+qOEeLmKR9r0OnMWe,SKCL,KFLL,407,407,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+me816g1n75dbL05x,KFLL,SKCL,408,339,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+pYmBAM01zxWbPjvN,SKSP,KMIA,485,485,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+xr75P4XkvlQNl0oN,KMIA,SKSP,486,489,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+o86VNP2QaK2M960x,SKCC,MPTO,491,491,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+qWM3Dxqw4ZPlXA9R,MPTO,SKCC,492,517,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+6xXoQjaM79a9Lqm9,SKBO,KIAH,507,507,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+pew4qGEZp6E3jN1y,KIAH,SKBO,508,508,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+vVykBWb8JXbrx9bX,SKCG,KEWR,531,333,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+xbEzQg1w4GyyApN5,KEWR,SKCG,532,334,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+8E3Vv8jLDljA83m6,SKBO,MMGL,555,551,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+ePXOLRWdmPy0z8Qj,MMGL,SKBO,556,556,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+D4mDkV4yeNJeWA9o,SKBQ,KMIA,581,355,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+Yd1aXvQW2N3VpRlK,KMIA,SKBQ,582,3,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+Md8mxPGAgzk96w7j,SKCG,KBOS,609,331,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+jXr16M9pQRvkJ8qg,KBOS,SKCG,610,332,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+n4ZA6qz8lK5DVWql,SKCL,SCEL,649,649,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Y8qM4NQEz8Kjy1dz,SCEL,SKCL,650,470,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+KBVeGEm470ZLLgxN,SKAR,KFLL,651,335,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+04eL0xbO7Y3NOepL,KFLL,SKAR,652,336,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+PNXlNOnKpMLGB5G2,SKRG,MROC,656,656,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+plAo4Mjo2kQkXOBR,MROC,SKRG,657,657,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+JBVgA7dYbybKJRyo,SKBO,MROC,692,692,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+V4M6DRoKQbQBEaeN,MROC,SKBO,693,693,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+W36bbKE5ja8Wo6Ro,SKCG,CYUL,697,300,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+ZD5NLZXxqKa0bpOR,CYUL,SKCG,698,301,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+13jab5vZ2r70560a,SKPE,KFLL,751,587,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+EZMeJZx3BZn1ojG3,SKCL,MMUN,779,779,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2bYR9bENabyw1mkZ,MMUN,SKCL,780,509,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+aXRQXKY8l3p4nGPe,SKRG,KIAH,781,781,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+dr9gae6Nr2lplgbO,KIAH,SKRG,782,782,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ZdryEAl7Za4YLrD7,SKSM,MPTO,783,783,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+JY0AyEnO0NGYzAvK,MPTO,SKSM,784,784,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+LPOaYQ4Pa65PmOzN,SKCG,MROC,785,785,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+kNoPE9gyJ9l67Lda,LPAZ,SKBO,786,786,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+vVB17Llb9PKPqRGr,LPAZ,SKBO,788,503,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+ryRgykP6LkkbNAZg,SKBO,TNCA,789,478,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+7jqr3GQ50GGr0paW,TNCA,SKBO,790,479,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+JxZyLNBb2deJPlvA,SKBO,KATL,791,791,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+826WJVZ5pDLnkgWV,KATL,SKBO,792,792,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+pvry9zlRY4kP6rE0,SKCG,KFLL,793,793,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+zJEbOr9pNq4vlMNr,KFLL,SKCG,794,794,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+WpzqM7Yg41oWKzeP,SKBO,MMUN,795,795,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+89lE2GjPrMyNNgeo,MMUN,SKBO,796,796,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+9wnmpAmQyYB8KRjz,SKBO,MMMX,797,797,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2ac7827d-98d6-4b60-a3c6-9fc8d1a06fa4,SBGR,SKRG,800,538,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+eae0c081-fa69-4db7-8b1f-d1b96de0e9c3,SKBO,KMIA,801,546,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+287f124e-4b8c-44b8-99cb-18bbf323e3ce,KMIA,SKBO,802,391,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+3a0c8e6a-a58c-4f89-a008-e0b86b5d7d91,SKBO,KMIA,803,547,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+986c420e-0ca5-4f19-9431-a359d73656e7,KMIA,SKBO,804,804,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+9f58f26a-b9f5-4aab-9d08-c2d1f1b81851,SKBO,KMIA,805,805,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+e5a916fe-84fa-4fb0-8ee0-a93502fc6121,KMIA,SKBO,806,395,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+06066365-bbb4-46ff-9e0c-4b71c61a94e6,SKBO,KMIA,807,548,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+10d1c8c9-4a62-44ea-9d5b-06a79dde38c8,KMIA,SKBO,808,406,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+E1L1YzOPpx6PkL7j,SKBO,KMIA,809,549,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+Rp0vgaOP6r2JBw1Q,KMIA,SKBO,810,427,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+MlXlWeVwp206PZqJ,SKRG,KMIA,811,778,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+NVPEy7YgNXrJbPBq,KMIA,SKRG,812,812,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ee27c53a-fe67-49e7-a344-cdd1231af1a8,SKBO,KJFK,813,813,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+bb2effaf-460b-4366-9d5d-01bfbfcfd225,KJFK,SKBO,814,814,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+aa461181-b289-4324-8342-82bc30d8d0a4,SKBO,KJFK,815,20,adopta_ava,OTRA_RUTA,NULL,par ida/vuelta con el sentido inverso
+dc32ad0d-7956-44f6-b35d-5378efb68903,KJFK,SKBO,816,371,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+d41f6487-7bda-4654-bbad-77164dd3b96c,SKRG,KMIA,817,798,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+f422171c-ffdc-41d4-bf9f-b9ccc44244e3,KMIA,SKRG,818,818,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+66d6052f-b212-4f7d-ba86-34e681af8ba0,SKRG,KMIA,819,819,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2fafba1f-c9b7-45fa-9eee-1518c34eb3f0,KMIA,SKRG,820,484,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+7938f4c5-e650-4521-bbab-fdd48fe7d549,SKRG,MMMX,821,400,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+8cabcce5-6724-4c39-a05d-1bdb173eb870,MMMX,SKRG,822,822,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+df70aff9-62f9-4f88-8999-53442c34bff8,SKBO,KFLL,823,823,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+e7f2d554-a0cc-4c0d-abc8-56ad12df81c5,KFLL,SKBO,824,349,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+a298a9a5-1cd9-4917-a99e-4c8c425e714e,SKRG,KJFK,825,776,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+6071bf70-089a-4852-93c8-083d5b56dc1e,KJFK,SKRG,826,826,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+1ee50904-8de4-4f92-a1c3-82fe57655d73,SKBO,MPTO,829,829,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+605333d1-8705-4a6e-bcf1-fbd4ca30c74d,MPTO,SKBO,830,516,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+d5bb3558-22bd-45e3-90c6-abfcf221e4aa,SKCL,KJFK,831,577,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+021033a0-d3ed-49c1-9d3f-2894c42d61fa,MDSD,SKCG,832,832,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+178afe40-1147-400e-8a84-c63086a9e9da,SKBO,TNCC,833,833,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+aabdd4b4-40a3-4ef6-bd8c-c5ec682b6751,SKBO,KLAX,835,544,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+4f78a1ee-6166-4329-9bd8-6b91bdf0fd80,KLAX,SKBO,836,381,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+d0066bbc-cd52-42de-b90c-d54ce98abe7f,SKBO,KORD,841,550,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+bfa6f07e-ff3d-48f9-9bd6-93207e22aad5,KORD,SKBO,842,842,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+c9b38ac3-faaf-4b15-bc99-e62b3da6ea0c,SKBO,SCEL,843,241,adopta_ava,OTRA_RUTA,NULL,par ida/vuelta con el sentido inverso
+3fd61d35-7c61-4d41-9bd7-47a9927acefc,SCEL,SKBO,844,844,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+7e62baa4-298c-4ba8-abbd-59255704e119,SKBO,SCEL,845,845,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+d7fc9693-d8d8-4d57-bffd-89986526fd00,SCEL,SKBO,846,846,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+c9cfb006-5744-4c08-99f6-cf4bb74d1b6a,SKBO,SUMU,847,847,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+32646f55-183f-4e69-85a8-04e65eb627f7,SUMU,SKBO,848,848,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+a59c415b-c5b2-4c99-8673-578409dab855,SKRG,SCEL,849,849,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+92212286-3cb7-40c5-88a2-69e2d211a1cb,SCEL,SKRG,850,540,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+f901e09a-3d7a-4182-a188-ed46f1b09a10,SKCG,SCEL,851,469,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+24fbacf9-2fe1-4cee-875a-752d6d6213d8,SCEL,SKCG,852,539,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+56ee3bcb-717f-477d-9e59-51612ed46d84,SKRG,MPTO,853,853,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+69a9b4cb-54ed-4c3a-98c6-51dfa96679ef,MPTO,SKRG,854,854,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ef22c5a3-5059-4194-9c66-f87d47725dc1,SKBO,KBOS,855,855,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+7741df80-f3aa-4ff7-a40a-7c1da146a026,SKBO,KATL,857,541,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+2dd353a7-0659-4b78-9d46-1eaf9b183f56,KATL,SKBO,858,858,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ac059432-2745-493b-9d6b-5168d3601c78,SKRG,MDPC,859,827,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+5af12e9b-04e9-45b5-9493-588fdddd1038,SKBO,KATL,863,863,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2fd37ae7-628e-41b2-a6aa-d683521029dc,KATL,SKBO,864,864,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+16c6cabb-fc31-4aab-990d-7160fe92a86e,SKRG,TNCC,865,865,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+224de7c0-3877-4b5f-ab32-5720fc5a8150,TNCC,SKRG,866,866,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+5c5b4bfd-6b78-4d22-b51d-eba53304dd08,SKRG,MDSD,867,867,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+85262041-e8f8-4ded-87e8-c4b0f93945d0,SKCG,SPJC,869,869,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+76ec1af1-bc2c-427a-bac1-718c4dcbce7f,SKBO,KIAD,873,873,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+74b68cbc-d54c-4583-a623-82645b72efb2,KIAD,SKBO,874,874,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+b4472cb9-cd39-4ba0-9855-14b7863ac4c0,SKBO,KIAD,877,877,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ee4548b4-1af2-4eae-b786-b277cafe0b02,KIAD,SKBO,878,878,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+da22e879-1cd7-43ee-992c-e33c555020f8,SKRG,KFLL,879,879,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+d37d6ae2-82ca-4629-abe7-05dcd136537b,KFLL,SKRG,880,880,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+025db26a-6983-4697-baa7-d45e7e6fed81,SKBO,SLLP,881,881,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+97eb8303-3164-46b8-9847-d1bd359c5d74,SLLP,SKBO,882,882,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+9aa768a3-5a88-461b-96ed-88e1f62efc28,SKCG,MPTO,883,576,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+2611e962-2045-4495-9d50-2b9f761bd891,MPTO,SKCG,884,518,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+ad9f78af-eb11-43d1-8312-75f7fc2a0cf2,SBGL,SKBO,886,886,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+8ec2d399-ac94-4546-be8d-b84fd5462b1d,SKCL,KMIA,887,887,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ebd138c9-5a08-4daa-bce3-385ee76c119c,KMIA,SKCL,888,888,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+0a8c3b82-4394-484f-9568-1417e38570d3,SKRG,MMUN,889,889,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+b479a1d9-c3d8-443d-b75e-6382a010ea4e,MMUN,SKRG,890,890,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+5a1a3b99-b0d1-4f5a-b602-56b64d9aa091,SKBQ,MUHA,891,891,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+2769354d-75d2-433e-b5e0-69e676c4edf5,MUHA,SKBQ,892,519,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+7baa5263-34f6-4c66-9dc7-e1a62b8a975f,SKRG,KATL,893,893,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+0f3f9d1e-9abd-4ed1-9068-5fd596fc7745,KATL,SKRG,894,894,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+00d8705a-4196-4e80-babb-c9f89b238a5d,SKCL,MPTO,895,895,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+9c20084b-700e-4611-b313-7298471f3b97,MPTO,SKCL,896,896,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+781df2db-db11-4056-8b5e-77bbea6730d2,SKCL,SPJC,897,897,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+f499ffe3-21a9-462c-be5d-1949ab2bed02,SPJC,SKCL,898,898,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+a1de6be6-c90e-4f83-a290-4a4f49ff7ab9,SKRG,SPJC,899,899,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+cdb25afe-f47a-4826-bf2e-b8191a756ed5,SPJC,SKRG,900,900,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+899b1c7d-75e0-4441-aa15-ee8ea310930b,SKCL,KFLL,901,901,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+07df8c8b-4315-4d00-92a7-62ded30d5d21,KFLL,SKCL,902,340,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+567170b4-17f8-4335-a2fa-d57cc8636e5a,SKBQ,KMIA,903,356,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+ef3eac6d-b3aa-450c-81f7-7ef77cd10c92,KMIA,SKBQ,904,447,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+23d94464-3683-4d59-8549-b81d96fc7dc6,SKCG,KBOS,905,557,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+bbdba497-ee3c-45d3-b1b0-58719e722f83,KBOS,SKCG,906,320,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+f0e517f1-911e-446a-9942-8fdf275295b8,SKCL,SCEL,907,907,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+e3ba75d8-9fea-4f6f-b0c7-d704f2c69504,SCEL,SKCL,908,471,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+f5ee1785-11e3-468a-bbcc-5ee7e2297ee1,SKCG,CYUL,909,553,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+abcd17cf-9fb5-4b02-a895-29169ba5f9ab,CYUL,SKCG,910,910,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+BrmXbM5AdyW9dNJk,LEMD,SKRG,918,502,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+wJGMayKAV8wjwGgQ,LEBL,SKBO,920,19,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+ZaLB5OVKNeD2zJxK,SKBO,EGLL,921,921,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+KJOyNYnGQOl60MDl,EGLL,SKBO,922,309,propio_libre,OTRA_RUTA,NULL,numero propio en el bloque correcto; Avianca no lo usa
+b7bf2ea3-a03f-484e-a40e-371d6960a950,SKBO,MMMX,923,72,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+10322312-259a-4891-ab46-d905f5f6214a,SKBO,MMUN,925,403,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+48d287be-bc63-43f8-96bf-497e1bfa99a3,MMUN,SKBO,926,926,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+7AnN55q4dl6MQNR5,SKBO,LFPG,927,54,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+DzBN3bNX8RNmjoVg,SKBO,EDDF,929,305,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+1ZGv5LKdkN0ENO0P,EDDF,SKBO,930,306,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+ec5e99c3-55eb-4289-b9a2-1dfdd574638d,SKCG,KFLL,931,337,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+149df27e-b060-4006-abec-23aed1df9d0e,KFLL,SKCG,932,338,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+ed90d41f-9b23-4d21-b626-8034d36216dc,SKRG,KIAH,933,775,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+59bc59c5-23b4-4326-bcac-588454e22486,KIAH,SKRG,934,934,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+a752333b-826a-4cd9-93a2-86852b0e0c4d,SKCL,MMUN,935,935,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+899664f6-9c7f-407b-8fc0-0451c812e7fc,MMUN,SKCL,936,936,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ENwxbNzqePBbJKoA,SKVV,SKPC,4001,4001,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+e469mJ8zl09Yp6Ew,SKPC,SKVV,4002,4002,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+Xmk284yRz4GMdj5Q,SKPE,SKBO,4802,4802,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+7VKr4N3bYN1oqRpL,SKBO,SKPE,4803,4803,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+bEyB3VK7xV7w761j,SKBO,SKBG,4804,4804,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+wyA0zARMK91vaBW6,SKBG,SKBO,4805,4805,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+jl04KlDxyQmqdEA2,SKVV,SKBO,4809,4809,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Pr51NXPZvEGVvnNW,SKBO,SKVV,4810,4810,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+joBl3kepxkpJp76Q,SKBG,SKBO,4813,4813,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+wG3j0W9NgWNMkJvM,SKBO,SKBG,4814,4814,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+e10mJPkqEvY6yXna,SKBO,SKNV,4815,4815,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+zPY138X9Pj5O3gDQ,SKNV,SKBO,4816,4816,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+bKl2LD1XvGPb7Jze,SKBO,SKSM,4822,4822,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+WQndNbWkydLNQG6Y,SKSM,SKBO,4823,4823,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+X1kYbBDQqp0On5wK,SKBO,SKVV,4824,4824,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+XPpjX81M68O8qJGd,SKVV,SKBO,4827,4827,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+2MVN29d3R9OQAVbp,SKEJ,SKBO,4828,4828,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+r7YQyPG23oA56YqZ,SKVV,SKAR,4829,8132,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+lWenQKlMo6q4bynv,SKAR,SKVV,4830,8133,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+eAJ71gwlBg3D8RM7,SKSM,SKBO,4831,4831,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+YpbprlPkplx1emDM,SKBO,SKSM,4832,4832,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+x3jmxAaeORqrZbyG,SKNV,SKBO,4834,4834,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+aLpVPyVkR1j5gWGA,SKVV,SKNV,4835,8179,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+q8zWJmWaMNlAAn6M,SKNV,SKVV,4836,8180,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+9BpEaxq04MvJdpa7,SKVV,SKPP,4837,8191,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+MLkgZy62e78AePW8,SKPP,SKVV,4838,8192,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+5qWkB71Ka8Dzgn3G,SKVV,SKMD,4841,8169,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+N390BYZXVGWGkPqb,SKMD,SKVV,4842,8170,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+NVk0OOVEblXv10gD,SKVV,SKNQ,4843,8177,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+bXmZ712W5l3k1AK0,SKNQ,SKVV,4844,8178,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+D7N3ZmQ0bp20g6dA,SKVV,SKMU,4845,8173,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+9EVy9N1PkY3d0Vbr,SKMU,SKVV,4846,8174,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+OGM808QZ1A2lZM5R,SKVV,SKPD,4847,8185,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+RZzLNqvdVDgvgYk6,SKPD,SKVV,4848,8186,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+9aoYe6NrndL0noWv,SKBO,SKIB,4849,4849,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Wo1Xx9bWv9pA41nM,SKPE,SKBO,4852,4852,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+RQwGPoXdlE8VXLK7,SKVV,SKGY,4853,8161,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+R4MaYBV3vykb7Mym,SKGY,SKVV,4854,8162,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+znjLL8y67nPPDj7W,SKVV,SKPE,4855,8187,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+b385lpe94ZXQlnxr,SKPE,SKVV,4856,8188,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+rwl6jRJkKrNwQlW1,SKVV,SKPC,4857,8183,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+O1LMOYDyGnAxoVbK,SKPC,SKVV,4858,8184,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+MXl3dAXRjVwRyPL7,SKVV,SKYP,4859,8233,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+ZxXwzq8jWG2RyAgn,SKYP,SKVV,4860,8234,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+pm9bjbGNrb1pD9bl,SKSM,SKBO,4861,4861,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+jRJE56Xj7kG8gJEl,SKPC,SKVV,4862,8204,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+KyjgWlma7VMQ0Rao,SKVV,SKCC,4863,8141,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+E8OYdnOqK8mEv5ev,SKCC,SKVV,4864,8142,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+gKB2aP7eA6EqM9Xk,SKVV,SKBG,4865,8136,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+0bG8eEoLW68OaYM6,SKBG,SKVV,4866,8137,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+nzqmrmRXx9GR96Z5,SKBO,SKAR,4867,4867,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+AK1k3X16OlRVDnRq,SKVV,SKPA,4869,8181,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+AZYlRQK7pMmZbL4g,SKPA,SKVV,4870,8182,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+X0g28OWzx1q0z9DN,SKVV,SKSJ,4871,8195,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+bzk5dwyBzeWlom90,SKSJ,SKVV,4872,8196,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+1EZx1rwOvL5rY7Lv,SKBO,SKYP,4873,4873,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+rpAbdEQy8BWg804q,SKYP,SKBO,4874,4874,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+qV7q1PAqgRODB7Om,SKVV,SKFL,4877,8155,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+zklNrV32gDpRZlbp,SKFL,SKVV,4878,8156,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+zoeNR5DM37mV5ep9,SKVV,SKUI,4879,8225,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+EWnRZ73QayVERnKR,SKUI,SKVV,4880,8226,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+y2NBmX2J47oQlAkE,SKVV,SKBO,4881,4881,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+vBW9dzVrLJMmK3pM,SKVV,SKMZ,4883,8175,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+J0ZE8ylpDB135en4,SKMZ,SKVV,4884,8176,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+yEV9eOn4JaAM5Vjd,SKVV,SKPE,4885,8238,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+9alz1zjvG38OzBVj,SKPE,SKVV,4886,8208,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+NRKA4eqA8DmQoBG1,SKVV,SKGI,4887,8157,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+NlK7YL6eq4kaEAvB,SKGI,SKVV,4888,8158,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+VKz3Ao5yn9Rjb16Q,SKVV,SKEJ,4889,8153,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+gbEyekWyXL9DPEQx,SKEJ,SKVV,4890,8154,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+qyej0d1k6zlx9PpW,SKVV,SKTM,4891,8221,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+vOZW9wmax5b98j1n,SKTM,SKVV,4892,8222,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+Bk6z48pvjYK3A1Xm,SKVV,SKUC,4893,8223,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+Lmoa6JjAYe7b5KJD,SKUC,SKVV,4894,8224,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+QWPzr7QE8lG4dPbd,SKBO,SKYP,4895,4895,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+2DAJJK1B3a4EwAdW,SKVV,SKBU,4897,4897,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+dQnD59JmPd798EJb,SKBU,SKVV,4898,8128,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+o2WmNGWgDrxGVMnj,SKVV,SKPS,4899,8193,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+PmbrxEn6KMvZ7p8y,SKPS,SKVV,4900,8194,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+W7jbyab5XEJRR1Np,SKVV,SKGP,4901,8159,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+E1nGP4m6dMakVZOY,SKGP,SKVV,4902,8160,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+6eVDEaqXWYj7wJxo,SKVV,SKLC,4903,8167,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+5myMx8e3vAZ5GB6e,SKLC,SKVV,4904,8168,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+L9VORPKk67mGGqm7,SKVV,SKMR,4905,8171,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+gyqooQEN2MXd4qrx,SKMR,SKVV,4906,8172,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+k896jebv71d7K9RV,SKVV,SKCZ,4907,8151,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+MBmw9d5L14040yZv,SKCZ,SKVV,4908,8152,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+wQ9drpeaO42EaN35,SKVV,SKTL,4909,8217,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+YWgbvxKYj24qdgdl,SKTL,SKVV,4910,8218,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+yVZp7AvEkGPEKnvK,SKVV,SKVP,4911,8227,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+PJK8DdvRlB4GXKo3,SKVP,SKVV,4912,8228,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+3NP1qZGayLOWDPLG,SKVV,SKCG,4913,8147,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+gkjzbA4ZeopkQjRx,SKCG,SKVV,4914,8148,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+Mlpl2r8XBlKzaWy7,SKVV,SKBQ,4915,8138,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+1mGWePLvw76jmVjE,SKBQ,SKVV,4916,8139,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+mLpP4dyl378PPpOA,SKVV,SKSM,4917,8214,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+a8Mnwov6YLq3jPOJ,SKSM,SKVV,4918,8215,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+xrbrl1YQJ5NzkMBD,SKVV,SKPI,4919,8189,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+1o9EqxojVWMe29jg,SKPI,SKVV,4920,8190,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+aej0R8jVoZDZNLqR,SKVV,SKIB,4921,8163,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+Ga6jbvyxMYNYzjLW,SKIB,SKVV,4922,8164,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+GNV8noK1Yv0Xe5j9,SKVV,SKIP,4923,8165,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+9YAyxNX2M4qQ9meR,SKIP,SKVV,4924,8166,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+8X0Pv38Oe3DnDbr9,SKVV,SKBG,4995,8236,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+jDqArABXpAPMm3mG,SKBG,SKVV,4996,8126,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+vOrRz7AJv7vLNrw0,SKVV,SKMD,4997,8237,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+g73o94ylq4qBAklY,SKMD,SKVV,4998,8202,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+Z1qmZ6zPNAJpABvw,SKCG,SKSP,5001,8145,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+pa3LxanrJOlbV30r,SKSP,SKCG,5002,8146,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+r7BZbLX1RqlQ0BEZ,SKCG,SKSP,5003,8197,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+jAEyPMR7AbY6pqNW,SKSP,SKCG,5004,8229,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+qXW97avmPndw8zpN,SKCG,SKMR,5005,8143,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+9GJRK0YEw1W5pxmy,SKMR,SKCG,5006,8144,propio_libre,OTRA_RUTA,NULL,par propio consecutivo; Avianca no usa estos numeros
+ez6jMdeQ1d53aw39,SKBO,SKPS,5087,5087,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+vqK78A9BxA5vlrJ2,SKPS,SKCL,5090,5090,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+nPV8xWP86BqDrVOe,SKAR,SKBO,5212,5212,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Q0BYXRDeqEpozZgv,SKBO,SKAR,5213,5213,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+5KeavQkjKJBKZq6E,SKPP,SKBO,5225,5225,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+nQoR1kLGDkQaLM3d,SKBO,SKCC,5226,5226,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+MgY95Gl1LGNWVY9a,SKCC,SKBO,5227,5227,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+qnRByZE5pZyN574v,SKCG,SKCC,5555,5555,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2KE2WKj6OKxWeYnk,SKCC,SKCG,5556,5556,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+WJmw5dqArdpg0PL8,SKCG,SKVP,5993,5993,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Ld7Z4pbA5pzQY6rx,SKVP,SKCG,5994,5994,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+OKR5b8ZBy8abEGqd,SKCG,SKMD,5995,5995,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+reGepoRb5o3nyX9P,SKMD,SKCG,5996,5996,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+zN68w9blg9N3qEla,SKCG,SKPE,5997,5997,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+LVAGDg3l7Wj31rMQ,SKPE,SKCG,5998,5998,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Pk1PNKMoJREGZ9d4,SKSM,SKMD,8000,8000,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+qlJBrL1kmLenwJ9W,SKMD,SKPE,8001,8199,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+RK7zGkoQEkZ93bN3,SKPE,SKMD,8002,8002,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+KWVOp9bxg9J0pLQj,SKMD,SKBG,8003,8003,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+VBg7A9RLl96ZRznD,SKBG,SKMD,8004,8004,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+noXnoqLWJqj5QbRW,SKMD,SKPA,8005,8005,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ZnRpwXNL8X4DxOPL,SKPA,SKMD,8006,8006,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+D0YjM4qQE418lJ7o,SKMD,SKSG,8007,8007,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+6bMWYZWpBZNBRyv9,SKSG,SKMD,8008,8008,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+bXPqkb0BXbvaG3z1,SKMD,SKIB,8009,8009,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+KbE7kyagLyA6zE5M,SKIB,SKMD,8010,8010,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+OxmqQ3xWZ3EVOmRM,SKMD,SKNV,8011,8011,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+b137Ln1xDgBKxYRX,SKNV,SKMD,8012,8012,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+1LWeY2b062kR4WO3,SKMD,SKPP,8013,8013,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+kaLpQE7y8EGyqAzn,SKPP,SKMD,8014,8014,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+dx689gWKQgO39GEk,SKMD,SKNQ,8015,8015,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+EWa2BnWven9WDax1,SKNQ,SKMD,8016,8016,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+92ZQnAzGkA4EVyE8,SKMD,SKCZ,8017,8017,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+l3ReQqAXLqr8aRPq,SKCZ,SKMD,8018,8018,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+QxModzRK4zxQlVYK,SKMD,SKPS,8019,8019,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+jvmkZpdjqpGMGP0V,SKPS,SKMD,8020,8210,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+vAYen5W0254a2NV8,SKMD,SKAR,8021,8021,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+24jExXG8MXlrEbKk,SKAR,SKMD,8022,8022,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+NWxEGpPYoRpBVlo5,SKMD,SKMZ,8023,8023,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+MrjKb2kAe2nBYWkB,SKMZ,SKMD,8024,8024,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+WzZD78gPn8nJQMle,SKMD,SKTL,8025,8025,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+nVE315enk5kxJWXd,SKTL,SKMD,8026,8026,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+MDP1bJG0kJkANEa6,SKMD,SKBS,8027,8027,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+xYem66Qp5J6Y5mVl,SKBS,SKMD,8028,8028,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+lNJ1OGVkeGeXEy96,SKMD,SKUI,8029,8029,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+gjOwdJg08J7KlZzm,SKUI,SKMD,8030,8030,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Vd1LPQq6GQ7oZ1Av,SKMD,SKVP,8031,8031,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2YnRa8L1G8gAXzkE,SKVP,SKMD,8032,8032,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2x7yYW82xWr4n7yr,SKMD,SKLC,8033,8033,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+5O0PvYgNPY2jBVxk,SKLC,SKMD,8034,8034,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+bKnVZvdO7vDWVndM,SKMD,SKMR,8035,8035,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+GbXynbyzWbEBmgAP,SKMR,SKMD,8036,8036,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+k5O2EK89gKw39A2x,SKMD,SKCC,8037,8037,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+n67zraWJdaQ2a73z,SKCC,SKMD,8038,8038,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+2K7ly1EW51ALbkwR,SKAS,SKCL,8039,8039,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+DV8ZrAQR4Pggo81W,SKBO,SKCZ,8040,8040,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+GOVwgQxR2kqELVo2,SKBO,SKEJ,8041,8041,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Bkwa2ZVGlnzbze37,SKBO,SKEJ,8042,2984,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+qdNLd5y2x8WEbNJr,SKBO,SKFL,8043,8043,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+3RoMDv9VXvmME7zk,SKBO,SKMD,8044,8044,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+aA1J7WOx9AgEmJZk,SKBO,SKNV,8045,8045,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+z2mvA0OKG48xewD8,SKBO,SKPC,8046,8046,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+pwGvkOY1VvB657bD,SKBO,SKPC,8047,8047,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+VgAKVld2o6OzJR1M,SKBO,SKPP,8048,8048,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+oXbrpwoxywEjzNjQ,SKBO,SKSG,8050,8050,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+NL8nn25YK2XGK8Q5,SKBO,SKSO,8051,8051,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+WpZ4WDmPMDggYGY5,SKBO,SKVV,8052,8052,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+gZ1jJEnGPEvel1M4,SKBO,SKYP,8053,8053,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+qLW91n7RgaBVkWRe,SKBO,SKYP,8054,8054,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+26347657-f2f7-4ac5-b6ea-dc4e332ceda6,SKBQ,SKCL,8055,8055,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+KgJyzGvx3GvKV1Xv,SKBQ,SKCL,8056,8056,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+ypVzEKWnMKWGMdJa,SKCC,SKCL,8057,8057,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+GLAbNW2reWN1kAlD,SKCG,SKCL,8058,8058,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+deLwmW89kWglmXkw,SKCL,SKAS,8060,8060,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+vGNe43QAl3Q2J0gP,SKCL,SKBQ,8061,8061,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Q2AKbgk3Ggk2qzO0,SKCL,SKCC,8062,8062,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+eb50bb8b-1ab4-4ec9-95ba-e6af2e3cc85e,SKCL,SKCG,8063,8063,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+MORxVKew9BpzW8b5,SKCL,SKCG,8064,8064,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+R5LemAxjJAmO0LjM,SKCL,SKCG,8065,8065,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+n2pMKE1xjEQd6ry6,SKCL,SKCO,8066,8066,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+7eGnml5kxlvmpP6o,SKCL,SKFL,8067,8067,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+6GEWkr3VoroPQEM7,SKCL,SKGP,8068,8068,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+aRKk7yJevy37rKd0,SKCL,SKIP,8069,8069,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+k2LMK9WdP9PO50gz,SKCL,SKMD,8070,8070,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+VM7pmgoWNY8O03kG,SKCL,SKNA,8071,8071,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+QeRwB7J6G7kAwOdX,SKCL,SKPI,8072,8072,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+g6owwWz4nWYRLoZr,SKCL,SKRH,8073,8073,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+MEqPN3ZxX3YE49e0,SKCL,SKUI,8074,8074,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Vkg7VbrEObqYjP3o,SKCL,SKVG,8075,8075,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+9zKNJZWX1wEx5KZO,SKCL,SKVV,8076,8076,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+1KraQX7YOXBoBrxW,SKCL,SKVV,8077,8077,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+rgNYl7pDM7dk3KmZ,SKCO,SKCL,8078,8078,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+7QNl27njArKD16mP,SKCZ,SKBO,8079,8079,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+DaKW2DOow4n0vr0p,SKEJ,SKBO,8080,8080,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+MKmdBlbv4NMe7rGD,SKFL,SKBO,8081,8081,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+rpynKjpvGjRa3mV8,SKFL,SKCL,8082,8082,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+VPzYN6kx5q6y9Yb1,SKGP,SKCL,8083,8083,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+eJbpKXdvnrPWNmoV,SKIB,SKBO,8084,8084,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+goVl9g2yegPPzm3r,SKIP,SKCL,8085,8085,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+0yLP2erQmeElKYxG,SKMD,SKBO,8086,8086,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+qD8QAyvZkykGO8y1,SKMD,SKCL,8087,8087,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+XLoAkx6mPxjxeMK8,SKNA,SKCL,8088,8088,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+WemY1pzD9JRvlmyx,SKPC,SKBO,8089,8089,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+wLX9zqJyKaEe58bG,SKPC,SKBO,8090,8090,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Ml0Xor4JwrXKzA5x,SKPI,SKCL,8091,8091,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+y43Xwq2K9qodg1Xk,SKPP,SKCL,8092,8092,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+0j8J3m2J7mDADZR5,SKRH,SKCL,8093,8093,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+A7aoB1VWx1ZexEKv,SKSG,SKBO,8094,8094,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+xOZa1gvVAgz7LZNz,SKSO,SKBO,8095,8095,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+bly9MkbRZkpOAy2x,SKSP,SKBO,8096,8096,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+LG06QM7NW834BEMD,SKSP,SKCL,8097,8097,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+7R9eYQkwpQJN39kn,SKUI,SKCL,8098,8098,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+gkG2Q3lYJ3EekZlw,SKVG,SKCL,8099,8235,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+K4qr6n0pzbWrBq2z,SKVV,SKCL,8100,8149,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+5e72VA5l1An9v7jP,SKVV,SKCL,8101,8150,propio_libre,OTRA_RUTA,,par propio consecutivo; Avianca no usa estos numeros
+xwpBgxwRLznw6MA4,SKYP,SKBO,8102,2975,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+aV5raE6RJEogGwqp,SKYP,SKBO,8103,2993,adopta_ava,OTRA_RUTA,,par ida/vuelta con el sentido inverso
+V87V30zBYVO4OwN0,SKYP,SKBO,8104,8239,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+dmK0L9Jo699a1Kq0,SKBO,SEGU,8383,8383,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+OxBVgxGoZxxNGa2j,SEGU,SKBO,8384,8384,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+4f126540-c9c6-4ff6-b2b6-42f4369efeea,SKBO,SAEZ,8395,8395,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+8d326c20-1c25-44e9-8c7a-da21bad23d38,SAEZ,SKBO,8396,8396,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+3Q79r04poaeR5LNm,SKRG,SEGU,8399,8399,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+D5PoV2pGkAbxewGb,SKRG,SKBO,8401,8401,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+zm98KveqpvNDJA6B,SKRG,SKPE,8403,8403,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Y8RKgBQXdBDMqRGZ,SKRG,SKBO,8405,8405,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LmRn3ZLYd8pQxwdq,SKBO,SKPE,8407,8407,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Zg8al8OR7x8ABaN7,SKBO,SKCL,8409,8409,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+arZlr0oZK30Ok9Xm,SKBO,SKCL,8411,8411,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+p0YwQo6b1oRQajO3,SKBO,SKRH,8412,8412,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LjKzpaLpGY7E5ogQ,SKRH,SKBO,8413,8413,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+gLNDl6eAV6mkzNQ3,SKCL,SKBO,8416,8416,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+ARnMG9LxY9dJyZDb,SKCL,SKBO,8418,8418,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+37c30c51-b860-4c53-b74e-e8466547f9c4,SKBQ,SKBO,8419,8419,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+dLB0jYMla5b65nK9,SKBO,SKCL,8421,8421,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+rzwJgJzjpr1Go0E2,SKCL,SKBO,8422,8422,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+JP8DzLwO1LO9VlLE,SKCG,SKBO,8423,8423,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+x35vEM3yrMybMOLd,SKBO,SKCG,8426,8426,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Za1qQwVqWw9D01OR,SKRG,SKBO,8427,8427,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+kZBaZ4Y5V4maME7x,SKBO,SKRH,8428,8428,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+6V53yj8kQjdp3YkG,SKRH,SKBO,8429,8429,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+xdbynJwP46MZjLRN,SKBO,SKRG,8432,8432,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+ZyJMkMp83MrGgVWl,SKCG,SKRG,8433,8433,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+3qBgdL07pkR99zor,SKBO,SKBQ,8434,8434,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+BkJmnaRy9a6X6YK1,SKRG,SKBO,8435,8435,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+WgeBpPE6yP85mRGN,SKRG,SKSM,8436,8436,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+R0WjPM09oMzlVeo9,SKSM,SKRG,8437,8437,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+JOrZ8Z4KjZMG4q9B,SKSP,SKRG,8441,8441,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+fb422e34-2109-4092-b396-415340251c00,SKBO,SKBQ,8446,8446,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+6oNg5rGM1rkpMmzW,SKCL,SKRG,8448,8448,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+g8qAdwa0WLwVEZxR,SKRG,SKBO,8451,8451,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+kLyGp7RWj77X2Vv7,SKCL,SKBO,8454,8454,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+7PV9MnPOwyeYXV9E,SKPS,SKBO,8456,8456,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+6J5BOzawJr9lBPAb,SKBO,SKPS,8457,8457,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+BLmJ2pleVpjzGm1M,SKMR,SKBO,8459,8459,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+mYgEY3nwOJ0vbgWB,SKRG,SKPS,8466,8466,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+kENdp8GZkPyRJNLb,SKPS,SKRG,8467,8467,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+2bZRQzDR8z5GpLzj,SKRG,SKCG,8470,8470,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+02WM6QlbBaA9VKJL,SKBO,SKCG,8472,8472,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+VpLz4P1V8P4GmEWd,SKBO,SKCG,8480,8480,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+eQNGoKvzZK97JNJg,SKBO,SKSM,8484,8484,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+MVBbxzQ7azZDJ0Q5,SKBO,SKSM,8486,8486,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+PElaoZV5GZgqVmpd,SKSM,SKBO,8487,8487,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+427e9992-f422-470c-bbfe-0b58be4c4607,SKBO,SKCG,8490,8490,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+oa6NMB3o8BJnX5Jr,SKBO,SKMR,8500,8500,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+GkM60Bxw8jb5gPma,SKPE,SKBO,8504,8504,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+eVGYzDrxgDRbvAYr,SKBO,SKMR,8508,8508,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+MxB9pO5ALO72pew3,SKMR,SKBO,8509,8509,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+db320086-30f1-4000-80af-ebd844a922f1,SKCG,SKRG,8511,8511,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+qY3Z4GwMdz5qPo7r,SKBO,SKPE,8515,8515,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+aNLmpaWMdajBJVOb,SKRG,SKRH,8516,8516,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+kG6nQdPKzdeovZ1L,SKRH,SKRG,8517,8517,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+YZ7G4x6M0wrW4ePK,SKCL,SKBO,8522,8522,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+3valGnPaQpkAMAyk,SKBO,SKCL,8523,8523,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+MgElBbkVpbvg9oky,SKBO,SKBQ,8524,8524,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+PaBK92RWP2qg1JRx,SKBQ,SKBO,8525,8525,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+BxeVNjgGYjKB8eq6,SKCG,SKBO,8537,8537,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+O1MWJBjgQl0PzYjW,SKPE,SKBO,8538,8538,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+1YloOxR23xomnl43,SKBO,SKPE,8539,8539,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+O5BVz4XDKOP7KBRm,SKAR,SKBO,8544,8544,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+1r7AYqRgWqOQL7jW,SKBQ,SKRG,8545,8545,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+9YEoKLYBdLM3NEAv,SKRG,SKBQ,8546,8546,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+rRZN5m7Jdm5mmn0L,SKCG,SKBO,8559,8559,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+l509R5KwQ5DoabYn,SKSP,SKBO,8561,8561,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+pXParRMOL4zW4aDr,SKBO,SKBG,8562,8562,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+anoaO2v892znpY9q,SKBG,SKBO,8563,8563,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+jgnJPa9YkQN5yZ9k,SKCG,SKCL,8569,8569,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+JnmPPaREvaRQ0mYp,SKBO,SKBQ,8574,8574,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+p7dyZLQnBLQOXmAy,SKBQ,SKBO,8575,8575,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+0nKALWd04WN6oGWA,SKBO,SKVP,8576,8576,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+r3eBjO4rq373bq6A,SKVP,SKBO,8577,8577,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+mKgWKpeO6pDKJgJr,SKBO,SKVP,8580,8580,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LZrEjdEKqdW3x9oD,SKVP,SKBO,8581,8581,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+yPOe1ny5qnXmyOMZ,SKPS,SKBO,8584,8584,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+orJWQroeprgeWPvN,SKBO,SKPS,8587,8587,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+06549143-fca1-494f-8b0f-7ad522829046,SKCL,SKBQ,8593,8593,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+gaVNxaYZRavvXO7G,SKMD,SKML,8911,8911,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+58X90vPABveG1pqv,SKML,SKMD,8912,8912,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+AJ6oE1Az4G25vWGl,SKSM,SKPE,9000,8473,adopta_ava,OTRA_RUTA,NULL,par ida/vuelta con el sentido inverso
+9EVJjnE95nYqXVmo,SKBG,SKSO,9001,8124,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+ED95O8bER8vGEleN,SKSO,SKBG,9002,9002,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+EJbRGjedLj96z36D,SKYP,SKSO,9003,9003,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+50zkmWly2WODWGye,SKSO,SKYP,9004,8219,propio_libre,OTRA_RUTA,,numero propio en el bloque correcto; Avianca no lo usa
+RprNl8ZGJVjpGNqz,SKCC,SKSO,9005,9005,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+Z4eb6BKy7BEkle6P,SKSO,SKCC,9006,9006,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+xkY8kjwJ5jgz6OQK,SKPS,SKPP,9007,9007,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+EJR4W3M4e36E01pQ,SKBQ,SKSP,9009,9009,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+yG8jn4xnE2J1WLJY,SKSP,SKBQ,9010,9010,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+K2xPGW3amVD2kPjp,SKBG,SKSM,9011,9011,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+3b1GRAPNQoWlDqMk,SKSM,SKBG,9012,9012,mantiene,NO_EXISTE,NULL,ya cumple: numero propio verificado como no usado por Avianca
+kGmWoZwdArZ2BagR,SKMR,SKVP,9013,9013,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+nKlReKy780KY0PDr,SKVP,SKMR,9014,9014,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+L4MWzVxv3VPVJEgD,SKSP,SKPV,9015,9015,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+YewmenOYEnmVMw0Z,SKPV,SKSP,9016,9016,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+adL67W5GaW9lzMEN,SKBG,SKCC,9059,9059,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+m0Gy1572O5vR6GRJ,SKCC,SKBG,9060,9060,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+zXoEzagneaqyjNGL,SKCC,SKUC,9147,9147,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+wVzPnvl9WvXxabMg,SKUC,SKCC,9148,9148,mantiene,NO_EXISTE,,ya cumple: numero propio verificado como no usado por Avianca
+8y5M6NDaZ2b2QmYo,SKBO,SKCL,9203,9203,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+03M3DdEenX5AK7mN,SKCL,SKBO,9204,9204,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+MQq9Q1JpW1v1Pqk3,SKBO,SKCL,9205,9205,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+AkqOQPDYgPW1eob1,SKRG,SKCL,9211,9211,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+BdXDb7K6O7B1Go0L,SKCL,SKBO,9220,9220,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+NOe6OQa1oQ4NJGKo,SKBO,SKCL,9221,9221,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+4AXE6Z9aNZDNZJol,SKCL,SKSM,9222,9222,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+KZP7pBGmABvYY1a4,SKSM,SKCL,9225,9225,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LRAjoVl6KVe4W7Mz,SKBO,SKRG,9232,9232,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+r0E3VezGaewA6JVw,SKBO,SKRG,9234,9234,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+1PrBp0kKoGx49Jw5,SKBO,SKRG,9242,9242,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+QVYEKLBWmq9A3kZ1,SKRG,SKBO,9243,9243,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Le8XEJ3qVJ6bzopk,SKBG,SKRG,9246,9246,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+0Yj81NYWlNa7gKMG,SKRG,SKBG,9247,9247,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+jwlxzk5pakKpOm4k,SKBO,SKRG,9252,9252,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+zKOxxVBPGVPVBO52,SKRG,SKAR,9254,9254,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LQPgJDNkzP555RvW,SKAR,SKRG,9255,9255,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+kmrNLb5YQ4bJgKoP,SKBO,SKRG,9260,9260,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+QDK3Qalq4aDPbonw,SKPE,SKRG,9264,9264,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+zjXqaAnVRwA3gqdR,SKRG,SKMR,9276,9276,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+ZxAeWeJyLe49K32N,SKMR,SKRG,9277,9277,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+QqZMnbDmjb2jn59G,SKCL,SKPS,9295,9295,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+bkeb9vL1B2ar5pGM,SKRG,SKBO,9303,9303,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+OKPxqoyRm4ddy70Z,SKBO,SKRG,9304,9304,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+y3WjkGpBbGe8XnNA,SKRG,SKSP,9348,9348,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+YV6bRmKGd5bEz6Ln,SKBO,SKSP,9376,9376,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+XgqbRkdx0Yg9kqr7,SKSP,SKBO,9377,9377,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Yedxj39Y53NE9AMa,SKCL,SKRG,9382,9382,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+38cc5c1c-c570-4f48-92e0-a47a123c6084,SKCL,SKRG,9384,9384,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Ez5Dx8QyR8xzK5Gy,SKPE,SKCG,9388,9388,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+VQZ6PN147NP9Yl8e,SKCG,SKPE,9389,9389,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+4qZ91n6QKRn7QJew,SKBO,SKMR,9396,9396,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+DaMZ1eYg9eZYDP8l,SKMR,SKBO,9397,9397,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+3Oall5rbP5VwwaPN,SKPS,SKBO,9402,9402,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+1zGzEokpgo90A89Q,SKRG,SKCL,9431,9431,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+eVAgg7Onj7E60A4M,SKSP,SKBO,9445,9445,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+AD5L4e12MkX9e5zr,SKBG,SKBO,9465,9465,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+DVMQyOepaN7NjM4Y,SKBO,SKBG,9466,9466,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+qdmpOgoaMGWGPBVx,SKBO,SKLT,9488,9488,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+LNzodyxK5rqZMVkl,SKLT,SKBO,9489,9489,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+3MEbXx6qlxwJkZao,SKBO,SKLT,9491,9491,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+A1qdbpNedpZ6BJ7W,SKLT,SKBO,9492,9492,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+d2PGd1kJv1xjwYO7,SKCC,SKRG,9507,9507,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+96Ja51VD0j5wwJ0E,SKRG,SKCC,9508,9508,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+rv7m4OrxgO23npDx,SKRG,SKCC,9510,9510,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+bgjrMn6dlnam49oP,SKBO,SKBQ,9520,9520,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+5BK1oMlmRMdZZ3x0,SKBQ,SKBO,9521,9521,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Rg3onwZX0wMwgJEq,SKBQ,SKBO,9523,9523,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+5QBG0X7lyXq1GwyP,SKBO,SKBQ,9524,9524,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+zrg2wMYKjR3m8GE6,SKBQ,SKBO,9525,9525,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+QEkEpZxm6nqnbNqY,SKCL,SKSP,9614,9614,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+arg3B4PkoRv7rO4v,SKEJ,SKBO,9700,9700,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+7leGR8Z2Ad8DAP4O,SKBO,SKEJ,9701,9701,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+Nm79DKyvQaO6LrE9,SKBO,SKBG,9710,9710,mantiene,COINCIDE,NULL,ya cumple: numero real de Avianca en su ruta
+rBjggnBzGrevKjaA,SKBG,SKBO,9711,9711,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+YZ0EQNx9qNL4g0mo,SKBO,SKSP,9774,9774,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+6bXMrwD6Mwe0OEJV,SKBO,SKSP,9776,9776,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+v0YKq2rBl2g9dPeR,SKBO,SKSP,9778,9778,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+JlolW0lmd0bBOAeR,SKCG,SKBG,9820,9820,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta
+yrVjGlOxg7lZ3BzN,SKBG,SKCG,9821,9821,mantiene,COINCIDE,,ya cumple: numero real de Avianca en su ruta

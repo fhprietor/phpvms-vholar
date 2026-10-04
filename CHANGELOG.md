@@ -1,5 +1,22 @@
 # Changelog
 
+## [Vholar] 2026-10-02 — Mapa publico de la red de rutas (`/networkmap`)
+
+- Pagina **publica** nueva: `/networkmap` (enlace en el desplegable *Centro de
+  Operaciones*, junto a Fleet Map), con la red de rutas en Leaflet.
+- **Una linea por ruta** (origen-destino, sin numeros de vuelo) con geodesicas, y un
+  **popup al pasar el raton** con la ruta, los aeropuertos, la distancia y la **lista de
+  vuelos que la cubren** (enlazados a su ficha).
+- **Colores por categoria** + leyenda con el recuento, y control de capas para encender y
+  apagar cada categoria: **heavy 42**, **airliner 120**, **regional 372**, **express 5**
+  (539 rutas en total, 1.273 vuelos).
+- Clasificacion (ajustable en `NetworkMapController::categoryFor()`): express = ruta con
+  algun vuelo que **solo** admite carguero (B77F/A30F/A306); heavy >= 2.500 nm;
+  airliner 800-2.500 nm; regional < 800 nm. Se usa distancia porque la aerolinea asigna
+  hasta 16 subflotas por vuelo y "la aeronave de la ruta" no distingue nada.
+- Cacheado 60 min (`vholar.network_map`); `php artisan cache:clear` para forzar.
+- Cadenas en `resources/lang/{en,es-es}/vholar_network.php`.
+
 ## [Vholar] 2026-10-02 — Tramos de tour desacoplados de `route_code`
 
 Los tramos ya no son "vuelos marcados con `route_code` = codigo del tour" (eso obligaba a

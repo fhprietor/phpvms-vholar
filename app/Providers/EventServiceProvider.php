@@ -16,6 +16,7 @@ use App\Listeners\FareListener;
 use App\Listeners\FinanceEventHandler;
 use App\Listeners\MessageLoggedListener;
 use App\Listeners\PirepEventsHandler;
+use App\Listeners\PirepFeedbackListener;
 use App\Listeners\TLDUpdater;
 use App\Listeners\UserStateListener;
 use App\Notifications\NotificationEventsHandler;
@@ -41,6 +42,7 @@ class EventServiceProvider extends ServiceProvider
 
         PirepFiled::class => [
             UserStateListener::class,
+            PirepFeedbackListener::class,
         ],
 
         Registered::class => [

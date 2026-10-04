@@ -11,6 +11,7 @@ use App\Models\Enums\PirepSource;
 use App\Models\Enums\PirepState;
 use App\Models\Fare;
 use App\Models\Pirep;
+use App\Models\PirepAiFeedback;
 use App\Models\PirepFare;
 use App\Models\SimBrief;
 use App\Models\User;
@@ -217,14 +218,20 @@ class PirepController extends Controller
         $map_features = $this->geoSvc->pirepGeoJson($pirep);
 
         $altitudeProfile = FlightAnalysisHelper::getAltitudeProfile($pirep);
-        $logData         = FlightAnalysisHelper::parseLogData($pirep);
+        $logData = FlightAnalysisHelper::parseLogData($pirep);
+
+        // Retroalimentacion automatica del vuelo, si ya se genero. Se busca sin
+        // relación en el modelo para no cargarla en el resto de consultas de
+        // PIREPs, donde no se usa.
+        $aiFeedback = PirepAiFeedback::where('pirep_id', $pirep->id)->first();
 
         return view('pireps.show', [
-            'pirep'          => $pirep,
-            'map_features'   => $map_features,
-            'user'           => Auth::user(),
+            'pirep'           => $pirep,
+            'map_features'    => $map_features,
+            'user'            => Auth::user(),
             'altitudeProfile' => $altitudeProfile,
             'logData'         => $logData,
+            'aiFeedback'      => $aiFeedback,
         ]);
     }
 

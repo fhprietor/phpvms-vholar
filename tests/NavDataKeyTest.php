@@ -180,6 +180,30 @@ final class NavDataKeyTest extends TestCase
         $this->assertNull($this->openCbcEnvelope(base64_encode($blob), $this->pilot->api_key));
     }
 
+    public function test_the_delivered_url_has_no_trailing_slash(): void
+    {
+        // El .config que se publicaba llevaba barra final; el cliente concatena
+        // rutas sobre la base, asi que se entrega normalizada.
+        $this->configure(self::API_URL.'/');
+
+        $data = $this->withHeaders($this->headers($this->pilot))->getJson('/api/navdata')->json('data');
+        $payload = $this->openEnvelope($data['payload'], $this->pilot->api_key);
+
+        $this->assertSame(self::API_URL, $payload['url']);
+    }
+
+    public function test_a_host_only_url_is_delivered_as_is(): void
+    {
+        // phpVMS no adivina la ruta: si el staff configura solo el host, eso es
+        // lo que recibe el cliente (y NavData fallara: es un error de setting).
+        $this->configure('https://navdata.vholar.co');
+
+        $data = $this->withHeaders($this->headers($this->pilot))->getJson('/api/navdata')->json('data');
+        $payload = $this->openEnvelope($data['payload'], $this->pilot->api_key);
+
+        $this->assertSame('https://navdata.vholar.co', $payload['url']);
+    }
+
     public function test_the_two_envelopes_are_not_interchangeable(): void
     {
         $this->configure();

@@ -161,6 +161,9 @@
       </div>
       @endif
 
+      {{-- Análisis automático (IA) --}}
+      @include('components.pirep-ai-feedback', ['aiFeedback' => $aiFeedback])
+
       {{-- Takeoff / Landing --}}
       <div class="row mt-3">
         <div class="col-6 mb-3">

@@ -148,6 +148,12 @@ El JSON plano, en ambos casos:
 `url` es la base del servicio NavData y `key` la clave: exactamente lo que hoy sacáis de
 `navdata_api_url` y `navdata_api_key`.
 
+> **La base incluye la ruta, no es solo el host.** Se entrega lo que el staff haya configurado en
+> Admin > Settings, normalizado **sin barra final** (el `.config` que se publicaba llevaba una:
+> `https://navdata.vholar.co/api/v1/`). phpVMS **no adivina** rutas: si la setting trae solo el host,
+> eso es lo que recibe el cliente y las llamadas a NavData fallarán. Valor correcto:
+> `https://navdata.vholar.co/api/v1`.
+
 ---
 
 ## 5. Código .NET Framework 4.8.1

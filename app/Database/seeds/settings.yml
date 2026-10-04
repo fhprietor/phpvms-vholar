@@ -95,14 +95,56 @@
   value: ''
   options: ''
   type: text
-  description: 'Base URL of the NavData service handed to ACARS clients by GET /api/navdata (eg. https://navdata.example.com/api)'
+  description: 'FULL base URL of the NavData service handed to ACARS clients by GET /api/navdata, path included (eg. https://navdata.vholar.co/api/v1). Routes are appended as-is'
 - key: general.navdata_api_key
   name: 'NavData API Key'
   group: general
   value: ''
   options: ''
   type: text
-  description: 'NavData API key handed to ACARS clients by GET /api/navdata. It is never sent in clear text: it travels sealed (AES-256-GCM or AES-256-CBC+HMAC) under the API key of the pilot making the request'
+  description: 'NavData API key handed to ACARS clients by GET /api/navdata, sealed (AES-GCM or AES-CBC+HMAC) under the caller API key. Never sent in clear text'
+- key: general.deepseek_api_key
+  name: 'DeepSeek API Key'
+  group: general
+  value: ''
+  options: ''
+  type: text
+  description: 'API key for the automatic PIREP feedback (phpvms:pireps-ai-feedback). Stored in clear text like the NavData key: prefer a dedicated key, never the one used for development tooling'
+- key: general.deepseek_model
+  name: 'DeepSeek Model'
+  group: general
+  value: 'deepseek-flash'
+  options: 'deepseek-flash,deepseek-v4-pro'
+  type: select
+  description: 'Model used for the automatic PIREP feedback. deepseek-flash is the cheapest and is enough for telemetry analysis'
+- key: general.deepseek_feedback_enabled
+  name: 'Automatic PIREP Feedback'
+  group: general
+  value: false
+  options: ''
+  type: boolean
+  description: 'Generate AI feedback for every new PIREP that carries ACARS telemetry. Requires a valid DeepSeek API key; without one the job silently does nothing'
+- key: finance.revenue_estimate_enabled
+  name: 'Estimate PIREP Revenue'
+  group: finance
+  value: true
+  options: ''
+  type: boolean
+  description: 'Estimate revenue for the AI PIREP feedback from the PAX/CARGO logged by the ACARS client and the subfleet fares. It is an ESTIMATE, not recorded revenue'
+- key: finance.revenue_pax_mix
+  name: 'Passenger Class Mix'
+  group: finance
+  value: '80,15,5'
+  options: ''
+  type: text
+  description: 'Share of passengers per fare, with the passenger fares sorted by price ascending: 80,15,5 = 80% cheapest, 15% next, 5% dearest. Any remainder goes to the cheapest'
+- key: finance.revenue_pax_mix_by_type
+  name: 'Passenger Class Mix by Type'
+  group: finance
+  value: ''
+  options: ''
+  type: text
+  description: 'Optional per-aircraft-type overrides of the passenger mix, as JSON keyed by ICAO type, eg. {"B38M":"85,10,5"}. Empty means every type uses the global mix'
 - key: captcha.enabled
   name: 'hCaptcha Enabled'
   group: captcha
@@ -557,6 +599,20 @@
   options: ''
   type: boolean
   description: Pirep Rejected mails sent to pilots
+- key: notifications.discord_pirep_feedback
+  name: AI Pirep Feedback (Discord)
+  group: notifications
+  value: true
+  options: ''
+  type: boolean
+  description: Broadcast the automatic flight analysis to the public Discord channel, as a message separate from the PIREP filing notice. Requires general.deepseek_feedback_enabled
+- key: notifications.mail_pirep_feedback
+  name: AI Pirep Feedback (Pilot)
+  group: notifications
+  value: true
+  options: ''
+  type: boolean
+  description: Email the automatic flight analysis to the pilot who filed the PIREP. Requires general.deepseek_feedback_enabled
 - key: notifications.mail_news
   name: News Mails
   group: notifications

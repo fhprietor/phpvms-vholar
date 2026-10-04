@@ -75,10 +75,22 @@ class NavDataService extends Service
 
     /**
      * URL base del servicio NavData configurada (Admin > Settings), o null.
+     *
+     * Se normaliza sin barra final: el cliente concatena rutas tal cual sobre
+     * la base ("https://host/api/v1" + "/runways"), asi que una barra de mas
+     * produce un `//` que el servicio puede no reconocer. El `.config` que se
+     * publicaba llevaba barra final, de ahi la guarda.
      */
     public function getApiUrl(): ?string
     {
-        return $this->readSetting('general.navdata_api_url');
+        $url = $this->readSetting('general.navdata_api_url');
+        if ($url === null) {
+            return null;
+        }
+
+        $url = rtrim($url, '/');
+
+        return $url === '' ? null : $url;
     }
 
     /**

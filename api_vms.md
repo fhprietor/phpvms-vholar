@@ -523,7 +523,7 @@ ambos sobres la clave se deriva con `HKDF-SHA256(ikm = api_key del piloto, salt 
 
 | Setting | Contenido |
 |---|---|
-| `general.navdata_api_url` | URL base del servicio NavData |
+| `general.navdata_api_url` | URL base **completa** del servicio NavData, ruta incluida (`https://navdata.vholar.co/api/v1`). El cliente concatena rutas sobre ella, así que **solo el host no vale**. Se entrega normalizada sin barra final |
 | `general.navdata_api_key` | Clave de acceso. No se sirve en claro por ningún endpoint |
 
 > La URL se entrega junto a la clave para poder retirarla del fichero `.config` que se publica en el

@@ -1,0 +1,750 @@
+id_vuelo,origen,destino,numero_actual,numero_nuevo,fase,callsign_actual,limpiar_callsign,motivo
+x5g6zJYKp0zwZgrd,CYUL,SKBO,100,201,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+ZD5NLZXxqKa0bpOR,CYUL,SKCG,698,698,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+abcd17cf-9fb5-4b02-a895-29169ba5f9ab,CYUL,SKCG,910,910,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+PlgewN7Oea2M3A0j,CYYZ,SKBO,204,204,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+1ZGv5LKdkN0ENO0P,EDDF,SKBO,930,930,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+KJOyNYnGQOl60MDl,EGLL,SKBO,922,922,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+OvQ143MR4b0PYLK9,KATL,SKBO,180,180,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+826WJVZ5pDLnkgWV,KATL,SKBO,792,792,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2dd353a7-0659-4b78-9d46-1eaf9b183f56,KATL,SKBO,858,858,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2fd37ae7-628e-41b2-a6aa-d683521029dc,KATL,SKBO,864,864,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5m78BjxeXyENYPNp,KATL,SKRG,284,284,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+0f3f9d1e-9abd-4ed1-9068-5fd596fc7745,KATL,SKRG,894,894,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Nn9z6qkG3AKdY9z7,KBOS,SKBO,160,160,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jXr16M9pQRvkJ8qg,KBOS,SKCG,610,610,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bbdba497-ee3c-45d3-b1b0-58719e722f83,KBOS,SKCG,906,906,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+plgYJeK0M2qwj56D,KDFW,SKBO,110,189,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+vQZbpv3EA0jQ86wL,KDFW,SKBO,113,113,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+No0wmV4gBry1NW9R,KDFW,SKBO,122,122,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+o4YB6JO9dVNjwYbJ,KEWR,SKBO,269,269,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+k0wK1DQjZgozaLjn,KEWR,SKBO,270,270,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xbEzQg1w4GyyApN5,KEWR,SKCG,532,532,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+04eL0xbO7Y3NOepL,KFLL,SKAR,652,652,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bz6eow17MjPgrexL,KFLL,SKBO,36,37,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+e7f2d554-a0cc-4c0d-abc8-56ad12df81c5,KFLL,SKBO,824,824,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+zJEbOr9pNq4vlMNr,KFLL,SKCG,794,794,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+149df27e-b060-4006-abec-23aed1df9d0e,KFLL,SKCG,932,932,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+me816g1n75dbL05x,KFLL,SKCL,408,408,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+07df8c8b-4315-4d00-92a7-62ded30d5d21,KFLL,SKCL,902,902,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+V63Nbop1M9aJZ3Lm,KFLL,SKRG,236,236,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+d37d6ae2-82ca-4629-abe7-05dcd136537b,KFLL,SKRG,880,880,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yGB3zEJ8OQ0QZr7m,KIAD,SKBO,228,247,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+rBJgMBz48JJ1p6LX,KIAD,SKBO,246,246,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+zq54N1O4DJB2gY7d,KIAD,SKBO,246,140,3,,no,duplicado interno en el mismo par ida/vuelta resuelto
+74b68cbc-d54c-4583-a623-82645b72efb2,KIAD,SKBO,874,874,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ee4548b4-1af2-4eae-b786-b277cafe0b02,KIAD,SKBO,878,878,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+pew4qGEZp6E3jN1y,KIAH,SKBO,508,508,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+dr9gae6Nr2lplgbO,KIAH,SKRG,782,782,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+59bc59c5-23b4-4326-bcac-588454e22486,KIAH,SKRG,934,934,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+JwrmJkR8zYPznAka,KJFK,SKBO,20,21,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+DmM9gbRoD4Xjead9,KJFK,SKBO,242,242,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bb2effaf-460b-4366-9d5d-01bfbfcfd225,KJFK,SKBO,814,814,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+dc32ad0d-7956-44f6-b35d-5378efb68903,KJFK,SKBO,816,816,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+d0BODa0MX8K1dPv1,KJFK,SKCL,61,61,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+4jEGM617zNqQWX95,KJFK,SKRG,42,153,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+6071bf70-089a-4852-93c8-083d5b56dc1e,KJFK,SKRG,826,826,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+6kReb6M3VeZMgYep,KLAX,SKBO,84,84,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+4f78a1ee-6166-4329-9bd8-6b91bdf0fd80,KLAX,SKBO,836,836,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+N6rpzzbL81Kl3pQ2,KMCO,SKBO,28,29,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3wjMy2D5JxR3vjAD,KMCO,SKBO,30,30,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+rvKjY4BaodyP4Oam,KMCO,SKCG,60,60,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+y0ZOyre63Y87Oqp9,KMIA,SKBO,4,9,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3ONwVGL23YozGBYm,KMIA,SKBO,6,6,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+AN1L0yLPw3laV1nE,KMIA,SKBO,8,8,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aVYOOrWBgD9OoYRj,KMIA,SKBO,137,137,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aOBn4pZjvk6XRn1G,KMIA,SKBO,138,138,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+287f124e-4b8c-44b8-99cb-18bbf323e3ce,KMIA,SKBO,802,802,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+986c420e-0ca5-4f19-9431-a359d73656e7,KMIA,SKBO,804,804,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+e5a916fe-84fa-4fb0-8ee0-a93502fc6121,KMIA,SKBO,806,806,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+10d1c8c9-4a62-44ea-9d5b-06a79dde38c8,KMIA,SKBO,808,808,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Rp0vgaOP6r2JBw1Q,KMIA,SKBO,810,810,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+53dmpaGw2LrakK8G,KMIA,SKBO,2617,106,2,NULL,si,bloque 2xxx incoherente para ruta internacional; se asigna numero libre no usado por Avianca
+Yd1aXvQW2N3VpRlK,KMIA,SKBQ,582,582,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ef3eac6d-b3aa-450c-81f7-7ef77cd10c92,KMIA,SKBQ,904,904,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jk89DKnwXNLODzBl,KMIA,SKCG,112,112,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+E9eBv6OVRxV93ejd,KMIA,SKCL,268,268,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ebd138c9-5a08-4daa-bce3-385ee76c119c,KMIA,SKCL,888,888,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+g8KPDVb2d98GwKGd,KMIA,SKPE,134,134,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+JeLljRpE89yjj7Wa,KMIA,SKRG,32,32,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+OpEGrY2dqQYQyJoD,KMIA,SKRG,220,220,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+NVPEy7YgNXrJbPBq,KMIA,SKRG,812,812,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+f422171c-ffdc-41d4-bf9f-b9ccc44244e3,KMIA,SKRG,818,818,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2fafba1f-c9b7-45fa-9eee-1518c34eb3f0,KMIA,SKRG,820,820,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xr75P4XkvlQNl0oN,KMIA,SKSP,486,486,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ERp5WZeJQ6WgD9jX,KORD,SKBO,96,96,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bfa6f07e-ff3d-48f9-9bd6-93207e22aad5,KORD,SKBO,842,842,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+wJGMayKAV8wjwGgQ,LEBL,SKBO,920,920,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+rvEMxzNP4BX4g30Y,LEMD,SKBO,912,11,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+XBlyaMvLxJk0dl96,LEMD,SKBO,914,47,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+AyY1paR7ve2jQ5Qg,LEMD,SKCL,856,15,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+BrmXbM5AdyW9dNJk,LEMD,SKRG,918,918,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+kNoPE9gyJ9l67Lda,LPAZ,SKBO,786,786,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+vVB17Llb9PKPqRGr,LPAZ,SKBO,788,788,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+logEjealOWG0zYW9,MDPC,SKBO,120,129,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3vev1ZbWyaoDVRb0,MDPC,SKBO,128,253,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+4zNnApoxR3gqbkWM,MDPC,SKBO,252,252,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+vMyOpkZN58kz7wXD,MDPC,SKRG,218,218,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+X4YVvpJ0jDLjAYog,MDSD,SKCG,342,342,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+021033a0-d3ed-49c1-9d3f-2894c42d61fa,MDSD,SKCG,832,832,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yz0o45ER36N4kaOA,MDSD,SKCL,234,234,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+mOpG2B1RexBaXzED,MDSD,SKRG,222,222,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+e9kGvQLo2eoeLlxp,MGGT,SKBO,264,165,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+VAw0GLne5kkW5zxg,MHTG,SKBO,274,274,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ePXOLRWdmPy0z8Qj,MMGL,SKBO,556,556,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZXj5RqG1zpg2E7NP,MMMX,SKBO,44,23,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+9APXLn2rKdRw5P0V,MMMX,SKBO,72,45,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+9YzA8PeqxBO6mGZW,MMMX,SKBO,798,73,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+095eca39-ef18-4d01-971d-935d55ffffcd,MMMX,SKBO,924,187,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+VqZ0p95EjzYlxZ3n,MMMX,SKRG,34,34,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+8cabcce5-6724-4c39-a05d-1bdb173eb870,MMMX,SKRG,822,822,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+exmvKnbMP5pLG3dl,MMUN,SKBO,68,69,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+WEeVaWOdbo1xmGky,MMUN,SKBO,258,258,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+89lE2GjPrMyNNgeo,MMUN,SKBO,796,796,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+48d287be-bc63-43f8-96bf-497e1bfa99a3,MMUN,SKBO,926,926,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2bYR9bENabyw1mkZ,MMUN,SKCL,780,780,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+899664f6-9c7f-407b-8fc0-0451c812e7fc,MMUN,SKCL,936,936,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+549ElAd0KNkWJznj,MMUN,SKRG,270,144,3,,no,numero compartido con otra ruta; se asigna par libre consecutivo (ida/vuelta)
+b479a1d9-c3d8-443d-b75e-6382a010ea4e,MMUN,SKRG,890,890,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bwVdnQva8gEg0ZrL,MPPA,SKRG,152,152,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+51KA96PewDmjWKGr,MPTO,SKBO,56,56,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+gqNWmA3kX89j4OYD,MPTO,SKBO,58,58,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+605333d1-8705-4a6e-bcf1-fbd4ca30c74d,MPTO,SKBO,830,830,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qWM3Dxqw4ZPlXA9R,MPTO,SKCC,492,492,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+10lr35OVMjq8265A,MPTO,SKCG,256,256,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2611e962-2045-4495-9d50-2b9f761bd891,MPTO,SKCG,884,884,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yQ6d0d4x7Rv1D6R1,MPTO,SKCL,308,308,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9c20084b-700e-4611-b313-7298471f3b97,MPTO,SKCL,896,896,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+W2eZJP59EkjWPelx,MPTO,SKPE,200,200,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+oz6knMxbwq1DmOge,MPTO,SKRG,150,150,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+69a9b4cb-54ed-4c3a-98c6-51dfa96679ef,MPTO,SKRG,854,854,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+JY0AyEnO0NGYzAvK,MPTO,SKSM,784,784,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+q09WYz02jkKmrljV,MPTO,SKSP,230,230,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+V4M6DRoKQbQBEaeN,MROC,SKBO,192,693,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+JAgaXxK5oZy93Qzv,MROC,SKBO,2613,699,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+plAo4Mjo2kQkXOBR,MROC,SKRG,646,657,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+d7e9dB53Pv0mJw9a,MSLP,SKBO,366,383,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+pzjQPY2856ngAkrY,MUHA,SKBQ,276,276,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2769354d-75d2-433e-b5e0-69e676c4edf5,MUHA,SKBQ,892,892,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+gv68dVpO0yDNd6XK,MUHA,SKRG,272,272,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+lag60DavAwBZlkBN,MWCR,SKBO,266,266,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2jkQ6LVQGEYayZPg,SAEZ,SKBO,88,88,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+8d326c20-1c25-44e9-8c7a-da21bad23d38,SAEZ,SKBO,840,8396,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+Oz74pgdYrlYpk7NM,SBGL,SKBO,262,146,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+ad9f78af-eb11-43d1-8312-75f7fc2a0cf2,SBGL,SKBO,886,886,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+b0o24Olk7yXV4jqK,SBGR,SKBO,86,86,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+866e9abd-11f9-4c50-8178-c35214597b5d,SBGR,SKBO,838,184,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+BOeJazjok5kJvwv9,SBGR,SKRG,186,186,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2ac7827d-98d6-4b60-a3c6-9fc8d1a06fa4,SBGR,SKRG,800,800,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xB0b6zeMJQ6w30k3,SCEL,SKBO,98,98,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9dmkyAV1pGpllaqB,SCEL,SKBO,194,116,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+3fd61d35-7c61-4d41-9bd7-47a9927acefc,SCEL,SKBO,844,844,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+d7fc9693-d8d8-4d57-bffd-89986526fd00,SCEL,SKBO,846,846,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+RQmNQjLAWKJWLoG0,SCEL,SKCG,132,132,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+24fbacf9-2fe1-4cee-875a-752d6d6213d8,SCEL,SKCG,852,852,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Y8qM4NQEz8Kjy1dz,SCEL,SKCL,650,650,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+e3ba75d8-9fea-4f6f-b0c7-d704f2c69504,SCEL,SKCL,908,908,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+81gjZqKW6lvJQ0MR,SCEL,SKRG,114,155,3,NULL,no,vuelta reasignada para mantener la convencion ida+1
+92212286-3cb7-40c5-88a2-69e2d211a1cb,SCEL,SKRG,850,850,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+w8pdrwXAndL8Qo3K,SECU,SKCL,290,290,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+OxBVgxGoZxxNGa2j,SEGU,SKBO,776,8384,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+BM1YX7YzKoZoRqzb,SEGU,SKRG,136,136,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+OoEPkROB037qJKeV,SEQM,SKBO,124,124,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+W7AKQkNXvO9ZNnXR,SEQM,SKRG,386,158,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+QbM3BZwGYzzAGRXE,SGAS,SKBO,212,212,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+KBVeGEm470ZLLgxN,SKAR,KFLL,651,651,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+nPV8xWP86BqDrVOe,SKAR,SKBO,1930,5212,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+O5BVz4XDKOP7KBRm,SKAR,SKBO,1932,8544,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+24jExXG8MXlrEbKk,SKAR,SKMD,8022,8022,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+LQPgJDNkzP555RvW,SKAR,SKRG,2986,9255,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+lWenQKlMo6q4bynv,SKAR,SKVV,4830,4830,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2K7ly1EW51ALbkwR,SKAS,SKCL,7966,8039,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+wyA0zARMK91vaBW6,SKBG,SKBO,1948,4805,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+joBl3kepxkpJp76Q,SKBG,SKBO,1950,4813,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+anoaO2v892znpY9q,SKBG,SKBO,1952,8563,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+AD5L4e12MkX9e5zr,SKBG,SKBO,1956,9465,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+rBjggnBzGrevKjaA,SKBG,SKBO,1958,9711,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+G0jDoa4w3x9edBlk,SKBG,SKBO,2619,4875,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+adL67W5GaW9lzMEN,SKBG,SKCC,9059,9059,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yrVjGlOxg7lZ3BzN,SKBG,SKCG,5992,9821,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+VBg7A9RLl96ZRznD,SKBG,SKMD,8004,8004,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Le8XEJ3qVJ6bzopk,SKBG,SKRG,2990,9246,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+K2xPGW3amVD2kPjp,SKBG,SKSM,9011,9011,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9EVJjnE95nYqXVmo,SKBG,SKSO,9001,9001,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+0bG8eEoLW68OaYM6,SKBG,SKVV,4866,4866,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jDqArABXpAPMm3mG,SKBG,SKVV,4996,4996,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+a4G65exYvw5AMVKE,SKBO,CYUL,99,196,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+7K3VoqzgEVvAdp0R,SKBO,CYYZ,203,254,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+DzBN3bNX8RNmjoVg,SKBO,EDDF,929,929,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZaLB5OVKNeD2zJxK,SKBO,EGLL,921,921,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+8l78V3DNaqxZ9eRB,SKBO,KATL,179,179,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+JxZyLNBb2deJPlvA,SKBO,KATL,791,791,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+7741df80-f3aa-4ff7-a40a-7c1da146a026,SKBO,KATL,857,857,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5af12e9b-04e9-45b5-9493-588fdddd1038,SKBO,KATL,863,863,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+kxlzvQE0BpjRWlM7,SKBO,KBOS,159,159,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ef22c5a3-5059-4194-9c66-f87d47725dc1,SKBO,KBOS,855,855,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+O19QAamYrp8ep9wd,SKBO,KDFW,109,188,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+jOB6Y0ZQqGnqk14n,SKBO,KDFW,121,121,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aYP4eKG9dWL4l74L,SKBO,KEWR,269,139,3,,no,duplicado interno en el mismo par ida/vuelta resuelto
+l0rMlPe1gYk70KPJ,SKBO,KFLL,35,66,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+df70aff9-62f9-4f88-8999-53442c34bff8,SKBO,KFLL,823,823,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+AgmOjJVw3xkWqMna,SKBO,KIAD,227,148,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+r16q9z13MmE9k6ZB,SKBO,KIAD,245,245,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+76ec1af1-bc2c-427a-bac1-718c4dcbce7f,SKBO,KIAD,873,873,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+b4472cb9-cd39-4ba0-9855-14b7863ac4c0,SKBO,KIAD,877,877,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+6xXoQjaM79a9Lqm9,SKBO,KIAH,507,507,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+e2kGrdyqmZ9Pk1nN,SKBO,KJFK,19,210,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+bPw6j8Q3AYN3jw1e,SKBO,KJFK,241,244,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+ee27c53a-fe67-49e7-a344-cdd1231af1a8,SKBO,KJFK,813,813,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aa461181-b289-4324-8342-82bc30d8d0a4,SKBO,KJFK,815,815,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+20RD0mkXq4ZOrR1O,SKBO,KLAX,83,83,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aabdd4b4-40a3-4ef6-bd8c-c5ec682b6751,SKBO,KLAX,835,835,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qr81ApWanr9W98QJ,SKBO,KMCO,27,118,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+YKrzYgE9q7pAJemq,SKBO,KMIA,3,126,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+B9wBKe9o3LqmXA15,SKBO,KMIA,5,5,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xyV1KkP1BeEpn85Z,SKBO,KMIA,7,7,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+NrlEwPjq961kgX7V,SKBO,KMIA,137,141,3,NULL,no,duplicado interno en el mismo par ida/vuelta resuelto
+eae0c081-fa69-4db7-8b1f-d1b96de0e9c3,SKBO,KMIA,801,801,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+3a0c8e6a-a58c-4f89-a008-e0b86b5d7d91,SKBO,KMIA,803,803,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9f58f26a-b9f5-4aab-9d08-c2d1f1b81851,SKBO,KMIA,805,805,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+06066365-bbb4-46ff-9e0c-4b71c61a94e6,SKBO,KMIA,807,807,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+E1L1YzOPpx6PkL7j,SKBO,KMIA,809,809,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+LPpQ6Kn5R2GJ2oxb,SKBO,KORD,95,95,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+d0066bbc-cd52-42de-b90c-d54ce98abe7f,SKBO,KORD,841,841,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+VGnZBA03xEKJYnDl,SKBO,LEBL,919,18,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+16k6nrlXxG2JMkxm,SKBO,LEMD,911,10,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+9wnmO4yR8275YL4b,SKBO,LEMD,913,26,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+GKlmRYngm1WkYEXO,SKBO,LEMD,915,46,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+7AnN55q4dl6MQNR5,SKBO,LFPG,927,927,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+p7Jb7werpbWYlqrn,SKBO,MDPC,119,119,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+37MNvmqgOlVzVMvA,SKBO,MDPC,127,127,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+J4a0kvYZ6wWJWmyA,SKBO,MDPC,251,251,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jywVDMmVlQ8YYkMp,SKBO,MGGT,263,164,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+nqRr351qJ66vZmWd,SKBO,MHTG,273,273,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+8E3Vv8jLDljA83m6,SKBO,MMGL,555,555,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+lG6PkKzYxEl1Qbo5,SKBO,MMMX,43,22,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+kO3EpkADLR5DDjmb,SKBO,MMMX,71,71,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9wnmpAmQyYB8KRjz,SKBO,MMMX,797,797,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+b7bf2ea3-a03f-484e-a40e-371d6960a950,SKBO,MMMX,923,923,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+RMKXywAORd7LroxX,SKBO,MMUN,67,67,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jvwz942rkpNqv0bm,SKBO,MMUN,257,257,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+WpzqM7Yg41oWKzeP,SKBO,MMUN,795,795,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+10322312-259a-4891-ab46-d905f5f6214a,SKBO,MMUN,925,925,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+6VkAKP7J9MWN8maQ,SKBO,MPTO,55,40,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+dG1Jmw50l7r46yxM,SKBO,MPTO,57,57,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+1ee50904-8de4-4f92-a1c3-82fe57655d73,SKBO,MPTO,829,829,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+JBVgA7dYbybKJRyo,SKBO,MROC,191,692,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+o58JJ5zrMob6x89B,SKBO,MSLP,365,70,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+xvQrd43JKzzDdr3O,SKBO,MWCR,265,265,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+z8R6Lekz4MJaml3K,SKBO,SAEZ,87,87,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+4f126540-c9c6-4ff6-b2b6-42f4369efeea,SKBO,SAEZ,839,8395,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+zM3o1JA5byyQ5LqN,SKBO,SBGL,261,261,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+b90f2dc1-ec69-4bfb-b936-f4a01ec5dcc6,SKBO,SBGL,885,147,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+8bnYMvLDxowlNnd4,SKBO,SBGR,85,85,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+6174e16c-26be-4137-bebd-049fa76885d4,SKBO,SBGR,837,161,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+om5j7dlRA878KgMK,SKBO,SCEL,97,97,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+G07yBmkaVnV2DozV,SKBO,SCEL,193,115,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+c9b38ac3-faaf-4b15-bc99-e62b3da6ea0c,SKBO,SCEL,843,843,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+7e62baa4-298c-4ba8-abbd-59255704e119,SKBO,SCEL,845,845,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+dmK0L9Jo699a1Kq0,SKBO,SEGU,775,8383,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+VgOvv0JrVybw7O2n,SKBO,SEQM,123,125,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+vwy6k8QDj66QW54z,SKBO,SGAS,211,213,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+nzqmrmRXx9GR96Z5,SKBO,SKAR,1929,4867,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Q0BYXRDeqEpozZgv,SKBO,SKAR,1931,5213,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+bEyB3VK7xV7w761j,SKBO,SKBG,1947,4804,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+wG3j0W9NgWNMkJvM,SKBO,SKBG,1949,4814,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+pXParRMOL4zW4aDr,SKBO,SKBG,1951,8562,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+DVMQyOepaN7NjM4Y,SKBO,SKBG,1955,9466,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Nm79DKyvQaO6LrE9,SKBO,SKBG,1957,9710,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+PMXV9NWxvOB07Z1x,SKBO,SKBG,2618,5216,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+MgElBbkVpbvg9oky,SKBO,SKBQ,1909,8524,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+JnmPPaREvaRQ0mYp,SKBO,SKBQ,1911,8574,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+bgjrMn6dlnam49oP,SKBO,SKBQ,1913,9520,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+5QBG0X7lyXq1GwyP,SKBO,SKBQ,1915,9524,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3qBgdL07pkR99zor,SKBO,SKBQ,1917,8434,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+fb422e34-2109-4092-b396-415340251c00,SKBO,SKBQ,3003,8446,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+nQoR1kLGDkQaLM3d,SKBO,SKCC,1881,5226,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+xVk2MmyRBd424N1Y,SKBO,SKCC,2614,5232,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+x35vEM3yrMybMOLd,SKBO,SKCG,1903,8426,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+02WM6QlbBaA9VKJL,SKBO,SKCG,1905,8472,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+VpLz4P1V8P4GmEWd,SKBO,SKCG,1907,8480,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+427e9992-f422-470c-bbfe-0b58be4c4607,SKBO,SKCG,3013,8490,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+dLB0jYMla5b65nK9,SKBO,SKCL,1109,8421,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3valGnPaQpkAMAyk,SKBO,SKCL,1111,8523,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+8y5M6NDaZ2b2QmYo,SKBO,SKCL,1113,9203,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+MQq9Q1JpW1v1Pqk3,SKBO,SKCL,1985,9205,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+NOe6OQa1oQ4NJGKo,SKBO,SKCL,1987,9221,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Zg8al8OR7x8ABaN7,SKBO,SKCL,1989,8409,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+arZlr0oZK30Ok9Xm,SKBO,SKCL,1991,8411,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+DV8ZrAQR4Pggo81W,SKBO,SKCZ,1257,8040,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+7leGR8Z2Ad8DAP4O,SKBO,SKEJ,1939,9701,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+GOVwgQxR2kqELVo2,SKBO,SKEJ,1941,8041,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+Bkwa2ZVGlnzbze37,SKBO,SKEJ,1943,8042,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+qdNLd5y2x8WEbNJr,SKBO,SKFL,1945,8043,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+9aoYe6NrndL0noWv,SKBO,SKIB,1937,4849,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+qdmpOgoaMGWGPBVx,SKBO,SKLT,1231,9488,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3MEbXx6qlxwJkZao,SKBO,SKLT,1975,9491,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3RoMDv9VXvmME7zk,SKBO,SKMD,1897,8044,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+eVGYzDrxgDRbvAYr,SKBO,SKMR,1887,8508,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+4qZ91n6QKRn7QJew,SKBO,SKMR,1889,9396,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+oa6NMB3o8BJnX5Jr,SKBO,SKMR,1891,8500,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+e10mJPkqEvY6yXna,SKBO,SKNV,1933,4815,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+aA1J7WOx9AgEmJZk,SKBO,SKNV,1935,8045,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+z2mvA0OKG48xewD8,SKBO,SKPC,1001,8046,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+pwGvkOY1VvB657bD,SKBO,SKPC,1953,8047,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+7VKr4N3bYN1oqRpL,SKBO,SKPE,1921,4803,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+1YloOxR23xomnl43,SKBO,SKPE,1923,8539,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+LmRn3ZLYd8pQxwdq,SKBO,SKPE,1925,8407,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+qY3Z4GwMdz5qPo7r,SKBO,SKPE,1927,8515,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+VgAKVld2o6OzJR1M,SKBO,SKPP,1919,8048,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+6J5BOzawJr9lBPAb,SKBO,SKPS,1243,8457,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+ez6jMdeQ1d53aw39,SKBO,SKPS,1971,5087,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+orJWQroeprgeWPvN,SKBO,SKPS,1973,8587,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+e5Q1526God862QOa,SKBO,SKPS,2609,8049,2,NULL,si,bloque 2xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+1PrBp0kKoGx49Jw5,SKBO,SKRG,1209,9242,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+OKPxqoyRm4ddy70Z,SKBO,SKRG,1211,9304,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+xdbynJwP46MZjLRN,SKBO,SKRG,1213,8432,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+LRAjoVl6KVe4W7Mz,SKBO,SKRG,1977,9232,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+r0E3VezGaewA6JVw,SKBO,SKRG,1979,9234,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+jwlxzk5pakKpOm4k,SKBO,SKRG,1981,9252,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+kmrNLb5YQ4bJgKoP,SKBO,SKRG,1983,9260,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+p0YwQo6b1oRQajO3,SKBO,SKRH,1893,8412,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+kZBaZ4Y5V4maME7x,SKBO,SKRH,1895,8428,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+MD2m1OnzwKY0g2y5,SKBO,SKRH,2620,8590,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+oXbrpwoxywEjzNjQ,SKBO,SKSG,1899,8050,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+bKl2LD1XvGPb7Jze,SKBO,SKSM,1265,4822,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+YpbprlPkplx1emDM,SKBO,SKSM,1965,4832,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+MVBbxzQ7azZDJ0Q5,SKBO,SKSM,1967,8486,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+eQNGoKvzZK97JNJg,SKBO,SKSM,1969,8484,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+7q0q4pJq1xPlnBNy,SKBO,SKSM,2603,8496,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+NL8nn25YK2XGK8Q5,SKBO,SKSO,1901,8051,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+YV6bRmKGd5bEz6Ln,SKBO,SKSP,1275,9376,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+YZ0EQNx9qNL4g0mo,SKBO,SKSP,1959,9774,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+6bXMrwD6Mwe0OEJV,SKBO,SKSP,1961,9776,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+v0YKq2rBl2g9dPeR,SKBO,SKSP,1963,9778,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+0nKALWd04WN6oGWA,SKBO,SKVP,1883,8576,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+mKgWKpeO6pDKJgJr,SKBO,SKVP,1885,8580,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Pr51NXPZvEGVvnNW,SKBO,SKVV,1003,4810,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+X1kYbBDQqp0On5wK,SKBO,SKVV,1005,4824,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+WpZ4WDmPMDggYGY5,SKBO,SKVV,1997,8052,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+1EZx1rwOvL5rY7Lv,SKBO,SKYP,1009,4873,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+QWPzr7QE8lG4dPbd,SKBO,SKYP,1011,4895,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+gZ1jJEnGPEvel1M4,SKBO,SKYP,1993,8053,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+qLW91n7RgaBVkWRe,SKBO,SKYP,1995,8054,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+4dbR5dlPv42Dz8wZ,SKBO,SLLP,239,239,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+025db26a-6983-4697-baa7-d45e7e6fed81,SKBO,SLLP,881,881,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yp514jn0WNd869R4,SKBO,SLVR,777,167,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+0ErY1y87xR4RBr3N,SKBO,SPJC,53,53,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+8LnBo01QMNoEbe1y,SKBO,SPJC,101,49,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+28edf8a5-d46c-4e53-93d1-cd05f37e7ac4,SKBO,SPJC,827,51,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+yWOZYk4x0e3pDG3a,SKBO,SUMU,107,107,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+c9cfb006-5744-4c08-99f6-cf4bb74d1b6a,SKBO,SUMU,847,847,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2Mg0vwjepZwDDA5w,SKBO,SVMI,223,223,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZbyeE307Omd1LyB2,SKBO,TJSJ,259,214,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+abAe7K1obdZk1OjZ,SKBO,TNCA,89,232,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+ryRgykP6LkkbNAZg,SKBO,TNCA,789,789,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+x0zWJL6Q1NeGkPgw,SKBO,TNCC,77,92,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+178afe40-1147-400e-8a84-c63086a9e9da,SKBO,TNCC,833,833,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+D4mDkV4yeNJeWA9o,SKBQ,KMIA,581,581,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+567170b4-17f8-4335-a2fa-d57cc8636e5a,SKBQ,KMIA,903,903,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xKgn5A7E23LpwVBv,SKBQ,MUHA,275,275,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5a1a3b99-b0d1-4f5a-b602-56b64d9aa091,SKBQ,MUHA,891,891,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+PaBK92RWP2qg1JRx,SKBQ,SKBO,1910,8525,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+p7dyZLQnBLQOXmAy,SKBQ,SKBO,1912,8575,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+5BK1oMlmRMdZZ3x0,SKBQ,SKBO,1914,9521,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Rg3onwZX0wMwgJEq,SKBQ,SKBO,1916,9523,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+zrg2wMYKjR3m8GE6,SKBQ,SKBO,1918,9525,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+37c30c51-b860-4c53-b74e-e8466547f9c4,SKBQ,SKBO,3004,8419,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+26347657-f2f7-4ac5-b6ea-dc4e332ceda6,SKBQ,SKCL,3018,8055,2,,no,bloque 3xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+KgJyzGvx3GvKV1Xv,SKBQ,SKCL,7990,8056,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+1r7AYqRgWqOQL7jW,SKBQ,SKRG,2984,8545,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+EJR4W3M4e36E01pQ,SKBQ,SKSP,9009,9009,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+1mGWePLvw76jmVjE,SKBQ,SKVV,4916,4916,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xYem66Qp5J6Y5mVl,SKBS,SKMD,8028,8028,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+dQnD59JmPd798EJb,SKBU,SKVV,4898,4898,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+o86VNP2QaK2M960x,SKCC,MPTO,491,491,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+m0Gy1572O5vR6GRJ,SKCC,SKBG,9060,9060,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MgY95Gl1LGNWVY9a,SKCC,SKBO,1882,5227,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+2KE2WKj6OKxWeYnk,SKCC,SKCG,5556,5556,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ypVzEKWnMKWGMdJa,SKCC,SKCL,7992,8057,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+n67zraWJdaQ2a73z,SKCC,SKMD,8038,8038,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+d2PGd1kJv1xjwYO7,SKCC,SKRG,2602,9507,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+kvObJeEL5pAlBOrP,SKCC,SKRG,2615,9511,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+RprNl8ZGJVjpGNqz,SKCC,SKSO,9005,9005,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+zXoEzagneaqyjNGL,SKCC,SKUC,9147,9147,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+E8OYdnOqK8mEv5ev,SKCC,SKVV,4864,4864,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+W36bbKE5ja8Wo6Ro,SKCG,CYUL,697,697,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+f5ee1785-11e3-468a-bbcc-5ee7e2297ee1,SKCG,CYUL,909,909,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Md8mxPGAgzk96w7j,SKCG,KBOS,609,609,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+23d94464-3683-4d59-8549-b81d96fc7dc6,SKCG,KBOS,905,905,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+vVykBWb8JXbrx9bX,SKCG,KEWR,531,531,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+pvry9zlRY4kP6rE0,SKCG,KFLL,793,793,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ec5e99c3-55eb-4289-b9a2-1dfdd574638d,SKCG,KFLL,931,931,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZQmJROVP7Z4PJmqL,SKCG,KMCO,59,59,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+BL3V9dp4BPj9VRo2,SKCG,KMIA,111,111,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+kbqYg2YRlZvJ4mL0,SKCG,MDSD,341,341,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+LYg34YBPLxO9PjaG,SKCG,MPTO,255,255,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9aa768a3-5a88-461b-96ed-88e1f62efc28,SKCG,MPTO,883,883,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+LPOaYQ4Pa65PmOzN,SKCG,MROC,785,785,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xOVWZqJ2oyGLnmaP,SKCG,SCEL,131,131,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+f901e09a-3d7a-4182-a188-ed46f1b09a10,SKCG,SCEL,851,851,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+JlolW0lmd0bBOAeR,SKCG,SKBG,5991,9820,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+JP8DzLwO1LO9VlLE,SKCG,SKBO,1904,8423,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+BxeVNjgGYjKB8eq6,SKCG,SKBO,1906,8537,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+rRZN5m7Jdm5mmn0L,SKCG,SKBO,1908,8559,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+qnRByZE5pZyN574v,SKCG,SKCC,5555,5555,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jgnJPa9YkQN5yZ9k,SKCG,SKCL,7002,8569,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+GLAbNW2reWN1kAlD,SKCG,SKCL,7004,8058,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+OKR5b8ZBy8abEGqd,SKCG,SKMD,5995,5995,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qXW97avmPndw8zpN,SKCG,SKMR,5005,5005,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yVayjExggJZW5D0o,SKCG,SKPC,0,8059,2,VHR5,si,bloque 0xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+VQZ6PN147NP9Yl8e,SKCG,SKPE,5223,9389,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+zN68w9blg9N3qEla,SKCG,SKPE,5997,5997,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZyJMkMp83MrGgVWl,SKCG,SKRG,2978,8433,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+db320086-30f1-4000-80af-ebd844a922f1,SKCG,SKRG,3016,8511,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Z1qmZ6zPNAJpABvw,SKCG,SKSP,5001,5001,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+r7BZbLX1RqlQ0BEZ,SKCG,SKSP,5003,5003,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+WJmw5dqArdpg0PL8,SKCG,SKVP,5993,5993,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+gkjzbA4ZeopkQjRx,SKCG,SKVV,4914,4914,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Q9WXBVzJ9KQgD0KM,SKCG,SPJC,237,237,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+85262041-e8f8-4ded-87e8-c4b0f93945d0,SKCG,SPJC,869,869,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qOEeLmKR9r0OnMWe,SKCL,KFLL,407,407,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+899b1c7d-75e0-4441-aa15-ee8ea310930b,SKCL,KFLL,901,901,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Lp0ovNQ9Y5zOMoJ6,SKCL,KJFK,61,62,3,,no,duplicado interno en el mismo par ida/vuelta resuelto
+d5bb3558-22bd-45e3-90c6-abfcf221e4aa,SKCL,KJFK,831,831,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+mKJYq1Rly7lN2J47,SKCL,KMIA,267,267,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+8ec2d399-ac94-4546-be8d-b84fd5462b1d,SKCL,KMIA,887,887,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+VNAV67dzYGOgRAdy,SKCL,MDSD,233,233,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+EZMeJZx3BZn1ojG3,SKCL,MMUN,779,779,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+a752333b-826a-4cd9-93a2-86852b0e0c4d,SKCL,MMUN,935,935,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+p5Ej2p3R90nVAEmr,SKCL,MPTO,307,307,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+00d8705a-4196-4e80-babb-c9f89b238a5d,SKCL,MPTO,895,895,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+n4ZA6qz8lK5DVWql,SKCL,SCEL,649,649,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+f0e517f1-911e-446a-9942-8fdf275295b8,SKCL,SCEL,907,907,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+54a8Y6qrgEJ1vzYJ,SKCL,SECU,289,289,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+deLwmW89kWglmXkw,SKCL,SKAS,7965,8060,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+rzwJgJzjpr1Go0E2,SKCL,SKBO,1110,8422,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+YZ7G4x6M0wrW4ePK,SKCL,SKBO,1112,8522,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+03M3DdEenX5AK7mN,SKCL,SKBO,1114,9204,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+BdXDb7K6O7B1Go0L,SKCL,SKBO,1986,9220,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+gLNDl6eAV6mkzNQ3,SKCL,SKBO,1988,8416,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+ARnMG9LxY9dJyZDb,SKCL,SKBO,1990,8418,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+kLyGp7RWj77X2Vv7,SKCL,SKBO,1992,8454,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+RpgmQL3kAYrbLg89,SKCL,SKBO,2608,9218,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+06549143-fca1-494f-8b0f-7ad522829046,SKCL,SKBQ,3017,8593,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+vGNe43QAl3Q2J0gP,SKCL,SKBQ,7989,8061,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+Q2AKbgk3Ggk2qzO0,SKCL,SKCC,7991,8062,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+b621Jygp5Pl1PG7E,SKCL,SKCG,2611,8570,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+eb50bb8b-1ab4-4ec9-95ba-e6af2e3cc85e,SKCL,SKCG,3001,8063,2,,no,bloque 3xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+MORxVKew9BpzW8b5,SKCL,SKCG,7001,8064,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+R5LemAxjJAmO0LjM,SKCL,SKCG,7003,8065,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+n2pMKE1xjEQd6ry6,SKCL,SKCO,7797,8066,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+7eGnml5kxlvmpP6o,SKCL,SKFL,7771,8067,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+6GEWkr3VoroPQEM7,SKCL,SKGP,7907,8068,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+aRKk7yJevy37rKd0,SKCL,SKIP,7389,8069,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+k2LMK9WdP9PO50gz,SKCL,SKMD,7913,8070,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+VM7pmgoWNY8O03kG,SKCL,SKNA,7419,8071,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+QeRwB7J6G7kAwOdX,SKCL,SKPI,7027,8072,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+QqZMnbDmjb2jn59G,SKCL,SKPS,7993,9295,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+6oNg5rGM1rkpMmzW,SKCL,SKRG,2980,8448,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Yedxj39Y53NE9AMa,SKCL,SKRG,2982,9382,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+38cc5c1c-c570-4f48-92e0-a47a123c6084,SKCL,SKRG,3014,9384,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+g6owwWz4nWYRLoZr,SKCL,SKRH,7995,8073,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+4AXE6Z9aNZDNZJol,SKCL,SKSM,7997,9222,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+QEkEpZxm6nqnbNqY,SKCL,SKSP,7005,9614,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+MEqPN3ZxX3YE49e0,SKCL,SKUI,7951,8074,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+Vkg7VbrEObqYjP3o,SKCL,SKVG,7047,8075,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+9zKNJZWX1wEx5KZO,SKCL,SKVV,7007,8076,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+1KraQX7YOXBoBrxW,SKCL,SKVV,7773,8077,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+dGPmgzL6p7KzzyBw,SKCL,SPJC,389,389,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+781df2db-db11-4056-8b5e-77bbea6730d2,SKCL,SPJC,897,897,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+rgNYl7pDM7dk3KmZ,SKCO,SKCL,7798,8078,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+7QNl27njArKD16mP,SKCZ,SKBO,1258,8079,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+l3ReQqAXLqr8aRPq,SKCZ,SKMD,8018,8018,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MBmw9d5L14040yZv,SKCZ,SKVV,4908,4908,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2MVN29d3R9OQAVbp,SKEJ,SKBO,1940,4828,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+arg3B4PkoRv7rO4v,SKEJ,SKBO,1942,9700,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+DaKW2DOow4n0vr0p,SKEJ,SKBO,1944,8080,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+gbEyekWyXL9DPEQx,SKEJ,SKVV,4890,4890,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MKmdBlbv4NMe7rGD,SKFL,SKBO,1946,8081,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+rpynKjpvGjRa3mV8,SKFL,SKCL,7772,8082,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+zklNrV32gDpRZlbp,SKFL,SKVV,4878,4878,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+NlK7YL6eq4kaEAvB,SKGI,SKVV,4888,4888,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+VPzYN6kx5q6y9Yb1,SKGP,SKCL,7908,8083,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+E1nGP4m6dMakVZOY,SKGP,SKVV,4902,4902,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+R4MaYBV3vykb7Mym,SKGY,SKVV,4854,4854,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+eJbpKXdvnrPWNmoV,SKIB,SKBO,1938,8084,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+KbE7kyagLyA6zE5M,SKIB,SKMD,8010,8010,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Ga6jbvyxMYNYzjLW,SKIB,SKVV,4922,4922,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+goVl9g2yegPPzm3r,SKIP,SKCL,7390,8085,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+9YAyxNX2M4qQ9meR,SKIP,SKVV,4924,4924,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5O0PvYgNPY2jBVxk,SKLC,SKMD,8034,8034,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5myMx8e3vAZ5GB6e,SKLC,SKVV,4904,4904,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+LNzodyxK5rqZMVkl,SKLT,SKBO,1232,9489,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+A1qdbpNedpZ6BJ7W,SKLT,SKBO,1976,9492,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+vAYen5W0254a2NV8,SKMD,SKAR,8021,8021,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+KWVOp9bxg9J0pLQj,SKMD,SKBG,8003,8003,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+0yLP2erQmeElKYxG,SKMD,SKBO,1898,8086,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+MDP1bJG0kJkANEa6,SKMD,SKBS,8027,8027,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+k5O2EK89gKw39A2x,SKMD,SKCC,8037,8037,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+reGepoRb5o3nyX9P,SKMD,SKCG,5996,5996,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qD8QAyvZkykGO8y1,SKMD,SKCL,7914,8087,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+92ZQnAzGkA4EVyE8,SKMD,SKCZ,8017,8017,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bXPqkb0BXbvaG3z1,SKMD,SKIB,8009,8009,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2x7yYW82xWr4n7yr,SKMD,SKLC,8033,8033,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+gaVNxaYZRavvXO7G,SKMD,SKML,8911,8911,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bKnVZvdO7vDWVndM,SKMD,SKMR,8035,8035,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+NWxEGpPYoRpBVlo5,SKMD,SKMZ,8023,8023,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+dx689gWKQgO39GEk,SKMD,SKNQ,8015,8015,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+OxmqQ3xWZ3EVOmRM,SKMD,SKNV,8011,8011,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+noXnoqLWJqj5QbRW,SKMD,SKPA,8005,8005,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qlJBrL1kmLenwJ9W,SKMD,SKPE,8001,8001,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+1LWeY2b062kR4WO3,SKMD,SKPP,8013,8013,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+QxModzRK4zxQlVYK,SKMD,SKPS,8019,8019,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+D0YjM4qQE418lJ7o,SKMD,SKSG,8007,8007,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+WzZD78gPn8nJQMle,SKMD,SKTL,8025,8025,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+lNJ1OGVkeGeXEy96,SKMD,SKUI,8029,8029,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Vd1LPQq6GQ7oZ1Av,SKMD,SKVP,8031,8031,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+N390BYZXVGWGkPqb,SKMD,SKVV,4842,4842,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+g73o94ylq4qBAklY,SKMD,SKVV,4998,4998,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+58X90vPABveG1pqv,SKML,SKMD,8912,8912,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MxB9pO5ALO72pew3,SKMR,SKBO,1888,8509,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+DaMZ1eYg9eZYDP8l,SKMR,SKBO,1890,9397,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+BLmJ2pleVpjzGm1M,SKMR,SKBO,1892,8459,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+9GJRK0YEw1W5pxmy,SKMR,SKCG,5006,5006,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+GbXynbyzWbEBmgAP,SKMR,SKMD,8036,8036,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZxAeWeJyLe49K32N,SKMR,SKRG,2994,9277,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+kGmWoZwdArZ2BagR,SKMR,SKVP,9013,9013,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+gyqooQEN2MXd4qrx,SKMR,SKVV,4906,4906,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9EVy9N1PkY3d0Vbr,SKMU,SKVV,4846,4846,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MrjKb2kAe2nBYWkB,SKMZ,SKMD,8024,8024,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+J0ZE8ylpDB135en4,SKMZ,SKVV,4884,4884,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+XLoAkx6mPxjxeMK8,SKNA,SKCL,7420,8088,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+EWa2BnWven9WDax1,SKNQ,SKMD,8016,8016,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bXmZ712W5l3k1AK0,SKNQ,SKVV,4844,4844,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+zPY138X9Pj5O3gDQ,SKNV,SKBO,1934,4816,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+x3jmxAaeORqrZbyG,SKNV,SKBO,1936,4834,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+b137Ln1xDgBKxYRX,SKNV,SKMD,8012,8012,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+q8zWJmWaMNlAAn6M,SKNV,SKVV,4836,4836,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZnRpwXNL8X4DxOPL,SKPA,SKMD,8006,8006,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+AZYlRQK7pMmZbL4g,SKPA,SKVV,4870,4870,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+WemY1pzD9JRvlmyx,SKPC,SKBO,1002,8089,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+wLX9zqJyKaEe58bG,SKPC,SKBO,1954,8090,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+e469mJ8zl09Yp6Ew,SKPC,SKVV,4002,4002,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+O1LMOYDyGnAxoVbK,SKPC,SKVV,4858,4858,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jRJE56Xj7kG8gJEl,SKPC,SKVV,4862,4862,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+RZzLNqvdVDgvgYk6,SKPD,SKVV,4848,4848,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+13jab5vZ2r70560a,SKPE,KFLL,751,751,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Qw1Gojb4l0Qbx1Ng,SKPE,KMIA,133,133,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Olj5DmlLqEXXeVEa,SKPE,MPTO,199,199,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Xmk284yRz4GMdj5Q,SKPE,SKBO,1922,4802,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Wo1Xx9bWv9pA41nM,SKPE,SKBO,1924,4852,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+O1MWJBjgQl0PzYjW,SKPE,SKBO,1926,8538,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+GkM60Bxw8jb5gPma,SKPE,SKBO,1928,8504,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Ez5Dx8QyR8xzK5Gy,SKPE,SKCG,5224,9388,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+LVAGDg3l7Wj31rMQ,SKPE,SKCG,5998,5998,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+RK7zGkoQEkZ93bN3,SKPE,SKMD,8002,8002,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+WokjZ8Epv2rQqk80,SKPE,SKRG,2605,8404,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+QDK3Qalq4aDPbonw,SKPE,SKRG,2998,9264,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+b385lpe94ZXQlnxr,SKPE,SKVV,4856,4856,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9alz1zjvG38OzBVj,SKPE,SKVV,4886,4886,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Ml0Xor4JwrXKzA5x,SKPI,SKCL,7028,8091,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+1o9EqxojVWMe29jg,SKPI,SKVV,4920,4920,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5KeavQkjKJBKZq6E,SKPP,SKBO,1920,5225,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+y43Xwq2K9qodg1Xk,SKPP,SKCL,7166,8092,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+kaLpQE7y8EGyqAzn,SKPP,SKMD,8014,8014,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MLkgZy62e78AePW8,SKPP,SKVV,4838,4838,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+7PV9MnPOwyeYXV9E,SKPS,SKBO,1244,8456,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+yPOe1ny5qnXmyOMZ,SKPS,SKBO,1972,8584,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3Oall5rbP5VwwaPN,SKPS,SKBO,1974,9402,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+N7p2goXlPM4xmJPr,SKPS,SKCL,2610,9294,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+vqK78A9BxA5vlrJ2,SKPS,SKCL,7994,5090,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+jvmkZpdjqpGMGP0V,SKPS,SKMD,8020,8020,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xkY8kjwJ5jgz6OQK,SKPS,SKPP,9007,9007,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+kENdp8GZkPyRJNLb,SKPS,SKRG,2992,8467,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+PmbrxEn6KMvZ7p8y,SKPS,SKVV,4900,4900,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+YewmenOYEnmVMw0Z,SKPV,SKSP,9016,9016,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+7x0qkOJnZ6QGAmaD,SKRG,KATL,283,283,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+7baa5263-34f6-4c66-9dc7-e1a62b8a975f,SKRG,KATL,893,893,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+j0J40A4Mmdw1oJXb,SKRG,KFLL,235,190,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+da22e879-1cd7-43ee-992c-e33c555020f8,SKRG,KFLL,879,879,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aXRQXKY8l3p4nGPe,SKRG,KIAH,781,781,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ed90d41f-9b23-4d21-b626-8034d36216dc,SKRG,KIAH,933,933,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+KMjMWVBYNv5NmaQy,SKRG,KJFK,41,41,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+a298a9a5-1cd9-4917-a99e-4c8c425e714e,SKRG,KJFK,825,825,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+83jv62oZwVDA8jV2,SKRG,KMIA,31,31,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+dbqZNx42LBBp6q2x,SKRG,KMIA,219,219,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MlXlWeVwp206PZqJ,SKRG,KMIA,811,811,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+d41f6487-7bda-4654-bbad-77164dd3b96c,SKRG,KMIA,817,817,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+66d6052f-b212-4f7d-ba86-34e681af8ba0,SKRG,KMIA,819,819,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+85rR3yMAXl26GwPn,SKRG,KMIA,2616,130,2,NULL,si,bloque 2xxx incoherente para ruta internacional; se asigna numero libre no usado por Avianca
+oWGvl0M3147nVrVv,SKRG,LEMD,917,16,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+QJ6XBQq5ERY3NgLx,SKRG,MDPC,217,217,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+3QOozBreJkBYyVBN,SKRG,MDPC,220,142,3,,no,numero compartido con otra ruta; se asigna par libre consecutivo (ida/vuelta)
+ac059432-2745-493b-9d6b-5168d3601c78,SKRG,MDPC,859,859,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+3kmqbXq8vPXldVgv,SKRG,MDSD,221,221,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5c5b4bfd-6b78-4d22-b51d-eba53304dd08,SKRG,MDSD,867,867,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qNLk63N4J1nW0YlG,SKRG,MMMX,33,33,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+7938f4c5-e650-4521-bbab-fdd48fe7d549,SKRG,MMMX,821,821,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yX1ZbMdpwxpOG1Nl,SKRG,MMUN,269,143,3,,no,numero compartido con otra ruta; se asigna par libre consecutivo (ida/vuelta)
+0a8c3b82-4394-484f-9568-1417e38570d3,SKRG,MMUN,889,889,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+RbkNBvQRdMA6rknx,SKRG,MPPA,151,151,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+WKXKyEOv0Zaj3A2q,SKRG,MPTO,149,149,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+56ee3bcb-717f-477d-9e59-51612ed46d84,SKRG,MPTO,853,853,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+PNXlNOnKpMLGB5G2,SKRG,MROC,645,656,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+V1879oXPGzjmMZDl,SKRG,MUHA,271,271,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+wVjaE80m6L6e9jAG,SKRG,SBGR,185,185,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+OQj1Az7oZEBbPj84,SKRG,SCEL,113,154,3,NULL,no,numero compartido con otra ruta; se asigna par libre consecutivo (ida/vuelta)
+a59c415b-c5b2-4c99-8673-578409dab855,SKRG,SCEL,849,849,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+3Q79r04poaeR5LNm,SKRG,SEGU,135,8399,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+YjmBAq9XQnjPzNW1,SKRG,SEQM,385,385,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+zKOxxVBPGVPVBO52,SKRG,SKAR,2985,9254,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+0Yj81NYWlNa7gKMG,SKRG,SKBG,2989,9247,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+QVYEKLBWmq9A3kZ1,SKRG,SKBO,1210,9243,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+bkeb9vL1B2ar5pGM,SKRG,SKBO,1212,9303,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+D5PoV2pGkAbxewGb,SKRG,SKBO,1214,8401,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Y8RKgBQXdBDMqRGZ,SKRG,SKBO,1978,8405,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Za1qQwVqWw9D01OR,SKRG,SKBO,1980,8427,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+BkJmnaRy9a6X6YK1,SKRG,SKBO,1982,8435,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+g8qAdwa0WLwVEZxR,SKRG,SKBO,1984,8451,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+9YEoKLYBdLM3NEAv,SKRG,SKBQ,2983,8546,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+96Ja51VD0j5wwJ0E,SKRG,SKCC,2601,9508,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+rv7m4OrxgO23npDx,SKRG,SKCC,2999,9510,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+2bZRQzDR8z5GpLzj,SKRG,SKCG,2977,8470,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+AkqOQPDYgPW1eob1,SKRG,SKCL,2979,9211,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+1zGzEokpgo90A89Q,SKRG,SKCL,2981,9431,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+zjXqaAnVRwA3gqdR,SKRG,SKMR,2993,9276,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+zm98KveqpvNDJA6B,SKRG,SKPE,2997,8403,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+mYgEY3nwOJ0vbgWB,SKRG,SKPS,2991,8466,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+aNLmpaWMdajBJVOb,SKRG,SKRH,2987,8516,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+WgeBpPE6yP85mRGN,SKRG,SKSM,2975,8436,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+JWdJ2W3AQqX2ld5e,SKRG,SKSP,2606,8440,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+y3WjkGpBbGe8XnNA,SKRG,SKSP,2995,9348,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+ojO3XMKE0ZnYxJW8,SKRG,SPJC,393,393,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+a1de6be6-c90e-4f83-a290-4a4f49ff7ab9,SKRG,SPJC,899,899,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+zw7jdQRP5z0agEaQ,SKRG,TNCA,205,205,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Gy0YQOwkl99Dn0l9,SKRG,TNCC,207,207,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+16c6cabb-fc31-4aab-990d-7160fe92a86e,SKRG,TNCC,865,865,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+LjKzpaLpGY7E5ogQ,SKRH,SKBO,1894,8413,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+6V53yj8kQjdp3YkG,SKRH,SKBO,1896,8429,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+0j8J3m2J7mDADZR5,SKRH,SKCL,7996,8093,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+kG6nQdPKzdeovZ1L,SKRH,SKRG,2988,8517,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+A7aoB1VWx1ZexEKv,SKSG,SKBO,1900,8094,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+6bMWYZWpBZNBRyv9,SKSG,SKMD,8008,8008,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+bzk5dwyBzeWlom90,SKSJ,SKVV,4872,4872,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZdryEAl7Za4YLrD7,SKSM,MPTO,783,783,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+3b1GRAPNQoWlDqMk,SKSM,SKBG,9012,9012,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+WQndNbWkydLNQG6Y,SKSM,SKBO,1266,4823,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+eAJ71gwlBg3D8RM7,SKSM,SKBO,1966,4831,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+pm9bjbGNrb1pD9bl,SKSM,SKBO,1968,4861,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+PElaoZV5GZgqVmpd,SKSM,SKBO,1970,8487,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+KZP7pBGmABvYY1a4,SKSM,SKCL,7998,9225,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Pk1PNKMoJREGZ9d4,SKSM,SKMD,8000,8000,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+AJ6oE1Az4G25vWGl,SKSM,SKPE,9000,9000,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+R0WjPM09oMzlVeo9,SKSM,SKRG,2976,8437,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+a8Mnwov6YLq3jPOJ,SKSM,SKVV,4918,4918,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ED95O8bER8vGEleN,SKSO,SKBG,9002,9002,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xOZa1gvVAgz7LZNz,SKSO,SKBO,1902,8095,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+Z4eb6BKy7BEkle6P,SKSO,SKCC,9006,9006,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+50zkmWly2WODWGye,SKSO,SKYP,9004,9004,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+pYmBAM01zxWbPjvN,SKSP,KMIA,485,485,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Q1BgwOl1bEEYPgbP,SKSP,MPTO,229,229,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+XgqbRkdx0Yg9kqr7,SKSP,SKBO,1276,9377,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+l509R5KwQ5DoabYn,SKSP,SKBO,1960,8561,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+eVAgg7Onj7E60A4M,SKSP,SKBO,1962,9445,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+bly9MkbRZkpOAy2x,SKSP,SKBO,1964,8096,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+yG8jn4xnE2J1WLJY,SKSP,SKBQ,9010,9010,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+pa3LxanrJOlbV30r,SKSP,SKCG,5002,5002,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jAEyPMR7AbY6pqNW,SKSP,SKCG,5004,5004,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qDLYyo4wqNAWNLwx,SKSP,SKCL,2607,9613,1,NULL,si,numero de Avianca en servicio en esta misma ruta y sentido
+LG06QM7NW834BEMD,SKSP,SKCL,7006,8097,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+L4MWzVxv3VPVJEgD,SKSP,SKPV,9015,9015,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+JOrZ8Z4KjZMG4q9B,SKSP,SKRG,2996,8441,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+nVE315enk5kxJWXd,SKTL,SKMD,8026,8026,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+YWgbvxKYj24qdgdl,SKTL,SKVV,4910,4910,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+vOZW9wmax5b98j1n,SKTM,SKVV,4892,4892,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+wVzPnvl9WvXxabMg,SKUC,SKCC,9148,9148,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Lmoa6JjAYe7b5KJD,SKUC,SKVV,4894,4894,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+7R9eYQkwpQJN39kn,SKUI,SKCL,7952,8098,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+gjOwdJg08J7KlZzm,SKUI,SKMD,8030,8030,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+EWnRZ73QayVERnKR,SKUI,SKVV,4880,4880,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+gkG2Q3lYJ3EekZlw,SKVG,SKCL,7048,8099,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+r3eBjO4rq373bq6A,SKVP,SKBO,1884,8577,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+LZrEjdEKqdW3x9oD,SKVP,SKBO,1886,8581,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Ld7Z4pbA5pzQY6rx,SKVP,SKCG,5994,5994,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2YnRa8L1G8gAXzkE,SKVP,SKMD,8032,8032,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+nKlReKy780KY0PDr,SKVP,SKMR,9014,9014,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+PJK8DdvRlB4GXKo3,SKVP,SKVV,4912,4912,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+r7YQyPG23oA56YqZ,SKVV,SKAR,4829,4829,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+gKB2aP7eA6EqM9Xk,SKVV,SKBG,4865,4865,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+8X0Pv38Oe3DnDbr9,SKVV,SKBG,4995,4995,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+jl04KlDxyQmqdEA2,SKVV,SKBO,1004,4809,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+y2NBmX2J47oQlAkE,SKVV,SKBO,1006,4881,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+XPpjX81M68O8qJGd,SKVV,SKBO,1998,4827,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Mlpl2r8XBlKzaWy7,SKVV,SKBQ,4915,4915,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+2DAJJK1B3a4EwAdW,SKVV,SKBU,4897,4897,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+KyjgWlma7VMQ0Rao,SKVV,SKCC,4863,4863,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+3NP1qZGayLOWDPLG,SKVV,SKCG,4913,4913,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+K4qr6n0pzbWrBq2z,SKVV,SKCL,7008,8100,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+5e72VA5l1An9v7jP,SKVV,SKCL,7774,8101,2,,no,bloque 7xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+k896jebv71d7K9RV,SKVV,SKCZ,4907,4907,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+VKz3Ao5yn9Rjb16Q,SKVV,SKEJ,4889,4889,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qV7q1PAqgRODB7Om,SKVV,SKFL,4877,4877,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+NRKA4eqA8DmQoBG1,SKVV,SKGI,4887,4887,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+W7jbyab5XEJRR1Np,SKVV,SKGP,4901,4901,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+RQwGPoXdlE8VXLK7,SKVV,SKGY,4853,4853,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aej0R8jVoZDZNLqR,SKVV,SKIB,4921,4921,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+GNV8noK1Yv0Xe5j9,SKVV,SKIP,4923,4923,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+6eVDEaqXWYj7wJxo,SKVV,SKLC,4903,4903,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+5qWkB71Ka8Dzgn3G,SKVV,SKMD,4841,4841,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+vOrRz7AJv7vLNrw0,SKVV,SKMD,4997,4997,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+L9VORPKk67mGGqm7,SKVV,SKMR,4905,4905,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+D7N3ZmQ0bp20g6dA,SKVV,SKMU,4845,4845,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+vBW9dzVrLJMmK3pM,SKVV,SKMZ,4883,4883,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+NVk0OOVEblXv10gD,SKVV,SKNQ,4843,4843,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+aLpVPyVkR1j5gWGA,SKVV,SKNV,4835,4835,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+AK1k3X16OlRVDnRq,SKVV,SKPA,4869,4869,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ENwxbNzqePBbJKoA,SKVV,SKPC,4001,4001,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+rwl6jRJkKrNwQlW1,SKVV,SKPC,4857,4857,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+OGM808QZ1A2lZM5R,SKVV,SKPD,4847,4847,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+znjLL8y67nPPDj7W,SKVV,SKPE,4855,4855,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yEV9eOn4JaAM5Vjd,SKVV,SKPE,4885,4885,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+xrbrl1YQJ5NzkMBD,SKVV,SKPI,4919,4919,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+9BpEaxq04MvJdpa7,SKVV,SKPP,4837,4837,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+o2WmNGWgDrxGVMnj,SKVV,SKPS,4899,4899,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+X0g28OWzx1q0z9DN,SKVV,SKSJ,4871,4871,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+mLpP4dyl378PPpOA,SKVV,SKSM,4917,4917,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+wQ9drpeaO42EaN35,SKVV,SKTL,4909,4909,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+qyej0d1k6zlx9PpW,SKVV,SKTM,4891,4891,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+Bk6z48pvjYK3A1Xm,SKVV,SKUC,4893,4893,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+zoeNR5DM37mV5ep9,SKVV,SKUI,4879,4879,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+yVZp7AvEkGPEKnvK,SKVV,SKVP,4911,4911,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+MXl3dAXRjVwRyPL7,SKVV,SKYP,4859,4859,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+rpAbdEQy8BWg804q,SKYP,SKBO,1010,4874,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+xwpBgxwRLznw6MA4,SKYP,SKBO,1012,8102,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+aV5raE6RJEogGwqp,SKYP,SKBO,1994,8103,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+V87V30zBYVO4OwN0,SKYP,SKBO,1996,8104,2,,no,bloque 1xxx incoherente para ruta domestica; se asigna numero libre no usado por Avianca
+EJbRGjedLj96z36D,SKYP,SKSO,9003,9003,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+ZxXwzq8jWG2RyAgn,SKYP,SKVV,4860,4860,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+eJY2GPR6Qlon8Kq1,SLLP,SKBO,240,240,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+97eb8303-3164-46b8-9847-d1bd359c5d74,SLLP,SKBO,882,882,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+y53lp7lgN77Z53E8,SLVR,SKBO,778,166,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+mYVn5AoelYG0Pr1a,SPJC,SKBO,54,48,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+nAgYZ5jaLoROMV4y,SPJC,SKBO,102,102,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+3479d570-a2e6-4886-bd96-3fa153abf1a4,SPJC,SKBO,828,50,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+Rp8lN3po9rn3v5Qb,SPJC,SKCG,238,238,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+NojmRQy8x1PwaAy6,SPJC,SKCL,390,390,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+f499ffe3-21a9-462c-be5d-1949ab2bed02,SPJC,SKCL,898,898,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+rlR9KwPgQJ71X9xX,SPJC,SKRG,394,394,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+cdb25afe-f47a-4826-bf2e-b8191a756ed5,SPJC,SKRG,900,900,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+QYlk9Ky5rz7GdgOa,SUMU,SKBO,108,108,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+32646f55-183f-4e69-85a8-04e65eb627f7,SUMU,SKBO,848,848,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+x9KJ6ZObNeDE6KNa,SVMI,SKBO,224,224,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+G4QXgMpmy55WOkbY,TJSJ,SKBO,260,215,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+LAmvYbOLAVZM13Y4,TNCA,SKBO,90,243,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+7jqr3GQ50GGr0paW,TNCA,SKBO,790,790,0,,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+axyqX8RgZMoaN0oZ,TNCA,SKRG,206,206,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+6DE9nJk0Z7xRpYjw,TNCC,SKBO,78,79,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+9184e192-5c9d-49d8-be31-1450cf538578,TNCC,SKBO,834,93,1,,no,numero de Avianca en servicio en esta misma ruta y sentido
+3eBE6EDGNRRy49P7,TNCC,SKRG,208,208,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
+224de7c0-3877-4b5f-ab32-5720fc5a8150,TNCC,SKRG,866,866,0,NULL,no,ya esta en bloque coherente y sin numero AVA confirmado disponible
