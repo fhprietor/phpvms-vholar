@@ -131,6 +131,7 @@ class NetworkMapController extends Controller
         return [
             'routes'       => array_values($routes),
             'legend'       => $legend,
+            'colors'       => self::COLORS,
             'totalFlights' => $flights->count(),
         ];
     }
