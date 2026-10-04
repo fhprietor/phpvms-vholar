@@ -24,9 +24,18 @@
         <div class="card-body">
           <h6 class="vh-tour-section mb-3"><i class="bi bi-palette"></i> @lang('vholar_network.legend')</h6>
 
+          {{-- Paleta tambien aqui: si el proceso web sirve una version anterior del
+               controlador (opcache), la vista no depende de que llegue $colors --}}
+          @php
+            $palette = ($colors ?? []) + [
+              'heavy' => '#7E57C2', 'airliner' => '#4A90D9',
+              'regional' => '#4CAF76', 'express' => '#EF6C00',
+            ];
+          @endphp
+
           @foreach(['heavy', 'airliner', 'regional', 'express'] as $category)
             <div class="d-flex align-items-center gap-2 mb-2" style="font-size: 0.82rem;">
-              <span class="vh-net-dot" style="background: {{ $colors[$category] }};"></span>
+              <span class="vh-net-dot" style="background: {{ $palette[$category] }};"></span>
               <span>@lang('vholar_network.category_'.$category)</span>
               <span class="ms-auto vh-tour-meta">{{ $legend[$category] }}</span>
             </div>
