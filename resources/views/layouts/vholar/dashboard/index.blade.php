@@ -56,6 +56,36 @@
                 </div>
             </div>
 
+            {{-- INFORME DEL INSTRUCTOR (IA) DEL ULTIMO VUELO ANALIZADO --}}
+            @php
+                // El ultimo vuelo del piloto que tiene analisis. Se ordena por la fecha del
+                // VUELO, no por la del analisis: el comando de retroanalisis genera analisis
+                // de vuelos antiguos y desordenaria cual es "el ultimo".
+                $aiFeedback = \App\Models\PirepAiFeedback::query()
+                    ->join('pireps', 'pireps.id', '=', 'pirep_ai_feedback.pirep_id')
+                    ->where('pireps.user_id', $user->id)
+                    ->orderByDesc('pireps.submitted_at')
+                    ->select('pirep_ai_feedback.*')
+                    ->with('pirep')
+                    ->first();
+            @endphp
+
+            @if($aiFeedback && $aiFeedback->pirep)
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-1"
+                     style="font-size: 0.75rem; color: var(--vh-text-muted);">
+                    <span style="font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;">
+                        <i class="bi bi-robot"></i> Último vuelo analizado
+                    </span>
+                    <a href="{{ route('frontend.pireps.show', [$aiFeedback->pirep_id]) }}">
+                        {{ $aiFeedback->pirep->ident }}
+                        · {{ $aiFeedback->pirep->dpt_airport_id }} → {{ $aiFeedback->pirep->arr_airport_id }}
+                        · {{ optional($aiFeedback->pirep->submitted_at)->format('d M Y H:i') }}
+                    </a>
+                </div>
+            @endif
+
+            @include('components.pirep-ai-feedback', ['aiFeedback' => $aiFeedback])
+
             {{-- MIS ÚLTIMOS 5 VUELOS --}}
             @once
             @include('vholar::pireps.logbook-styles')
