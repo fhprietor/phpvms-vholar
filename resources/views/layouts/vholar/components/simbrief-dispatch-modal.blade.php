@@ -323,7 +323,11 @@
             extrarmk:   'OPR/' + d.airline + ' CS/VHOLAR IVAOVA/' + d.airline,
             flighttype: document.getElementById('sb-flighttype').value,
         });
-        if (flFt > 0) params.append('fl', Math.round(flFt / 100));
+        // `fl` va en PIES, no en centenas: la tabla oficial de parametros de
+        // SimBrief da "34000, FL340" como valores validos (y "altn_#_fl" si es
+        // el nivel en centenas). La API v1 de phpVMS tambien manda el nivel del
+        // vuelo tal cual, en pies. Mandar 330 para 33.000 ft planificaba mal.
+        if (flFt > 0) params.append('fl', flFt);
         const pax    = document.getElementById('sb-pax').value;
         const cargo  = document.getElementById('sb-cargo').value;
         const deprwy = document.getElementById('sb-deprwy').value.trim();
