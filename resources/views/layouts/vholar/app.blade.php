@@ -4,8 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
-        name='viewport' />
+    {{-- Sin maximum-scale ni user-scalable: bloquear el zoom rompia el pinch-zoom
+         en movil (WCAG 1.4.4). viewport-fit=cover lo necesita la app instalada
+         para respetar las zonas seguras (notch, indicador de inicio). --}}
+    <meta content='width=device-width, initial-scale=1, viewport-fit=cover' name='viewport' />
 
     <title>
         @hasSection('title')
@@ -38,6 +40,22 @@
     {{-- End the required lines block --}}
 
     <link rel="shortcut icon" type="image/png" href="{{ public_asset('/images/favicon.png') }}" />
+
+    {{-- PWA: la web instalable como app (Android/iOS). Manifest e iconos viven en
+         /public. El fichero es manifest.json y no .webmanifest porque el
+         mime.types de nginx no conoce esa extension y lo serviria como
+         application/octet-stream; .json si esta registrado. --}}
+    <link rel="manifest" href="{{ public_asset('/manifest.json') }}" />
+    <meta name="theme-color" content="#412C4D" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="VHolar" />
+    {{-- black-translucent dibuja el contenido bajo la barra de estado de iOS: el
+         navbar recupera esa franja con env(safe-area-inset-top) desde theme.css --}}
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ public_asset('/images/pwa/apple-touch-icon.png') }}" />
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ public_asset('/images/pwa/icon-192.png') }}" />
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ public_asset('/images/pwa/icon-512.png') }}" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -483,6 +501,103 @@
     });
 })();
 </script>
+
+    {{-- PWA: instrucciones de instalacion manual (iOS). Safari no dispara
+         beforeinstallprompt, asi que el propio usuario abre esta ayuda. --}}
+    <div class="modal fade" id="vhInstallModal" tabindex="-1" aria-labelledby="vhInstallTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background:var(--vh-surface);border:1px solid var(--vh-border);color:var(--vh-text);">
+                <div class="modal-header" style="background:var(--vh-surface-2);border-bottom:1px solid var(--vh-border);">
+                    <h5 class="modal-title" id="vhInstallTitle" style="color:var(--vh-text);">
+                        <i class="bi bi-phone"></i> Instalar VHolar en tu dispositivo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ol class="ps-3 mb-3" style="line-height:1.9;">
+                        <li>Pulsa el botón <strong>Compartir</strong> de Safari.</li>
+                        <li>Elige <strong>Añadir a pantalla de inicio</strong>.</li>
+                        <li>Confirma con <strong>Añadir</strong>.</li>
+                    </ol>
+                    <p class="mb-0" style="color:var(--vh-text-muted);font-size:0.85rem;">
+                        En iOS la instalación solo está disponible desde Safari. Si usas
+                        Chrome o Firefox en iPhone, abre VHolar en Safari para añadirlo.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    /* PWA: registro del service worker y boton "Instalar app" del menu.
+       - Chromium (Android y escritorio) dispara beforeinstallprompt: se guarda y
+         se lanza desde el boton.
+       - iOS no dispara nada: el boton abre las instrucciones manuales.
+       - Si ya esta instalada (standalone) o no se puede instalar, no se muestra. */
+    (function () {
+        var item = document.getElementById('vh-install-item');
+        var btn = document.getElementById('vh-install-btn');
+        var standalone = window.matchMedia('(display-mode: standalone)').matches ||
+            window.navigator.standalone === true;
+
+        /* El SW solo tiene sentido servido por HTTPS (o localhost). */
+        if ('serviceWorker' in navigator && window.isSecureContext) {
+            window.addEventListener('load', function () {
+                /* Version en la URL: Cloudflare cachea /sw.js, asi que una URL nueva es la
+                   unica forma de que la correccion llegue sin tocar el panel de Cloudflare.
+                   Subir esta version cada vez que se cambie sw.js. */
+                navigator.serviceWorker.register('{{ public_asset('/sw.js') }}?v=2', { scope: '/' })
+                    .catch(function (err) {
+                        console.warn('[PWA] Service worker no registrado:', err);
+                    });
+            });
+        }
+
+        if (!item || !btn || standalone) return;
+
+        var deferredPrompt = null;
+        var ua = window.navigator.userAgent || '';
+        /* El iPad moderno se identifica como MacIntel con pantalla tactil. */
+        var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+            (window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1);
+        /* Solo Safari puede instalar en iOS; Chrome/Firefox/Edge de iOS no. */
+        var isIOSSafari = isIOS && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA/.test(ua);
+
+        function show() { item.classList.remove('d-none'); }
+        function hide() { item.classList.add('d-none'); }
+
+        window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            show();
+        });
+
+        if (isIOSSafari) show();
+
+        window.addEventListener('appinstalled', function () {
+            deferredPrompt = null;
+            hide();
+        });
+
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function (choice) {
+                    if (choice && choice.outcome === 'accepted') hide();
+                    deferredPrompt = null;
+                }).catch(function () { deferredPrompt = null; });
+                return;
+            }
+
+            var modal = document.getElementById('vhInstallModal');
+            if (modal && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(modal).show();
+            }
+        });
+    })();
+    </script>
 
 </body>
 
