@@ -164,6 +164,9 @@
       {{-- Análisis automático (IA) --}}
       @include('components.pirep-ai-feedback', ['aiFeedback' => $aiFeedback])
 
+{{-- Analisis financiero del vuelo (mismo libro diario) --}}
+@include('components.pirep-financial-analysis')
+
       {{-- Takeoff / Landing --}}
       <div class="row mt-3">
         <div class="col-6 mb-3">

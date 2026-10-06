@@ -74,6 +74,50 @@ class ProfitabilityService extends Service
     }
 
     /**
+     * Analisis financiero de un PIREP concreto: ingresos por tarifas, desglose de costes
+     * (via PirepEconomicsService::costs()) y resultado.
+     *
+     * `revenue` es el bruto de las tarifas (credito de los apuntes con "fare"); los costes
+     * incluyen el coste de esas mismas tarifas y todos los demas apuntes al debe, que es el
+     * mismo criterio del analisis de rentabilidad y de PirepEconomicsService::costs().
+     *
+     * @return array<string, mixed>
+     */
+    public function forPirep(\App\Models\Pirep $pirep): array
+    {
+        $income = "sum(case when lower(memo) like '%fare%' then credit else 0 end)";
+
+        $row = DB::table('journal_transactions')
+            ->where('ref_model', self::LEDGER_MODEL)
+            ->where('ref_model_id', $pirep->id)
+            ->selectRaw("round({$income} / 100) as income")
+            ->selectRaw('round(sum(debit) / 100) as cost')
+            ->first();
+
+        $revenue = (float) ($row->income ?? 0);
+
+        $costs = app(\App\Services\PirepEconomicsService::class)->costs($pirep);
+        $total = (float) ($costs['total'] ?? 0);
+
+        $hours = max((float) $pirep->flight_time / 60, 0.01);
+        $profit = round($revenue - $total, 2);
+
+        return [
+            'revenue'      => $revenue,
+            'costs_total'  => $total,
+            'profit'       => $profit,
+            'margin'       => $total > 0 ? round(100 * $profit / $total, 1) : null,
+            'breakdown'    => $costs['breakdown'] ?? [],
+            'hours'        => round($hours, 2),
+            'revenue_hour' => round($revenue / $hours),
+            'cost_hour'    => round($total / $hours),
+            'has_ledger'   => $revenue !== 0.0 || $total > 0.0,
+            'fares'        => DB::table('pirep_fares')->where('pirep_id', $pirep->id)
+                ->get(['code', 'count', 'price', 'cost', 'type']),
+        ];
+    }
+
+    /**
      * @return array<int, array{label: string, income: float, cost: float, profit: float}>
      */
     private function grouped(?string $userId, string $format, ?int $fromYear = null, ?string $like = null): array
