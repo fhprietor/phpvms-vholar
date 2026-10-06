@@ -431,6 +431,13 @@
   options: ''
   type: boolean
   description: 'When enabled, only phpVMS Airframes will be listed for flight planning (instead of combined list)'
+- key: simbrief.baggage_by_class
+  name: 'Baggage allowance per class (kg)'
+  group: simbrief
+  value: '10,23,46'
+  options: ''
+  type: string
+  description: 'Equipaje incluido por pasajero en cada clase, de la mas barata a la mas cara (kg). Ej: 10,23,46'
 - key: simbrief.extrarmk
   name: 'Extra FPL Info (Item 18)'
   group: simbrief

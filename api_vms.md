@@ -303,7 +303,8 @@ Respuesta (recortada):
       "civalue": "30", "units": "kgs", "maps": "detail",
       "deph": "04", "depm": "10", "flighttype": "s",
       "fl": "35000", "pax": "70",
-      "extrarmk": "CS/VHOLAR IVAOVA/VHR OPR/VHR"
+      "extrarmk": "CS/VHOLAR IVAOVA/VHR OPR/VHR",
+      "acdata": "{\"paxwgt\":170,\"bagwgt\":30}"
     }
   },
   "suggestion": { "pax": 70, "cargo": 0, "margin_pct": 20.4, "target_reached": true },
@@ -320,6 +321,13 @@ Notas:
   (`route_code` CH, CA, PS o FR) no se sugiere carga: se devuelve la URL sin
   `pax`/`cargo`.
 - `route` solo viaja cuando el vuelo la tiene; si no, SimBrief genera la suya.
+- **`acdata` lleva nuestros pesos medios**: el de pasajero (`simbrief.noncharter_pax_weight`)
+  y el de equipaje, que sale del setting `simbrief.baggage_by_class` (kg por clase,
+  de la más barata a la más cara, **ponderado por el reparto de clases**) y viaja
+  en libras. Sin él, SimBrief planifica con 175 lb de pasajero y 55 lb (25 kg) de
+  equipaje: con la política de equipaje por clase de la aerolínea eso son casi 2 t
+  de más, y **recorta la carga** para respetar el MZFW.
+  Con una sola clase se usa el primer tramo; sin tarifas de pasaje no se manda.
 - Los parámetros siguen la tabla oficial de SimBrief y el formulario del core:
   `maps=detail` (no `detailed`) y **sin** `static_url`, que no existe en la tabla
   (el core usa `static_id`, que es otra cosa).

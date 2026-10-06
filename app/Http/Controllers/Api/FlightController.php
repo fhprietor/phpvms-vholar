@@ -277,7 +277,8 @@ class FlightController extends Controller
             $user,
             (int) ($suggestion['suggestion']['pax'] ?? 0),
             (int) ($suggestion['suggestion']['cargo'] ?? 0),
-            $request->input('dep_time')
+            $request->input('dep_time'),
+            isset($suggestion['fares']['baggage_avg_kg']) ? (float) $suggestion['fares']['baggage_avg_kg'] : null
         );
 
         return response()->json([

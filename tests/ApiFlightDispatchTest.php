@@ -46,6 +46,8 @@ final class ApiFlightDispatchTest extends TestCase
         Setting::where('key', 'airports.default_jet_a_fuel_cost')->update(['value' => 0.9]);
         Setting::where('key', 'finance.revenue_pax_mix')->update(['value' => '80,15,5']);
         Setting::where('key', 'finance.revenue_pax_mix_by_type')->update(['value' => '']);
+        Setting::where('key', 'simbrief.baggage_by_class')->update(['value' => '10,23,46']);
+        Setting::where('key', 'simbrief.noncharter_pax_weight')->update(['value' => 170]);
     }
 
     /**
@@ -132,6 +134,31 @@ final class ApiFlightDispatchTest extends TestCase
 
         // El Item 18 sale del setting, con el remark de la aerolinea por defecto.
         $this->assertSame('CS/VHOLAR IVAOVA/VHR OPR/VHR', $params['extrarmk']);
+
+        // `acdata` lleva NUESTROS pesos medios: 170 lb de pasajero y, con una
+        // sola clase, el primer tramo de equipaje (10 kg -> 22 lb). Sin esto
+        // SimBrief planifica con 175/55 lb y recorta la carga.
+        $this->assertSame('{"paxwgt":170,"bagwgt":22}', $params['acdata']);
+    }
+
+    public function test_the_baggage_average_goes_in_the_acdata(): void
+    {
+        [$user, $flight, $aircraft] = $this->scenario();
+
+        // Tres clases (la mas barata primero) y mix 80/15/5 -> 13,75 kg de media
+        // -> 30 lb. Es el caso real de las tarifas L/C/F de la aerolinea.
+        foreach ([['L', 100.0], ['C', 200.0], ['F', 400.0]] as [$code, $price]) {
+            $fareId = DB::table('fares')->insertGetId([
+                'code' => $code, 'name' => $code, 'price' => $price, 'cost' => 15.0,
+                'capacity' => 1, 'type' => FareType::PASSENGER, 'active' => true,
+            ]);
+            DB::table('flight_fare')->insert(['flight_id' => $flight->id, 'fare_id' => $fareId]);
+        }
+
+        $response = $this->callApi($user, $flight->id, ['aircraft_id' => $aircraft->id]);
+
+        $response->assertOk();
+        $this->assertStringContainsString('"bagwgt":30', $response->json('simbrief.params.acdata'));
     }
 
     public function test_the_item_18_remark_is_configurable(): void

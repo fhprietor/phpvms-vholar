@@ -7,6 +7,7 @@ use App\Models\Aircraft;
 use App\Models\Flight;
 use App\Models\Subfleet;
 use App\Services\DispatchSuggestionService;
+use App\Services\SimBriefUrlService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,16 @@ use Illuminate\Http\Request;
  * El avion reservado (matricula) es la fuente del tipo y de la subflota; si no
  * llega, se cae al tipo declarado en el boton y a la primera subflota de ese
  * tipo, para que el endpoint nunca devuelva un 500 por un data-* que falte.
+ *
+ * Ademas del sugerido devuelve el `acdata` de SimBrief (pesos medios de pasajero
+ * y equipaje, con el equipaje por clase), que es lo que evita que SimBrief
+ * planifique con sus pesos por defecto y recorte la carga.
  */
 class DispatchSuggestionController extends Controller
 {
     public function __construct(
-        private readonly DispatchSuggestionService $suggestionSvc
+        private readonly DispatchSuggestionService $suggestionSvc,
+        private readonly SimBriefUrlService $simbriefUrlSvc
     ) {}
 
     public function show(Request $request): JsonResponse
@@ -44,7 +50,14 @@ class DispatchSuggestionController extends Controller
             $request->user()
         );
 
-        return response()->json(['ok' => true] + $suggestion);
+        $baggage = isset($suggestion['fares']['baggage_avg_kg'])
+            ? (float) $suggestion['fares']['baggage_avg_kg']
+            : null;
+
+        return response()->json([
+            'ok'       => true,
+            'simbrief' => ['acdata' => $this->simbriefUrlSvc->acdata($flight, $baggage)],
+        ] + $suggestion);
     }
 
     /**

@@ -44,6 +44,7 @@ final class DispatchSuggestionServiceTest extends TestCase
         Setting::where('key', 'finance.revenue_pax_mix')->update(['value' => '80,15,5']);
         Setting::where('key', 'finance.revenue_pax_mix_by_type')->update(['value' => '']);
         Setting::where('key', 'finance.revenue_estimate_enabled')->update(['value' => 1]);
+        Setting::where('key', 'simbrief.baggage_by_class')->update(['value' => '10,23,46']);
     }
 
     /**
@@ -162,6 +163,59 @@ final class DispatchSuggestionServiceTest extends TestCase
 
         $this->assertNotNull($estimate);
         $this->assertEqualsWithDelta($estimate['total'], $result['suggestion']['pax_revenue'], 0.01);
+    }
+
+    // ------------------------------------------------- equipaje por clase
+
+    /**
+     * SimBrief solo admite UN peso de equipaje por vuelo, asi que se le manda el
+     * promedio ponderado por el reparto de clases: con 10/23/46 kg y un mix
+     * 80/15/5 sale 0,8x10 + 0,15x23 + 0,05x46 = 13,75 kg.
+     */
+    public function test_the_baggage_allowance_is_weighted_by_class(): void
+    {
+        $ctx = $this->setupFlight();
+        $this->addPassengerFare($ctx['flight'], 'L', 100.0);
+        $this->addPassengerFare($ctx['flight'], 'C', 200.0);
+        $this->addPassengerFare($ctx['flight'], 'F', 400.0);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
+
+        // Las clases van de la mas barata a la mas cara.
+        $this->assertSame(['L', 'C', 'F'], array_column($result['fares']['pax'], 'code'));
+        $this->assertSame(13.75, $result['fares']['baggage_avg_kg']);
+    }
+
+    public function test_the_baggage_allowance_is_configurable(): void
+    {
+        Setting::where('key', 'simbrief.baggage_by_class')->update(['value' => '0,20,40']);
+
+        $ctx = $this->setupFlight();
+        $this->addPassengerFare($ctx['flight'], 'L', 100.0);
+        $this->addPassengerFare($ctx['flight'], 'C', 200.0);
+        $this->addPassengerFare($ctx['flight'], 'F', 400.0);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
+
+        // 0,8x0 + 0,15x20 + 0,05x40 = 5 kg
+        $this->assertSame(5.0, $result['fares']['baggage_avg_kg']);
+    }
+
+    /**
+     * Con una sola clase se aplica el primer valor, y sin tarifas de pasaje no
+     * hay promedio (el despacho no mandara `acdata` y SimBrief usara el suyo).
+     */
+    public function test_with_one_class_it_takes_the_first_allowance(): void
+    {
+        $ctx = $this->setupFlight();
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
+        $this->assertSame(10.0, $result['fares']['baggage_avg_kg']);
+
+        $other = $this->setupFlight(['type' => 'A306', 'flight_time' => 60]);
+        $result = $this->service->suggest($other['flight']->fresh(), $other['aircraft'], null, 15.0);
+        $this->assertNull($result['fares']['baggage_avg_kg']);
     }
 
     // ------------------------------------------------- operaciones no regulares

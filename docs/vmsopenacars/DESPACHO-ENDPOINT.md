@@ -124,6 +124,13 @@ empieza a añadir o quitar parámetros por su cuenta, vuelve a haber dos version
    (`34000`, o `FL340`).
 4. `maps` es `detail` (no `detailed`) y **no existe** `static_url`: si los tienen
    en su builder, sobran.
+5. **Sus pesos de pasajero/equipaje** (`paxwgt`/`bagwgt` dentro de `acdata`): los
+   manda el servidor, con el equipaje por clase de la aerolínea ponderado por el
+   reparto de clases (ajuste `simbrief.baggage_by_class`). Si el cliente manda su
+   propio `acdata`, uno de los dos sobra; lo suyo es no mandarlo. Y si algún día
+   despacha con su builder de respaldo, que sepa que ahí SimBrief usaría sus
+   valores por defecto (175 lb de pasajero, 55 lb de equipaje) y **recortaría la
+   carga** antes de lo previsto.
 
 ## 7. Cuándo llamarlo
 

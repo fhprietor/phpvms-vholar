@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Service;
 use App\Models\Aircraft;
+use App\Models\Enums\FlightType;
 use App\Models\Flight;
 use App\Models\User;
 use Carbon\Carbon;
@@ -51,12 +52,19 @@ class SimBriefUrlService extends Service
     /** Cost index por defecto, igual que el modal. */
     private const DEFAULT_COST_INDEX = '30';
 
+    /** Libras por kilo: los pesos de `acdata` van en libras. */
+    private const LB_PER_KG = 2.20462;
+
     /**
      * Parametros de despacho para un vuelo y un avion.
      *
-     * Solo se anaden `pax`, `cargo` y `route` cuando tienen valor: es lo que hace
-     * el modal, y evita mandar un `route` vacio que SimBrief interpretaria como
-     * "ruta vacia" en vez de "genera la tuya".
+     * Solo se anaden `pax`, `cargo`, `route` y `acdata` cuando tienen valor: es lo
+     * que hace el modal, y evita mandar un `route` vacio que SimBrief
+     * interpretaria como "ruta vacia" en vez de "genera la tuya".
+     *
+     * @param float|null $baggageKg Equipaje medio por pasajero (kg), de
+     *                              `DispatchSuggestionService`. Null = no se manda
+     *                              `acdata` y SimBrief usa sus pesos por defecto.
      *
      * @return array<string, string>
      */
@@ -66,7 +74,8 @@ class SimBriefUrlService extends Service
         ?User $user,
         int $pax = 0,
         int $cargo = 0,
-        ?string $depTime = null
+        ?string $depTime = null,
+        ?float $baggageKg = null
     ): array {
         $airline = (string) (optional($flight->airline)->icao ?? '');
         $type = strtoupper(trim((string) ($aircraft?->icao ?: ($aircraft?->subfleet?->type ?? ''))));
@@ -109,7 +118,60 @@ class SimBriefUrlService extends Service
             $params['route'] = $route;
         }
 
+        // Pesos medios de pasajero y equipaje: asi SimBrief planifica con
+        // NUESTROS numeros y no recorta la carga con los suyos.
+        $acdata = $this->acdata($flight, $baggageKg);
+        if ($acdata !== null) {
+            $params['acdata'] = $acdata;
+        }
+
         return $params;
+    }
+
+    /**
+     * `acdata` de SimBrief con los pesos medios por pasajero.
+     *
+     * POR QUE HACE FALTA
+     * ------------------
+     * SimBrief, si no le dices otra cosa, planifica con 175 lb de pasajero y
+     * 55 lb (25 kg) de equipaje. Con la politica de equipaje por clase de la
+     * aerolinea (10/23/46 kg, media ~13,75 kg) eso son casi 2 t de mas en un
+     * vuelo de 166 pax, y SimBrief recorta la carga para respetar el MZFW. Aqui
+     * se le mandan los pesos de verdad.
+     *
+     * VA EN LIBRAS: los pesos de `acdata` son libras (el resto de pesos del
+     * objeto, en cambio, van en miles de libras: no se usan aqui).
+     *
+     * @param float|null $baggageKg Equipaje medio por pasajero (kg)
+     */
+    public function acdata(Flight $flight, ?float $baggageKg): ?string
+    {
+        $paxWeightLb = $this->paxWeightLb($flight);
+
+        $data = [];
+        if ($paxWeightLb > 0) {
+            $data['paxwgt'] = (int) round($paxWeightLb);
+        }
+
+        if ($baggageKg !== null) {
+            $data['bagwgt'] = (int) round($baggageKg * self::LB_PER_KG);
+        }
+
+        return $data === [] ? null : (string) json_encode($data);
+    }
+
+    /**
+     * Peso medio de pasajero (libras) del ajuste de la aerolinea, distinguiendo
+     * charter de vuelo regular, igual que el formulario del core.
+     */
+    private function paxWeightLb(Flight $flight): float
+    {
+        $isCharter = $flight->flight_type === FlightType::CHARTER_PAX_ONLY;
+
+        return (float) setting(
+            $isCharter ? 'simbrief.charter_pax_weight' : 'simbrief.noncharter_pax_weight',
+            $isCharter ? 168 : 170
+        );
     }
 
     /**

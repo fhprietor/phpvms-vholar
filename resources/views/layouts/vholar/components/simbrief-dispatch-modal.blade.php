@@ -155,6 +155,9 @@
     const sbNoteColors = { ok: 'var(--vh-success)', warn: 'var(--vh-warning)', danger: 'var(--vh-danger)', info: 'var(--vh-silver-dim)' };
     const sbNoteIcons  = { ok: 'bi-check-circle-fill', warn: 'bi-exclamation-triangle-fill', danger: 'bi-x-octagon-fill', info: 'bi-info-circle-fill' };
     let sbRequestSeq = 0;
+    // `acdata` de SimBrief (pesos medios de pasajero y equipaje) que devuelve el
+    // endpoint. Vacio = no se manda y SimBrief usa los suyos.
+    let sbAcdata = '';
 
     function sbSetSuggestion(title, notes, icon) {
         const box     = document.getElementById('sb-suggestion');
@@ -203,6 +206,12 @@
         if (!data || data.ok === false) {
             sbSetSuggestion('', [{ level: 'info', text: 'No se pudo calcular el sugerido.' }]);
             return;
+        }
+
+        // Pesos medios (pasajero y equipaje por clase) que calcula el servidor.
+        // Sin esto SimBrief usa los suyos y recorta la carga.
+        if (data.simbrief && data.simbrief.acdata) {
+            sbAcdata = data.simbrief.acdata;
         }
 
         if (data.applicable === false) {
@@ -280,6 +289,9 @@
         document.getElementById('sb-acreg').value  = d.acreg  || '';
         document.getElementById('sb-cpt').value    = sbCaptain;
 
+        // Que no se cuele el acdata del vuelo anterior.
+        sbAcdata = '';
+
         const t = new Date(Date.now() + 40 * 60000);
         document.getElementById('sb-deptm').value =
             String(t.getUTCHours()).padStart(2,'0') + ':' + String(t.getUTCMinutes()).padStart(2,'0');
@@ -344,6 +356,7 @@
         if (arrrwy) params.append('destrwy', arrrwy);
         if (route)  params.append('route',  route);
         if (sbExtraRmk) params.append('extrarmk', sbExtraRmk);
+        if (sbAcdata)   params.append('acdata',   sbAcdata);
 
         window.open('https://dispatch.simbrief.com/options/custom?' + params.toString(), '_blank');
         sbModal.hide();

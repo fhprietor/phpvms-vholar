@@ -63,6 +63,17 @@ class DispatchSuggestionService extends Service
     public const FIXED_COST = 15.0;
 
     /**
+     * Equipaje incluido por pasajero en cada clase (kg), de la mas barata a la
+     * mas cara. Es la politica de la aerolinea (estilo Avianca): la tarifa basica
+     * solo lleva 10 kg bajo el asiento, luego 1x23 y 2x23. Configurable en
+     * Admin > Settings (`simbrief.baggage_by_class`).
+     *
+     * Todas las clases de un vuelo son las mismas tres tarifas ordenadas por
+     * precio, asi que se aplica por POSICION.
+     */
+    private const DEFAULT_BAGGAGE_BY_CLASS = '10,23,46';
+
+    /**
      * LA marca de una operacion no regular es `flights.route_code`.
      *
      * La pone el Centro de Operaciones: el formulario de charter
@@ -251,6 +262,7 @@ class DispatchSuggestionService extends Service
         // --- Tarifas: mismas que usara el PIREP ---
         [$paxFares, $cargoFare] = $this->resolveFares($flight, $subfleet);
         $mix = $this->mixFor($type);
+        $baggageAvg = $this->averageBaggageKg($paxFares, $mix);
 
         // --- Menor PAX que cubre coste + 20 % ---
         $pax = 0;
@@ -341,6 +353,10 @@ class DispatchSuggestionService extends Service
                 'cargo_code'  => $cargoFare?->code,
                 'cargo_price' => $cargoFare !== null ? round((float) $cargoFare->price, 2) : null,
                 'mix'         => $mix,
+                // Equipaje medio por pasajero, ponderado por el reparto de
+                // clases. SimBrief solo admite UN peso de equipaje, asi que se
+                // le manda este promedio (lo que importa es el peso total).
+                'baggage_avg_kg' => $baggageAvg !== null ? round($baggageAvg, 2) : null,
             ],
             'suggestion' => [
                 'pax'            => $pax,
@@ -492,6 +508,70 @@ class DispatchSuggestionService extends Service
         }
 
         return $parts ?: [80.0, 15.0, 5.0];
+    }
+
+    /**
+     * Equipaje medio por pasajero, ponderado por el reparto de clases.
+     *
+     * SimBrief solo admite UN peso de equipaje por vuelo (`bagwgt`), asi que se
+     * le manda el promedio: lo que cuenta para el ZFW es el peso TOTAL, y el
+     * promedio lo reproduce. El reparto es el mismo que el del ingreso
+     * (`finance.revenue_pax_mix`) y las clases van de la mas barata a la mas
+     * cara, igual que `paxFares`.
+     *
+     * Null si el vuelo no tiene tarifas de pasaje: entonces no se manda `acdata`
+     * y SimBrief usa sus valores por defecto.
+     *
+     * @param Collection<int, object> $paxFares
+     * @param float[]                 $mix
+     */
+    private function averageBaggageKg(Collection $paxFares, array $mix): ?float
+    {
+        if ($paxFares->isEmpty()) {
+            return null;
+        }
+
+        $allowances = $this->baggageAllowances();
+        $weighted = 0.0;
+        $weight = 0.0;
+
+        foreach ($paxFares as $i => $fare) {
+            $pct = (float) ($mix[$i] ?? 0);
+            if ($pct <= 0) {
+                continue;
+            }
+
+            // Si hay mas clases que valores configurados, la ultima se repite.
+            $allowance = $allowances[$i] ?? $allowances[count($allowances) - 1];
+
+            $weighted += $pct * $allowance;
+            $weight += $pct;
+        }
+
+        return $weight > 0 ? $weighted / $weight : null;
+    }
+
+    /**
+     * Equipaje incluido por clase (kg), de la mas barata a la mas cara, leido del
+     * ajuste `simbrief.baggage_by_class`. Los valores invalidos se ignoran.
+     *
+     * @return float[]
+     */
+    private function baggageAllowances(): array
+    {
+        $raw = (string) setting('simbrief.baggage_by_class', self::DEFAULT_BAGGAGE_BY_CLASS);
+
+        $values = [];
+        foreach (explode(',', $raw) as $part) {
+            $part = trim($part);
+            if ($part === '' || !is_numeric($part)) {
+                continue;
+            }
+
+            $values[] = max(0.0, (float) $part);
+        }
+
+        return $values ?: [0.0];
     }
 
     /**
