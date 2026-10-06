@@ -96,8 +96,8 @@ class ProfitabilityService extends Service
 
         $revenue = (float) ($row->income ?? 0);
 
-        $costs = app(\App\Services\PirepEconomicsService::class)->costs($pirep);
-        $total = (float) ($costs['total'] ?? 0);
+        $breakdown = $this->costBreakdown($pirep);
+        $total = (float) array_sum($breakdown);
 
         $hours = max((float) $pirep->flight_time / 60, 0.01);
         $profit = round($revenue - $total, 2);
@@ -107,7 +107,7 @@ class ProfitabilityService extends Service
             'costs_total'  => $total,
             'profit'       => $profit,
             'margin'       => $total > 0 ? round(100 * $profit / $total, 1) : null,
-            'breakdown'    => $costs['breakdown'] ?? [],
+            'breakdown'    => $breakdown,
             'hours'        => round($hours, 2),
             'revenue_hour' => round($revenue / $hours),
             'cost_hour'    => round($total / $hours),
@@ -115,6 +115,64 @@ class ProfitabilityService extends Service
             'fares'        => DB::table('pirep_fares')->where('pirep_id', $pirep->id)
                 ->get(['code', 'count', 'price', 'cost', 'type']),
         ];
+    }
+
+    /**
+     * Costes del PIREP clasificados y con etiqueta legible.
+     *
+     * Se clasifica aqui (y no con PirepEconomicsService::concept(), que devuelve claves
+     * internas como `block_time`) para que la tarjeta se lea en cristiano y para no depender
+     * de un fichero en curso de otro hilo. El criterio de fondo es el mismo: TODOS los
+     * apuntes al debe del PIREP.
+     *
+     * @return array<string, float>
+     */
+    private function costBreakdown(\App\Models\Pirep $pirep): array
+    {
+        $labels = [
+            'tarifas'  => 'Coste de las tarifas',
+            'fuel'     => 'Combustible',
+            'bloque'   => 'Coste de bloque',
+            'piloto'   => 'Pago al piloto',
+            'handling' => 'Handling',
+            'otros'    => 'Otros',
+        ];
+
+        $rows = DB::table('journal_transactions')
+            ->where('ref_model', self::LEDGER_MODEL)
+            ->where('ref_model_id', $pirep->id)
+            ->where('debit', '>', 0)
+            ->get(['memo', 'debit']);
+
+        $buckets = [];
+        foreach ($rows as $row) {
+            $memo = strtolower((string) $row->memo);
+
+            if (str_contains($memo, 'fare')) {
+                $key = 'tarifas';
+            } elseif (str_contains($memo, 'fuel')) {
+                $key = 'fuel';
+            } elseif (str_contains($memo, 'block time')) {
+                $key = 'bloque';
+            } elseif (str_contains($memo, 'pilot payment')) {
+                $key = 'piloto';
+            } elseif (str_contains($memo, 'handling')) {
+                $key = 'handling';
+            } else {
+                $key = 'otros';
+            }
+
+            $buckets[$key] = round(($buckets[$key] ?? 0) + ((int) $row->debit) / 100, 2);
+        }
+
+        arsort($buckets);
+
+        $out = [];
+        foreach ($buckets as $key => $amount) {
+            $out[$labels[$key]] = $amount;
+        }
+
+        return $out;
     }
 
     /**

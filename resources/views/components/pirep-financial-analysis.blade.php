@@ -75,7 +75,7 @@
                 <span class="text-muted">{{ $fare->code }}</span>
                 {{ $fare->type == 1 ? 'carga' : 'pax' }} × {{ $fare->count }}
               </td>
-              <td class="text-end text-muted">{{ number_format($fare->price) }}/ud</td>
+              <td class="text-end text-muted">{{ rtrim(rtrim(number_format($fare->price, 2, '.', ''), '0'), '.') }}/ud</td>
               <td class="text-end fw-semibold">{{ number_format($fare->price * $fare->count) }}</td>
             </tr>
           @endforeach
