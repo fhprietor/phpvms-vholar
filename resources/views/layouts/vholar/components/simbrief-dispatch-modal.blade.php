@@ -153,6 +153,9 @@
     const sbNoteColors = { ok: 'var(--vh-success)', warn: 'var(--vh-warning)', danger: 'var(--vh-danger)', info: 'var(--vh-silver-dim)' };
     const sbNoteIcons  = { ok: 'bi-check-circle-fill', warn: 'bi-exclamation-triangle-fill', danger: 'bi-x-octagon-fill', info: 'bi-info-circle-fill' };
     let sbRequestSeq = 0;
+    // `type` que se manda a SimBrief: el airframe del piloto/avion si el endpoint
+    // lo resuelve, y mientras tanto (o si el endpoint falla) el ICAO del boton.
+    let sbSimBriefType = '';
 
     function sbSetSuggestion(title, notes, icon) {
         const box     = document.getElementById('sb-suggestion');
@@ -201,6 +204,12 @@
         if (!data || data.ok === false) {
             sbSetSuggestion('', [{ level: 'info', text: 'No se pudo calcular el sugerido.' }]);
             return;
+        }
+
+        // El airframe lo resuelve el servidor (campo de perfil del piloto, luego
+        // el del avion/subflota, luego el ICAO). Si no viene, se queda el del boton.
+        if (data.simbrief && data.simbrief.type) {
+            sbSimBriefType = data.simbrief.type;
         }
 
         if (data.applicable === false) {
@@ -278,6 +287,9 @@
         document.getElementById('sb-acreg').value  = d.acreg  || '';
         document.getElementById('sb-cpt').value    = sbCaptain;
 
+        // Hasta que responda el endpoint, se manda el tipo del boton.
+        sbSimBriefType = d.actype || '';
+
         const t = new Date(Date.now() + 40 * 60000);
         document.getElementById('sb-deptm').value =
             String(t.getUTCHours()).padStart(2,'0') + ':' + String(t.getUTCMinutes()).padStart(2,'0');
@@ -311,7 +323,7 @@
             fltnum:     d.fltnum,
             orig:       d.orig,
             dest:       d.dest,
-            type:       document.getElementById('sb-actype').value,
+            type:       sbSimBriefType || document.getElementById('sb-actype').value,
             reg:        document.getElementById('sb-acreg').value,
             cpt:        document.getElementById('sb-cpt').value,
             civalue:    document.getElementById('sb-ci').value || '30',

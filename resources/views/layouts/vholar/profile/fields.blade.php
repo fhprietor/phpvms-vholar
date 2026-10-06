@@ -153,6 +153,9 @@
                         <input type="text" name="field_{{ $field->slug }}" id="field_{{ $field->slug }}"
                             class="form-control" value="{{ $field->value }}" />
                     @endif
+                    @if (filled($field->description))
+                        <div class="form-text">{{ $field->description }}</div>
+                    @endif
                     @if ($errors->has('field_' . $field->slug))
                         <div id="field_{{ $field->slug }}Feedback" class="invalid-feedback">
                             {{ $errors->first('field_' . $field->slug) }}</div>

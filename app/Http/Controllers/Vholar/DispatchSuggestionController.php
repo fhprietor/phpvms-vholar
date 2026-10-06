@@ -7,6 +7,7 @@ use App\Models\Aircraft;
 use App\Models\Flight;
 use App\Models\Subfleet;
 use App\Services\DispatchSuggestionService;
+use App\Services\SimBriefAirframeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,17 @@ use Illuminate\Http\Request;
  * El avion reservado (matricula) es la fuente del tipo y de la subflota; si no
  * llega, se cae al tipo declarado en el boton y a la primera subflota de ese
  * tipo, para que el endpoint nunca devuelva un 500 por un data-* que falte.
+ *
+ * Ademas del sugerido, la respuesta lleva el `type` que hay que mandar a SimBrief
+ * para seleccionar el airframe: el del piloto si lo ha guardado en su perfil, y
+ * si no el del avion/subflota, y si no el ICAO pelado. Sin campo de perfil todo
+ * sigue funcionando igual que antes.
  */
 class DispatchSuggestionController extends Controller
 {
     public function __construct(
-        private readonly DispatchSuggestionService $suggestionSvc
+        private readonly DispatchSuggestionService $suggestionSvc,
+        private readonly SimBriefAirframeService $airframeSvc
     ) {}
 
     public function show(Request $request): JsonResponse
@@ -38,13 +45,48 @@ class DispatchSuggestionController extends Controller
             return response()->json(['ok' => false, 'error' => 'flight_not_found'], 404);
         }
 
-        $suggestion = $this->suggestionSvc->suggest(
-            $flight,
-            $this->resolveAircraft($data),
-            $request->user()
-        );
+        $aircraft = $this->resolveAircraft($data);
+        $user = $request->user();
 
-        return response()->json(['ok' => true] + $suggestion);
+        $suggestion = $this->suggestionSvc->suggest($flight, $aircraft, $user);
+        $simbrief = $this->airframeSvc->resolveType($aircraft, $user, $data['actype'] ?? null);
+
+        $notes = $suggestion['notes'] ?? [];
+        if ($simbrief['note'] !== null) {
+            $notes[] = $simbrief['note'];
+        }
+
+        return response()->json($this->payload($suggestion, $simbrief, $notes));
+    }
+
+    /**
+     * Arma la respuesta.
+     *
+     * OJO con `+`: no pisa claves ya existentes, asi que las notas del sugerido y
+     * el aviso del airframe se asignan al final. Con `+ ['notes' => $notes]` el
+     * aviso del airframe se perdia en silencio (las notas del sugerido ya
+     * ocupaban la clave).
+     *
+     * @param array<string, mixed>                                              $suggestion
+     * @param array{type: string, airframe: string|null, source: string, note: array<string, string>|null} $simbrief
+     * @param array<int, array{level: string, text: string}>                    $notes
+     *
+     * @return array<string, mixed>
+     */
+    private function payload(array $suggestion, array $simbrief, array $notes): array
+    {
+        $payload = [
+            'ok'       => true,
+            'simbrief' => [
+                'type'     => $simbrief['type'],
+                'airframe' => $simbrief['airframe'],
+                'source'   => $simbrief['source'],
+            ],
+        ] + $suggestion;
+
+        $payload['notes'] = $notes;
+
+        return $payload;
     }
 
     /**
