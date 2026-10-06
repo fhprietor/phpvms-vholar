@@ -13,10 +13,13 @@ use App\Models\SimBrief;
 use App\Models\User;
 use App\Repositories\Criteria\WhereCriteria;
 use App\Repositories\FlightRepository;
+use App\Services\DispatchSuggestionService;
 use App\Services\FareService;
 use App\Services\FlightService;
+use App\Services\SimBriefUrlService;
 use App\Services\UserService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
@@ -26,9 +29,11 @@ use Prettus\Repository\Exceptions\RepositoryException;
 class FlightController extends Controller
 {
     public function __construct(
+        private readonly DispatchSuggestionService $suggestionSvc,
         private readonly FareService $fareSvc,
         private readonly FlightRepository $flightRepo,
         private readonly FlightService $flightSvc,
+        private readonly SimBriefUrlService $simbriefUrlSvc,
         private readonly UserService $userSvc
     ) {}
 
@@ -219,5 +224,70 @@ class FlightController extends Controller
             ->get();
 
         return $aircraft;
+    }
+
+    /**
+     * Despacho del vuelo para el cliente ACARS: sugerido + URL de SimBrief.
+     *
+     * Existe porque vmsOpenAcars montaba la URL de SimBrief por su cuenta y se
+     * saltaba lo que hace la web: el sugerido de PAX/carga (minimo rentable) y
+     * los parametros canonicos. Aqui el servidor devuelve la URL ya montada y el
+     * cliente solo tiene que abrirla, asi que las dos vias comparten calculo y
+     * parametros.
+     *
+     * No confundir con `briefing`, que devuelve el OFP ya generado que phpVMS
+     * tenga guardado. El nombre lleva el prefijo `simbrief` porque
+     * `Controller::dispatch()` ya existe en el framework.
+     */
+    public function simbriefDispatch(string $id, Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $flight = $this->flightRepo->with(['airline', 'subfleets'])->findWithoutFail($id);
+        if ($flight === null) {
+            return response()->json(['ok' => false, 'error' => 'flight_not_found'], 404);
+        }
+
+        $aircraft = filled($request->input('aircraft_id'))
+            ? Aircraft::with('subfleet')->find($request->input('aircraft_id'))
+            : null;
+
+        if ($aircraft === null) {
+            return response()->json(['ok' => false, 'error' => 'aircraft_not_found'], 422);
+        }
+
+        // El avion tiene que estar entre los que puede volar el piloto en ese
+        // vuelo: mismas reglas que usa `aircraft()` para listarlos.
+        $user_subfleets = $this->userSvc->getAllowableSubfleets($user)->pluck('id')->toArray();
+        $flight_subfleets = $flight->subfleets->pluck('id')->toArray();
+        $subfleet_ids = filled($flight_subfleets)
+            ? array_intersect($user_subfleets, $flight_subfleets)
+            : $user_subfleets;
+
+        if (!in_array($aircraft->subfleet_id, $subfleet_ids, true)) {
+            return response()->json(['ok' => false, 'error' => 'aircraft_not_allowed'], 403);
+        }
+
+        $suggestion = $this->suggestionSvc->suggest($flight, $aircraft, $user);
+
+        $params = $this->simbriefUrlSvc->params(
+            $flight,
+            $aircraft,
+            $user,
+            (int) ($suggestion['suggestion']['pax'] ?? 0),
+            (int) ($suggestion['suggestion']['cargo'] ?? 0),
+            $request->input('dep_time')
+        );
+
+        return response()->json([
+            'ok'          => true,
+            'flight_id'   => $flight->id,
+            'aircraft_id' => $aircraft->id,
+            'simbrief'    => [
+                'url'    => $this->simbriefUrlSvc->url($params),
+                'params' => $params,
+            ],
+        ] + $suggestion);
     }
 }

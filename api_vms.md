@@ -268,6 +268,57 @@ Colección de `NavdataResource` con detalles de navaids.
 
 Aeronaves disponibles para el vuelo (filtradas por subflota, estado, aeropuerto y bids).
 
+### `GET /api/flights/{id}/dispatch` _(api.auth)_
+
+Despacho del vuelo para el cliente ACARS: devuelve el **sugerido de PAX/carga**
+(el mismo cálculo que el modal de la web) y la **URL de SimBrief ya montada**, para
+que el cliente no tenga que construirla. Es lo que evita que el cliente despache
+por su cuenta: si el servidor cambia un parámetro, cambia en las dos vías.
+
+El cliente solo tiene que **abrir `simbrief.url`** en el navegador del piloto
+(igual que hace hoy con su propia URL) y mostrar los `notes` si quiere. Si la
+llamada falla, puede seguir con su construcción local: no hay regresión.
+
+| Query Param | Obligatorio | Tipo | Descripción |
+|---|---|---|---|
+| `aircraft_id` | Sí | uuid | Avión reservado. Debe ser de una subflota que el piloto pueda volar en ese vuelo |
+| `dep_time` | No | string | Salida UTC en `HHMM` o `HH:MM`. Por defecto, ahora + 40 min |
+
+Respuesta (recortada):
+
+```json
+{
+  "ok": true,
+  "flight_id": "yz0o45ER36N4kaOA",
+  "aircraft_id": 15,
+  "applicable": true,
+  "simbrief": {
+    "url": "https://dispatch.simbrief.com/options/custom?airline=VHR&fltnum=378&…",
+    "params": {
+      "airline": "VHR", "fltnum": "378", "orig": "MDSD", "dest": "SKCL",
+      "type": "A320", "reg": "HK6251", "cpt": "NOMBRE DEL PILOTO",
+      "civalue": "30", "units": "kgs", "maps": "detailed", "static_url": "1",
+      "deph": "04", "depm": "10", "flighttype": "s",
+      "fl": "35000", "pax": "70"
+    }
+  },
+  "suggestion": { "pax": 70, "cargo": 0, "margin_pct": 20.4, "target_reached": true },
+  "notes": [ { "level": "ok", "text": "Margen estimado: +20,4 %." } ]
+}
+```
+
+Notas:
+
+- **`fl` va en PIES** (`35000`), nunca en centenas: SimBrief documenta el parámetro
+  como `34000` o `FL340`. El nivel sale de `flights.level` y, si el vuelo no lo
+  trae, del criterio por familia de equipo del modal.
+- `pax` y `cargo` solo aparecen cuando tienen valor. En operaciones no regulares
+  (`route_code` CH, CA, PS o FR) no se sugiere carga: se devuelve la URL sin
+  `pax`/`cargo`.
+- `route` solo viaja cuando el vuelo la tiene; si no, SimBrief genera la suya.
+- Errores: `404 flight_not_found`, `422 aircraft_not_found`,
+  `403 aircraft_not_allowed`.
+
 ---
 
 ## 1.8 PIREPs (Reportes de Vuelo)

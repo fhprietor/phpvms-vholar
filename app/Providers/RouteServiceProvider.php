@@ -602,6 +602,7 @@ class RouteServiceProvider extends ServiceProvider
                 Route::get('flights/{id}/briefing', 'FlightController@briefing')->name('flights.briefing');
                 Route::get('flights/{id}/route', 'FlightController@route');
                 Route::get('flights/{id}/aircraft', 'FlightController@aircraft');
+                Route::get('flights/{id}/dispatch', 'FlightController@simbriefDispatch');
 
                 Route::get('pireps', 'UserController@pireps');
                 Route::put('pireps/{pirep_id}', 'PirepController@update');
