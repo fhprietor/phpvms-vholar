@@ -279,6 +279,9 @@ El cliente solo tiene que **abrir `simbrief.url`** en el navegador del piloto
 (igual que hace hoy con su propia URL) y mostrar los `notes` si quiere. Si la
 llamada falla, puede seguir con su construcción local: no hay regresión.
 
+> Guía de integración para el equipo de vmsOpenAcars (qué quitar del cliente,
+> errores, compatibilidad y comprobaciones): `docs/vmsopenacars/DESPACHO-ENDPOINT.md`.
+
 | Query Param | Obligatorio | Tipo | Descripción |
 |---|---|---|---|
 | `aircraft_id` | Sí | uuid | Avión reservado. Debe ser de una subflota que el piloto pueda volar en ese vuelo |
