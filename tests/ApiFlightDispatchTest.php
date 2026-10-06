@@ -124,6 +124,33 @@ final class ApiFlightDispatchTest extends TestCase
 
         // Sin carga que completar, no se manda el parametro.
         $this->assertArrayNotHasKey('cargo', $response->json('simbrief.params'));
+
+        // Parametros segun la tabla oficial y el formulario del core.
+        $params = $response->json('simbrief.params');
+        $this->assertSame('detail', $params['maps']);
+        $this->assertArrayNotHasKey('static_url', $params);
+
+        // El Item 18 sale del setting, con el remark de la aerolinea por defecto.
+        $this->assertSame('CS/VHOLAR IVAOVA/VHR OPR/VHR', $params['extrarmk']);
+    }
+
+    public function test_the_item_18_remark_is_configurable(): void
+    {
+        Setting::where('key', 'simbrief.extrarmk')->update(['value' => 'RMK/PRUEBA VHR OPR/VHR']);
+
+        [$user, $flight, $aircraft] = $this->scenario();
+
+        $this->callApi($user, $flight->id, ['aircraft_id' => $aircraft->id])
+            ->assertOk()
+            ->assertJsonPath('simbrief.params.extrarmk', 'RMK/PRUEBA VHR OPR/VHR');
+
+        // Vacio = no se manda el parametro.
+        Setting::where('key', 'simbrief.extrarmk')->update(['value' => '']);
+
+        $params = $this->callApi($user, $flight->id, ['aircraft_id' => $aircraft->id])
+            ->assertOk()->json('simbrief.params');
+
+        $this->assertArrayNotHasKey('extrarmk', $params);
     }
 
     public function test_the_flight_level_is_sent_in_feet(): void

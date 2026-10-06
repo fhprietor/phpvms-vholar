@@ -20,14 +20,16 @@ use Carbon\Carbon;
  * PIES (`34000, FL340`). Aqui queda una sola definicion, que es la que devuelve
  * el endpoint del API.
  *
- * Los parametros replican a proposito los del modal, para que el cliente
- * despache igual que la web. Tres valores siguen pendientes de decidir porque no
- * cuadran con la tabla oficial de SimBrief; cuando se decidan, se cambian AQUI:
+ * Los parametros siguen a la tabla oficial de SimBrief y al formulario del core
+ * de phpVMS, que es la referencia dentro del proyecto:
  *
- *   - `maps=detailed`: la tabla documenta `detail, simple, none`.
- *   - `static_url=1` : no aparece en ninguna de las dos tablas oficiales.
- *   - `extrarmk`     : incluye un `CS/VHOLAR IVAOVA/<aerolinea>` que no es un
- *                      callsign valido (el campo CS/ espera el indicativo).
+ *   - `maps` = `detail` (el `<select>` del formulario usa detail/simple/none).
+ *     El modal mandaba `detailed`, que no es un valor documentado.
+ *   - sin `static_url`: no existe en ninguna tabla; el formulario del core usa
+ *     `static_id`, que es otra cosa (y no la usamos).
+ *   - `extrarmk` (Extra FPL Info, Item 18) sale del setting
+ *     `simbrief.extrarmk`, editable en Admin > Settings. El modal lo llevaba
+ *     escrito a mano; ahora es configurable y vacio significa no mandarlo.
  */
 class SimBriefUrlService extends Service
 {
@@ -80,11 +82,9 @@ class SimBriefUrlService extends Service
             'cpt'        => (string) ($user?->name ?? ''),
             'civalue'    => self::DEFAULT_COST_INDEX,
             'units'      => 'kgs',
-            'maps'       => 'detailed',
-            'static_url' => '1',
+            'maps'       => 'detail',
             'deph'       => $deph,
             'depm'       => $depm,
-            'extrarmk'   => 'OPR/'.$airline.' CS/VHOLAR IVAOVA/'.$airline,
             'flighttype' => 's',
             'fl'         => (string) $this->flightLevel($flight, $type),
         ];
@@ -95,6 +95,13 @@ class SimBriefUrlService extends Service
 
         if ($cargo > 0) {
             $params['cargo'] = (string) $cargo;
+        }
+
+        // Item 18 del plan (parametro `extrarmk`), configurable en Admin >
+        // Settings. Vacio = no se manda.
+        $extra = trim((string) setting('simbrief.extrarmk', ''));
+        if ($extra !== '') {
+            $params['extrarmk'] = $extra;
         }
 
         $route = trim((string) ($flight->getRawOriginal('route') ?? ''));

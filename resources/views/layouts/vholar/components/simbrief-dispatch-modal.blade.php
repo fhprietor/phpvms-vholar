@@ -120,6 +120,8 @@
     const sbModalEl = document.getElementById('simbriefDispatchModal');
     const sbModal   = new bootstrap.Modal(sbModalEl);
     const sbCaptain = @json(Auth::user()->name ?? '');
+    // Item 18 del plan (parametro `extrarmk`), configurable en Admin > Settings.
+    const sbExtraRmk = @json(trim((string) setting('simbrief.extrarmk', '')));
 
     // Close buttons — explicit hide() avoids data-bs-dismiss conflicts
     sbModalEl.querySelectorAll('.sb-close-btn').forEach(function (btn) {
@@ -306,6 +308,11 @@
         const d  = this.dataset;
         const tm = (document.getElementById('sb-deptm').value || '00:00').split(':');
         const flFt = parseInt(document.getElementById('sb-fl').value, 10) || 0;
+        // Parametros segun la tabla oficial de SimBrief. Ojo: `maps` es `detail`
+        // (el <select> del formulario del core usa detail/simple/none), no
+        // `detailed`. Sin `static_url`,
+        // que no existe (el core usa `static_id`). El Item 18 (`extrarmk`) sale
+        // del setting `simbrief.extrarmk` y se anade mas abajo.
         const params = new URLSearchParams({
             airline:    d.airline,
             fltnum:     d.fltnum,
@@ -316,11 +323,9 @@
             cpt:        document.getElementById('sb-cpt').value,
             civalue:    document.getElementById('sb-ci').value || '30',
             units:      'kgs',
-            maps:       'detailed',
-            static_url: '1',
+            maps:       'detail',
             deph:       tm[0] || '00',
             depm:       tm[1] || '00',
-            extrarmk:   'OPR/' + d.airline + ' CS/VHOLAR IVAOVA/' + d.airline,
             flighttype: document.getElementById('sb-flighttype').value,
         });
         // `fl` va en PIES, no en centenas: la tabla oficial de parametros de
@@ -338,6 +343,7 @@
         if (deprwy) params.append('origrwy', deprwy);
         if (arrrwy) params.append('destrwy', arrrwy);
         if (route)  params.append('route',  route);
+        if (sbExtraRmk) params.append('extrarmk', sbExtraRmk);
 
         window.open('https://dispatch.simbrief.com/options/custom?' + params.toString(), '_blank');
         sbModal.hide();

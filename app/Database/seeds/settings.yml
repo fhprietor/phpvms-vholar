@@ -431,6 +431,13 @@
   options: ''
   type: boolean
   description: 'When enabled, only phpVMS Airframes will be listed for flight planning (instead of combined list)'
+- key: simbrief.extrarmk
+  name: 'Extra FPL Info (Item 18)'
+  group: simbrief
+  value: 'CS/VHOLAR IVAOVA/VHR OPR/VHR'
+  options: ''
+  type: string
+  description: 'Texto que SimBrief pone en el Item 18 del plan (parametro extrarmk). Vacio para no mandarlo'
 - key: pireps.duplicate_check_time
   name: 'PIREP duplicate time check'
   group: pireps

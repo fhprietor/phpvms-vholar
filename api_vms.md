@@ -297,9 +297,10 @@ Respuesta (recortada):
     "params": {
       "airline": "VHR", "fltnum": "378", "orig": "MDSD", "dest": "SKCL",
       "type": "A320", "reg": "HK6251", "cpt": "NOMBRE DEL PILOTO",
-      "civalue": "30", "units": "kgs", "maps": "detailed", "static_url": "1",
+      "civalue": "30", "units": "kgs", "maps": "detail",
       "deph": "04", "depm": "10", "flighttype": "s",
-      "fl": "35000", "pax": "70"
+      "fl": "35000", "pax": "70",
+      "extrarmk": "CS/VHOLAR IVAOVA/VHR OPR/VHR"
     }
   },
   "suggestion": { "pax": 70, "cargo": 0, "margin_pct": 20.4, "target_reached": true },
@@ -316,6 +317,12 @@ Notas:
   (`route_code` CH, CA, PS o FR) no se sugiere carga: se devuelve la URL sin
   `pax`/`cargo`.
 - `route` solo viaja cuando el vuelo la tiene; si no, SimBrief genera la suya.
+- Los parámetros siguen la tabla oficial de SimBrief y el formulario del core:
+  `maps=detail` (no `detailed`) y **sin** `static_url`, que no existe en la tabla
+  (el core usa `static_id`, que es otra cosa).
+- `extrarmk` es el **Extra FPL Info (Item 18)** del plan. Sale del setting
+  `simbrief.extrarmk` (Admin > Settings); viene con el remark de la aerolínea y
+  vacío significa no mandarlo.
 - Errores: `404 flight_not_found`, `422 aircraft_not_found`,
   `403 aircraft_not_allowed`.
 
