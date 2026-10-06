@@ -30,6 +30,7 @@
     $reservedAircraftRegistration = null;
     $reservedAircraftType = null;
     $reservedAircraftIcao = '';
+    $reservedAircraftId = null;
     $hasReservedAircraft = false;
     
     if ($isBid && isset($saved[$flight->id])) {
@@ -37,6 +38,7 @@
         if ($bid && $bid->aircraft_id) {
             $aircraft = App\Models\Aircraft::find($bid->aircraft_id);
             if ($aircraft) {
+                $reservedAircraftId = $aircraft->id;
                 if ($aircraft->registration) {
                     $reservedAircraftRegistration = $aircraft->registration;
                 }
@@ -311,6 +313,8 @@
                     
                     @if ($isBid && $hasReservedAircraft)
                         <button class="action-link sb-dispatch-btn" type="button"
+                            data-flight-id="{{ $flight->id }}"
+                            data-aircraft-id="{{ $reservedAircraftId ?? '' }}"
                             data-fltnum="{{ $flight->flight_number }}"
                             data-airline="{{ optional($flight->airline)->icao ?? '' }}"
                             data-orig="{{ $flight->dpt_airport_id }}"

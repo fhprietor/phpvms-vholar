@@ -362,6 +362,7 @@
                     $reservedRegistration = null;
                     $reservedSubfleetName = null;
                     $reservedAircraftIcao = '';
+                    $reservedAircraftId = null;
                     if ($isCompleted && $linkedPirep && $linkedPirep->aircraft) {
                       $acIcao = $linkedPirep->aircraft->icao;
                       $acReg  = $linkedPirep->aircraft->registration;
@@ -371,6 +372,7 @@
                         $aircraft = App\Models\Aircraft::find($bid->aircraft_id);
                         if ($aircraft) {
                           $hasReservedAircraft  = true;
+                          $reservedAircraftId   = $aircraft->id;
                           $reservedRegistration = $aircraft->registration;
                           $reservedSubfleetName = $aircraft->subfleet->name ?? ($aircraft->name ?? $aircraft->icao);
                           $reservedAircraftIcao = $aircraft->icao ?? '';
@@ -538,6 +540,8 @@
 
                           @if($isBid && $hasReservedAircraft)
                             <button class="lb-action-btn sb-dispatch-btn" type="button" title="SimBrief"
+                              data-flight-id="{{ $flight?->id }}"
+                              data-aircraft-id="{{ $reservedAircraftId ?? '' }}"
                               data-fltnum="{{ $flight->flight_number }}"
                               data-airline="{{ optional($flight->airline)->icao ?? '' }}"
                               data-orig="{{ $flight->dpt_airport_id }}"

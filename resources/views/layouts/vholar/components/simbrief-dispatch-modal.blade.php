@@ -21,6 +21,18 @@
                         <div class="text-muted small" id="sb-dest-name-disp"></div>
                     </div>
                 </div>
+                {{-- Sugerido de PAX y carga: lo rellena el endpoint de despacho --}}
+                <div id="sb-suggestion" class="mb-3" style="display:none;">
+                    <div class="d-flex align-items-start gap-2 p-3"
+                         style="background:var(--vh-primary-active); border:1px solid var(--vh-primary); border-radius:10px;">
+                        <i class="bi bi-calculator" id="sb-suggestion-icon"
+                           style="color:var(--vh-silver-dim); font-size:1.05rem; line-height:1.3;"></i>
+                        <div style="font-size:0.84rem; line-height:1.45; min-width:0;">
+                            <div id="sb-suggestion-title" class="fw-bold" style="color:var(--vh-white);"></div>
+                            <div id="sb-suggestion-notes" style="color:var(--vh-text);"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label class="form-label small text-muted mb-1">VUELO</label>
@@ -133,6 +145,123 @@
         return 33000;
     }
 
+    // --- Sugerido de PAX y carga -------------------------------------------------
+    // Lo calcula el servidor (DispatchSuggestionService) con el coste real del
+    // libro; aqui solo se pinta y se rellenan los campos. Si falla, se mantiene
+    // la carga por defecto de sbDefaultPax, para que el despacho nunca se rompa.
+    const SB_SUGGESTION_URL = @json(route('vholar.dispatch.suggestion'));
+    const sbNoteColors = { ok: 'var(--vh-success)', warn: 'var(--vh-warning)', danger: 'var(--vh-danger)', info: 'var(--vh-silver-dim)' };
+    const sbNoteIcons  = { ok: 'bi-check-circle-fill', warn: 'bi-exclamation-triangle-fill', danger: 'bi-x-octagon-fill', info: 'bi-info-circle-fill' };
+    let sbRequestSeq = 0;
+
+    function sbSetSuggestion(title, notes, icon) {
+        const box     = document.getElementById('sb-suggestion');
+        const titleEl = document.getElementById('sb-suggestion-title');
+        const notesEl = document.getElementById('sb-suggestion-notes');
+        const iconEl  = document.getElementById('sb-suggestion-icon');
+
+        if (!title && (!notes || notes.length === 0)) {
+            box.style.display = 'none';
+            return;
+        }
+
+        iconEl.className = 'bi ' + (icon || 'bi-calculator');
+        titleEl.textContent = title || '';
+        titleEl.style.display = title ? '' : 'none';
+
+        notesEl.innerHTML = '';
+        (notes || []).forEach(function (n) {
+            const row = document.createElement('div');
+            row.className = 'd-flex align-items-start gap-1 mt-1';
+
+            const i = document.createElement('i');
+            i.className = 'bi ' + (sbNoteIcons[n.level] || sbNoteIcons.info);
+            i.style.color = sbNoteColors[n.level] || sbNoteColors.info;
+            i.style.fontSize = '0.8rem';
+            i.style.lineHeight = '1.45';
+            i.style.flex = '0 0 auto';
+
+            const span = document.createElement('span');
+            span.textContent = n.text;
+
+            row.appendChild(i);
+            row.appendChild(span);
+            notesEl.appendChild(row);
+        });
+
+        box.style.display = '';
+    }
+
+    function sbMoney(value) {
+        if (value === null || value === undefined) return '';
+        return '$' + Math.round(value).toLocaleString('es-CO');
+    }
+
+    function sbApplySuggestion(data) {
+        if (!data || data.ok === false) {
+            sbSetSuggestion('', [{ level: 'info', text: 'No se pudo calcular el sugerido.' }]);
+            return;
+        }
+
+        if (data.applicable === false) {
+            sbSetSuggestion(
+                data.flight_number ? ('Vuelo ' + data.flight_number) : 'Sin sugerido',
+                data.notes || [],
+                'bi-info-circle'
+            );
+            return;
+        }
+
+        const s = data.suggestion || {};
+
+        document.getElementById('sb-pax').value   = s.pax !== undefined ? s.pax : '';
+        document.getElementById('sb-cargo').value = s.cargo !== undefined ? s.cargo : '';
+
+        const parts = [s.pax + ' pax'];
+        if (s.cargo > 0) parts.push(Math.round(s.cargo).toLocaleString('es-CO') + ' kg');
+
+        sbSetSuggestion(
+            'Sugerido: ' + parts.join(' + ') + ' (objetivo ' + sbMoney(s.target) + ')',
+            data.notes || [],
+            'bi-calculator'
+        );
+    }
+
+    function sbLoadSuggestion(d) {
+        const seq = ++sbRequestSeq;
+
+        if (!d.flightId) {
+            sbSetSuggestion('', [{ level: 'info', text: 'Sin datos del vuelo: se mantiene la carga por defecto.' }]);
+            return;
+        }
+
+        sbSetSuggestion('Calculando el sugerido…', [], 'bi-hourglass-split');
+
+        const params = new URLSearchParams({
+            flight_id:   d.flightId,
+            aircraft_id: d.aircraftId || '',
+            actype:      d.actype || '',
+            acreg:       d.acreg || '',
+        });
+
+        fetch(SB_SUGGESTION_URL + '?' + params.toString(), {
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            credentials: 'same-origin',
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function (data) {
+                if (seq !== sbRequestSeq) return;   // respuesta obsoleta
+                sbApplySuggestion(data);
+            })
+            .catch(function () {
+                if (seq !== sbRequestSeq) return;
+                sbSetSuggestion('', [{ level: 'info', text: 'No se pudo calcular el sugerido; se mantiene la carga por defecto.' }]);
+            });
+    }
+
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.sb-dispatch-btn');
         if (!btn) return;
@@ -168,6 +297,8 @@
         gen.dataset.dest    = d.dest    || '';
 
         sbModal.show();
+
+        sbLoadSuggestion(d);
     });
 
     document.getElementById('sb-generate-btn').addEventListener('click', function () {
