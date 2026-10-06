@@ -320,6 +320,12 @@ Notas:
 - `pax` y `cargo` solo aparecen cuando tienen valor. En operaciones no regulares
   (`route_code` CH, CA, PS o FR) no se sugiere carga: se devuelve la URL sin
   `pax`/`cargo`.
+- ⚠️ **`cargo` va en MILES de la unidad de `units`**, no en kg: con `units=kgs`,
+  13.498 kg se mandan como `cargo=13.498`. Es el mismo convenio que
+  `manualpayload` y `manualzfw` (el propio SimBrief divide esos tres campos entre
+  1000 al compartir un vuelo, y sus ejemplos son `cargo = 5.0`, `manualzfw = 40.1`).
+  Mandarlo en kg hace que SimBrief lo lea como 13.498.000 kg y lo **recorte al
+  máximo**: el campo «Freight» abría con el payload máximo del avión.
 - `route` solo viaja cuando el vuelo la tiene; si no, SimBrief genera la suya.
 - **`acdata` lleva nuestros pesos medios**: el de pasajero (`simbrief.noncharter_pax_weight`)
   y el de equipaje, que sale del setting `simbrief.baggage_by_class` (kg por clase,

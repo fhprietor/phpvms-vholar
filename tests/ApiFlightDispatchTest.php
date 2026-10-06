@@ -161,6 +161,38 @@ final class ApiFlightDispatchTest extends TestCase
         $this->assertStringContainsString('"bagwgt":30', $response->json('simbrief.params.acdata'));
     }
 
+    /**
+     * `cargo` va en MILES de la unidad de `units`: con `units=kgs`, 13.498 kg se
+     * manda como `cargo=13.498`. En kg SimBrief lo lee como 13.498.000 kg y lo
+     * recorta al maximo (el campo Freight abria con el payload maximo).
+     */
+    public function test_the_cargo_goes_in_thousands_of_the_selected_unit(): void
+    {
+        [$user, $flight, $aircraft] = $this->scenario(['flight_time' => 300]);
+
+        // Una tarifa de carga, que es lo que hace que el sugerido lleve carga.
+        $cargoFareId = DB::table('fares')->insertGetId([
+            'code' => 'CGO', 'name' => 'CGO', 'price' => 2.8, 'cost' => 0.65,
+            'capacity' => 1, 'type' => FareType::CARGO, 'active' => true,
+        ]);
+        DB::table('subfleet_fare')->insert([
+            'subfleet_id' => $aircraft->subfleet_id,
+            'fare_id'     => $cargoFareId,
+        ]);
+
+        $response = $this->callApi($user, $flight->id, ['aircraft_id' => $aircraft->id])->assertOk();
+
+        $cargoKg = (float) $response->json('suggestion.cargo');
+        $this->assertGreaterThan(1000, $cargoKg, 'el caso de prueba debe tener carga que cubrir');
+        $this->assertTrue($response->json('suggestion.target_reached'));
+
+        $this->assertEqualsWithDelta(
+            round($cargoKg / 1000, 3),
+            (float) $response->json('simbrief.params.cargo'),
+            0.001
+        );
+    }
+
     public function test_the_item_18_remark_is_configurable(): void
     {
         Setting::where('key', 'simbrief.extrarmk')->update(['value' => 'RMK/PRUEBA VHR OPR/VHR']);

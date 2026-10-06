@@ -131,6 +131,12 @@ empieza a añadir o quitar parámetros por su cuenta, vuelve a haber dos version
    despacha con su builder de respaldo, que sepa que ahí SimBrief usaría sus
    valores por defecto (175 lb de pasajero, 55 lb de equipaje) y **recortaría la
    carga** antes de lo previsto.
+6. **Si su builder manda `cargo` (y `manualpayload`/`manualzfw`) en kg, tiene un
+   bug**: esos campos van en la URL en **MILES de la unidad** de `units`. Con
+   `units=kgs` y 15 t de carga hay que mandar `cargo=15`, no `cargo=15000`
+   (SimBrief leería 15.000.000 kg y lo recortaría al máximo: el campo «Freight»
+   abriría con el payload máximo del avión). Con la URL del servidor queda
+   resuelto, pero conviene corregirlo en el respaldo.
 
 ## 7. Cuándo llamarlo
 

@@ -351,7 +351,9 @@
         const arrrwy = document.getElementById('sb-arrrwy').value.trim();
         const route  = document.getElementById('sb-route').value.trim();
         if (pax)    params.append('pax',    pax);
-        if (cargo)  params.append('cargo',  cargo);
+        // `cargo` va en MILES de kg (SimBrief multiplica por 1000 al leerlo).
+        // En kg lo tomaria por 7.991.000 y lo recortaria al maximo.
+        if (cargo)  params.append('cargo',  (parseFloat(cargo) / 1000).toFixed(3));
         if (deprwy) params.append('origrwy', deprwy);
         if (arrrwy) params.append('destrwy', arrrwy);
         if (route)  params.append('route',  route);

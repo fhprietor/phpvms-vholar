@@ -102,8 +102,14 @@ class SimBriefUrlService extends Service
             $params['pax'] = (string) $pax;
         }
 
+        // OJO CON LA UNIDAD DE `cargo`: va en MILES de la unidad seleccionada, no
+        // en kg. Lo hace asi SimBrief en su propio codigo (al compartir un vuelo
+        // divide `cargo`, `manualpayload` y `manualzfw` entre 1e3), y los
+        // ejemplos de su documentacion lo confirman (`cargo = 5.0` son 5.000 kg).
+        // Mandarlo en kg lo interpreta como 7.991.000 kg y lo recorta al maximo
+        // permitido, que es justo el sintoma que veiamos: Freight = max payload.
         if ($cargo > 0) {
-            $params['cargo'] = (string) $cargo;
+            $params['cargo'] = (string) round($cargo / 1000, 3);
         }
 
         // Item 18 del plan (parametro `extrarmk`), configurable en Admin >
