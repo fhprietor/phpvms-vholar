@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <!-- viewport-fit=cover: respeta notch e indicador de inicio en la app instalada -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#412C4D" />
+    <meta name="robots" content="noindex" />
+    <title>Sin conexión | VHolar Virtual Airlines</title>
+    <link rel="icon" type="image/png" href="/images/pwa/icon-192.png" />
+    <link rel="apple-touch-icon" href="/images/pwa/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <!-- Colores replicados de /assets/themes/vholar/css/tokens.css (--vh-*). Este
+         fichero es estático y no pasa por Blade: si cambia la paleta, hay que
+         actualizarlos aquí a mano. -->
+    <style>
+        :root {
+            --vh-bg: #16121B;
+            --vh-surface: #1E1925;
+            --vh-border: rgba(255, 255, 255, 0.08);
+            --vh-text: #EDEAF1;
+            --vh-text-muted: #A79FB2;
+            --vh-primary: #412C4D;
+            --vh-primary-hover: #563A63;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+            background: var(--vh-bg);
+            color: var(--vh-text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Montserrat, Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+            text-align: center;
+        }
+
+        .card {
+            background: var(--vh-surface);
+            border: 1px solid var(--vh-border);
+            border-radius: 16px;
+            padding: 40px 28px;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .logo {
+            height: 56px;
+            width: auto;
+            margin-bottom: 28px;
+        }
+
+        .icon {
+            font-size: 40px;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 1.35rem;
+            margin: 0 0 12px;
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--vh-text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0 0 24px;
+        }
+
+        button {
+            font: inherit;
+            font-weight: 600;
+            color: #fff;
+            background: var(--vh-primary);
+            border: 1px solid var(--vh-primary);
+            border-radius: 10px;
+            padding: 12px 22px;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--vh-primary-hover);
+        }
+
+        .hint {
+            margin-top: 20px;
+            font-size: 0.78rem;
+            color: var(--vh-text-muted);
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="card">
+        <img class="logo" src="/images/vholar_logoweb.png" alt="VHolar Virtual Airlines" />
+        <div class="icon" aria-hidden="true">&#9992;&#65039;</div>
+        <h1>Sin conexión</h1>
+        <p>
+            No hemos podido contactar con el servidor de VHolar. Comprueba tu conexión
+            a internet y vuelve a intentarlo.
+        </p>
+        <button type="button" onclick="window.location.reload()">Reintentar</button>
+        <p class="hint">
+            Esta pantalla forma parte de la app instalada. Los datos de vuelo
+            necesitan conexión.
+        </p>
+    </main>
+
+  <script>
+    /* Rompe el bucle: si un service worker antiguo ha servido esta pagina, aqui mismo se
+       registra el SW con una URL unica (esquiva cualquier cache, incluida Cloudflare) y se
+       recarga una sola vez por minuto. Asi una version mala nunca puede quedarse pegada. */
+    (function () {
+      if (!('serviceWorker' in navigator) || !window.isSecureContext) return;
+      if (!navigator.onLine) return;
+
+      try {
+        var last = parseInt(sessionStorage.getItem('vhOfflineReload') || '0', 10);
+        if (Date.now() - last < 60000) return;
+        sessionStorage.setItem('vhOfflineReload', String(Date.now()));
+      } catch (e) { /* modo privado sin sessionStorage: seguimos */ }
+
+      navigator.serviceWorker.register('/sw.js?fresh=' + Date.now(), {
+        scope: '/',
+        updateViaCache: 'none'
+      }).then(function () {
+        return navigator.serviceWorker.ready;
+      }).then(function () {
+        window.location.reload();
+      }).catch(function () { /* si falla, se queda la pantalla offline */ });
+    })();
+  </script>
+</body>
+
+</html>

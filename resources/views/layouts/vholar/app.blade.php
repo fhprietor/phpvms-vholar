@@ -546,7 +546,11 @@
                 /* Version en la URL: Cloudflare cachea /sw.js, asi que una URL nueva es la
                    unica forma de que la correccion llegue sin tocar el panel de Cloudflare.
                    Subir esta version cada vez que se cambie sw.js. */
-                navigator.serviceWorker.register('{{ public_asset('/sw.js') }}?v=2', { scope: '/' })
+                navigator.serviceWorker.register('{{ public_asset('/sw.js') }}?v=3', {
+                    scope: '/',
+                    /* El script del SW no se toma nunca de la cache HTTP del navegador. */
+                    updateViaCache: 'none'
+                })
                     .catch(function (err) {
                         console.warn('[PWA] Service worker no registrado:', err);
                     });
