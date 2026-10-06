@@ -62,7 +62,34 @@ class DispatchSuggestionService extends Service
     /** Coste fijo por vuelo (handling de salida/llegada y tasas). */
     public const FIXED_COST = 15.0;
 
-    /** Sufijos que excluyen el vuelo del sugerido (decision del mantenedor). */
+    /**
+     * LA marca de una operacion no regular es `flights.route_code`.
+     *
+     * La pone el Centro de Operaciones: el formulario de charter
+     * (`/vmsopenops/charter/create`, `CharterController::create()`) ofrece
+     * exactamente estos codigos y los guarda en `flights.route_code`, creando el
+     * vuelo oculto (`active=0`, `visible=0`), su subflota y el bid del piloto:
+     *
+     *   CH charter de pasaje | CA charter de carga | PS posicionamiento | FR ferry
+     *
+     * El mismo campo se puede fijar a mano en el formulario de vuelos del admin.
+     * De ahi venia el "sufijo" del traspaso: el formulario tambien forma el
+     * callsign como `<user_id><codigo>` ("80CH", "80FR"), y los PIREPs de esas
+     * operaciones acaban con numeros como "025CH".
+     *
+     * El traspaso cerro CH y FR; CA y PS salen del MISMO formulario (charter de
+     * carga y posicionamiento en vacio) y quedan excluidos tambien por decision
+     * del mantenedor: ninguna de las cuatro es una operacion comercial de pasaje
+     * a la que aplicar el minimo rentable.
+     */
+    private const EXCLUDED_ROUTE_CODES = ['CH', 'CA', 'PS', 'FR'];
+
+    /**
+     * Respaldo por sufijo para cuando el numero de vuelo no es un entero.
+     * Hoy `flights.flight_number` es `int unsigned`, asi que no puede acabar en
+     * CH/FR: la comprobacion no salta, pero cubre el dia en que se ensanche la
+     * columna o llegue un dato heredado.
+     */
     private const SUFFIX_CHARTER = 'CH';
     private const SUFFIX_FERRY = 'FR';
 
@@ -146,6 +173,7 @@ class DispatchSuggestionService extends Service
         ?float $temperatureC = null
     ): array {
         $number = strtoupper(trim((string) ($flight->getRawOriginal('flight_number') ?: $flight->flight_number)));
+        $routeCode = strtoupper(trim((string) ($flight->getRawOriginal('route_code') ?? '')));
         $subfleet = $aircraft?->subfleet;
         $type = strtoupper((string) ($subfleet?->type ?: ($aircraft?->icao ?? '')));
 
@@ -154,15 +182,18 @@ class DispatchSuggestionService extends Service
             'flight_number' => $number,
             'flight_id'     => $flight->id,
             'aircraft_type' => $type ?: null,
+            'route_code'    => $routeCode ?: null,
         ];
 
-        // Charter y ferry quedan fuera por sufijo del numero de vuelo.
-        if ($number !== '' && (str_ends_with($number, self::SUFFIX_CHARTER) || str_ends_with($number, self::SUFFIX_FERRY))) {
+        // Operaciones no regulares: la marca la pone el Centro de Operaciones.
+        if (in_array($routeCode, self::EXCLUDED_ROUTE_CODES, true)
+            || ($number !== '' && (str_ends_with($number, self::SUFFIX_CHARTER) || str_ends_with($number, self::SUFFIX_FERRY)))
+        ) {
             return $base + [
                 'reason' => 'charter_or_ferry',
                 'notes'  => [[
                     'level' => 'info',
-                    'text'  => 'Vuelo '.$number.': charter o ferry. Sin sugerido de carga.',
+                    'text'  => 'Operacion no regular ('.($routeCode ?: 'CH/FR').'): sin sugerido de carga.',
                 ]],
             ];
         }
@@ -263,6 +294,7 @@ class DispatchSuggestionService extends Service
             'reason'        => $targetReached ? 'ok' : 'target_unreachable',
             'flight_id'     => $flight->id,
             'flight_number' => $number,
+            'route_code'    => $routeCode ?: null,
             'aircraft_type' => $type,
             'registration'  => $aircraft?->registration,
             'route'         => [

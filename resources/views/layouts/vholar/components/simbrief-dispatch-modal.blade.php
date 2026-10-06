@@ -204,11 +204,12 @@
         }
 
         if (data.applicable === false) {
-            sbSetSuggestion(
-                data.flight_number ? ('Vuelo ' + data.flight_number) : 'Sin sugerido',
-                data.notes || [],
-                'bi-info-circle'
-            );
+            // Las operaciones no regulares (CH/CA/PS/FR) traen su codigo de ruta;
+            // el numero de vuelo de esas operaciones es el id del piloto.
+            const title = data.route_code
+                ? ('Operacion no regular (' + data.route_code + ')')
+                : (data.flight_number ? ('Vuelo ' + data.flight_number) : 'Sin sugerido');
+            sbSetSuggestion(title, data.notes || [], 'bi-info-circle');
             return;
         }
 

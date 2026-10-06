@@ -76,6 +76,7 @@ final class DispatchSuggestionServiceTest extends TestCase
 
         $flight = Flight::factory()->create([
             'flight_number'  => 100,
+            'route_code'     => null,
             'dpt_airport_id' => $dpt->id,
             'arr_airport_id' => $arr->id,
             'flight_time'    => $minutes,
@@ -163,17 +164,58 @@ final class DispatchSuggestionServiceTest extends TestCase
         $this->assertEqualsWithDelta($estimate['total'], $result['suggestion']['pax_revenue'], 0.01);
     }
 
-    // ------------------------------------------------------------------ CH y FR
+    // ------------------------------------------------- operaciones no regulares
 
-    public function test_charter_and_ferry_numbers_are_excluded(): void
+    /**
+     * La marca real la pone el Centro de Operaciones en `flights.route_code`
+     * (`CharterController::create()`): CH charter de pasaje, CA charter de carga,
+     * PS posicionamiento y FR ferry. Ninguna es una operacion comercial de
+     * pasaje, asi que las cuatro quedan fuera. El formulario tambien deja el
+     * callsign como `<user_id><codigo>`.
+     */
+    public function test_non_scheduled_route_codes_are_excluded(): void
+    {
+        $ctx = $this->setupFlight();
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+
+        foreach (['CH', 'CA', 'PS', 'FR'] as $code) {
+            DB::table('flights')->where('id', $ctx['flight']->id)->update(['route_code' => $code]);
+
+            $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
+
+            $this->assertFalse($result['applicable'], $code.' deberia quedar fuera');
+            $this->assertSame('charter_or_ferry', $result['reason']);
+            $this->assertSame($code, $result['route_code']);
+        }
+    }
+
+    /**
+     * Un vuelo regular no lleva marca: el sugerido se calcula. Es el contraste
+     * que impide que la comprobacion se coma toda la programacion.
+     */
+    public function test_a_scheduled_flight_without_route_code_gets_a_suggestion(): void
+    {
+        $ctx = $this->setupFlight();
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
+
+        $this->assertTrue($result['applicable']);
+        $this->assertNull($result['route_code']);
+    }
+
+    /**
+     * Respaldo: si el numero de vuelo llegase con sufijo (hoy es entero y no
+     * puede), tambien queda fuera. Se prueba sobre el atributo crudo, igual que
+     * los PIREPs "025CH".
+     */
+    public function test_a_suffixed_flight_number_is_excluded_as_a_fallback(): void
     {
         $ctx = $this->setupFlight();
         $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
 
         foreach (['100CH', '100FR'] as $number) {
             $flight = $ctx['flight']->fresh();
-            // El numero se guarda entero, pero el sufijo viaja en el crudo: es el
-            // unico sitio donde puede leerse (igual que en los PIREPs, "025CH").
             $flight->flight_number = $number;
             $flight->syncOriginalAttribute('flight_number');
 
