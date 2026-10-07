@@ -48,6 +48,9 @@ final class ApiFlightDispatchTest extends TestCase
         Setting::where('key', 'finance.revenue_pax_mix_by_type')->update(['value' => '']);
         Setting::where('key', 'simbrief.baggage_by_class')->update(['value' => '10,23,46']);
         Setting::where('key', 'simbrief.noncharter_pax_weight')->update(['value' => 170]);
+        // Aqui se prueba la URL, no el coste: el handling a 0 deja las cifras
+        // esperadas como estaban (tiene sus propias pruebas en el sugerido).
+        Setting::where('key', 'airports.default_ground_handling_cost')->update(['value' => 0]);
     }
 
     /**
@@ -77,8 +80,17 @@ final class ApiFlightDispatchTest extends TestCase
             'registration'  => 'HK6251',
         ]);
 
-        $dpt = Airport::factory()->create(['id' => 'D001', 'icao' => 'D001', 'elevation' => 0]);
-        $arr = Airport::factory()->create(['id' => 'A001', 'icao' => 'A001', 'elevation' => 0]);
+        // El factory de aeropuertos pone handling y precio de combustible
+        // ALEATORIOS. A cero, como los aeropuertos reales: el precio sale del
+        // ajuste global y el handling de su ajuste por defecto.
+        $dpt = Airport::factory()->create([
+            'id' => 'D001', 'icao' => 'D001', 'elevation' => 0,
+            'ground_handling_cost' => 0, 'fuel_jeta_cost' => 0, 'fuel_100ll_cost' => 0, 'fuel_mogas_cost' => 0,
+        ]);
+        $arr = Airport::factory()->create([
+            'id' => 'A001', 'icao' => 'A001', 'elevation' => 0,
+            'ground_handling_cost' => 0, 'fuel_jeta_cost' => 0, 'fuel_100ll_cost' => 0, 'fuel_mogas_cost' => 0,
+        ]);
 
         $flight = Flight::factory()->create(array_merge([
             'flight_number'  => 378,
@@ -159,6 +171,25 @@ final class ApiFlightDispatchTest extends TestCase
 
         $response->assertOk();
         $this->assertStringContainsString('"bagwgt":30', $response->json('simbrief.params.acdata'));
+    }
+
+    /**
+     * El peso de pasajero del `acdata` (libras) es el mismo que usa el sugerido
+     * para el tope de carga (kilos): si se separan, SimBrief y nosotros
+     * planificamos con pesos distintos.
+     */
+    public function test_the_acdata_pax_weight_is_the_one_the_suggestion_uses(): void
+    {
+        [$user, $flight, $aircraft] = $this->scenario();
+
+        $response = $this->callApi($user, $flight->id, ['aircraft_id' => $aircraft->id])->assertOk();
+
+        $acdata = json_decode($response->json('simbrief.params.acdata'), true);
+
+        $this->assertSame(
+            (int) round($response->json('fares.pax_weight_kg') * 2.20462),
+            $acdata['paxwgt']
+        );
     }
 
     /**

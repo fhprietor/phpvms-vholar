@@ -45,6 +45,8 @@ final class DispatchSuggestionServiceTest extends TestCase
         Setting::where('key', 'finance.revenue_pax_mix_by_type')->update(['value' => '']);
         Setting::where('key', 'finance.revenue_estimate_enabled')->update(['value' => 1]);
         Setting::where('key', 'simbrief.baggage_by_class')->update(['value' => '10,23,46']);
+        Setting::where('key', 'simbrief.noncharter_pax_weight')->update(['value' => 170]);
+        Setting::where('key', 'airports.default_ground_handling_cost')->update(['value' => 0]);
     }
 
     /**
@@ -72,8 +74,19 @@ final class DispatchSuggestionServiceTest extends TestCase
         $dptId = 'D'.str_pad((string) ++self::$airportSeq, 3, '0', STR_PAD_LEFT);
         $arrId = 'A'.str_pad((string) ++self::$airportSeq, 3, '0', STR_PAD_LEFT);
 
-        $dpt = Airport::factory()->create(['id' => $dptId, 'icao' => $dptId, 'elevation' => $elevation]);
-        $arr = Airport::factory()->create(['id' => $arrId, 'icao' => $arrId, 'elevation' => 0]);
+        // El factory de aeropuertos pone handling y precios de combustible
+        // ALEATORIOS. Se dejan a cero para que el caso base sea determinista y use
+        // los ajustes por defecto, como en produccion (los aeropuertos reales los
+        // tienen a 0,00). El handling y el precio por aeropuerto tienen sus
+        // propias pruebas.
+        $dpt = Airport::factory()->create([
+            'id' => $dptId, 'icao' => $dptId, 'elevation' => $elevation,
+            'ground_handling_cost' => 0, 'fuel_jeta_cost' => 0, 'fuel_100ll_cost' => 0, 'fuel_mogas_cost' => 0,
+        ]);
+        $arr = Airport::factory()->create([
+            'id' => $arrId, 'icao' => $arrId, 'elevation' => 0,
+            'ground_handling_cost' => 0, 'fuel_jeta_cost' => 0, 'fuel_100ll_cost' => 0, 'fuel_mogas_cost' => 0,
+        ]);
 
         $flight = Flight::factory()->create([
             'flight_number'  => 100,
@@ -216,6 +229,139 @@ final class DispatchSuggestionServiceTest extends TestCase
         $other = $this->setupFlight(['type' => 'A306', 'flight_time' => 60]);
         $result = $this->service->suggest($other['flight']->fresh(), $other['aircraft'], null, 15.0);
         $this->assertNull($result['fares']['baggage_avg_kg']);
+    }
+
+    // ------------------------------------------------- coste real y tope de peso
+
+    /**
+     * El handling de las dos escalas es un coste fijo real: el libro lo cobra
+     * (`PirepFinanceService::payGroundHandling()`) y el sugerido no lo tenia, asi
+     * que el objetivo salia por debajo de lo que luego se paga.
+     */
+    public function test_the_airport_ground_handling_enters_the_cost(): void
+    {
+        $ctx = $this->setupFlight(['flight_time' => 60]);
+        $ctx['subfleet']->update(['ground_handling_multiplier' => null]);
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+
+        $sin = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
+        $this->assertSame(0.0, $sin['costs']['handling']);
+
+        foreach ([$ctx['flight']->dpt_airport_id, $ctx['flight']->arr_airport_id] as $id) {
+            Airport::where('id', $id)->update(['ground_handling_cost' => 700]);
+        }
+
+        $con = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
+        $this->assertSame(1400.0, $con['costs']['handling']);
+        $this->assertEqualsWithDelta($sin['costs']['fixed_total'] + 1400.0, $con['costs']['fixed_total'], 0.01);
+        $this->assertGreaterThan($sin['suggestion']['target'], $con['suggestion']['target']);
+    }
+
+    /**
+     * El multiplicador de handling de la subflota es un porcentaje (misma regla
+     * que el libro): 150 -> 150 % del coste del aeropuerto.
+     */
+    public function test_the_subfleet_handling_multiplier_applies(): void
+    {
+        $ctx = $this->setupFlight(['flight_time' => 60]);
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+
+        foreach ([$ctx['flight']->dpt_airport_id, $ctx['flight']->arr_airport_id] as $id) {
+            Airport::where('id', $id)->update(['ground_handling_cost' => 400]);
+        }
+        $ctx['subfleet']->update(['ground_handling_multiplier' => 150]);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
+
+        // 400 x 1,5 en cada una de las dos escalas.
+        $this->assertSame(1200.0, $result['costs']['handling']);
+    }
+
+    /**
+     * El precio del combustible sale del aeropuerto de salida, como en el libro;
+     * el ajuste global es solo el respaldo.
+     */
+    public function test_the_fuel_price_of_the_departure_airport_wins(): void
+    {
+        $ctx = $this->setupFlight(['flight_time' => 60]);
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+
+        Airport::where('id', $ctx['flight']->dpt_airport_id)->update(['fuel_jeta_cost' => 1.8]);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
+
+        $this->assertEqualsWithDelta(1.8, $result['costs']['fuel_price'], 0.001);
+        $this->assertEqualsWithDelta(
+            $result['costs']['fuel_lb_hour'] * 1.8,
+            $result['costs']['fuel_hour'],
+            0.01
+        );
+    }
+
+    /**
+     * La carga no puede pasar del PESO: MZFW - OEW - pasaje - equipaje. Antes se
+     * sugeria carga que SimBrief recortaba al generar, asi que el margen prometido
+     * no era el que se cobraba.
+     */
+    public function test_the_cargo_is_capped_by_the_aircraft_payload(): void
+    {
+        $ctx = $this->setupFlight(['type' => 'A320', 'flight_time' => 300]);
+        // 20.000 kg de carga util: MZFW 60.000 kg (132.277 lb) - OEW 40.000 kg
+        // (88.185 lb). Las columnas del avion guardan LIBRAS.
+        // Por DB directa: `update()` del modelo dispara el log de actividad y en
+        // el entorno de test se atraganta con `landing_time`.
+        DB::table('aircraft')->where('id', $ctx['aircraft']->id)
+            ->update(['zfw' => 132277, 'dow' => 88185]);
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+        $this->addCargoFare($ctx['subfleet'], 'CGO', 2.8, 0.65);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
+
+        $this->assertSame(20000, $result['limits']['payload_kg']);
+        // 180 pax x (170 lb = 77,11 kg + 10 kg de equipaje de la primera clase).
+        $this->assertEqualsWithDelta(4320, $result['limits']['cargo_max_kg'], 1);
+        $this->assertSame((int) $result['limits']['cargo_max_kg'], $result['suggestion']['cargo']);
+        $this->assertFalse($result['suggestion']['target_reached']);
+        $this->assertTrue($result['limits']['cargo_limited']);
+
+        $texts = implode(' | ', array_column($result['notes'], 'text'));
+        $this->assertStringContainsString('topada por el peso', $texts);
+    }
+
+    /**
+     * Los pesos del avion se guardan en libras: si se leyeran como kilos, la carga
+     * util saldria mas del doble.
+     */
+    public function test_the_payload_is_in_kilos_not_pounds(): void
+    {
+        $ctx = $this->setupFlight(['type' => 'A320', 'flight_time' => 60]);
+        DB::table('aircraft')->where('id', $ctx['aircraft']->id)
+            ->update(['zfw' => 143300, 'dow' => 88185]); // 65.000 y 40.000 kg
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
+
+        $this->assertSame(25000, $result['limits']['payload_kg']);
+    }
+
+    /**
+     * Sin pesos del avion no hay tope: es preferible no topar a inventarse un
+     * limite (los B763/DH8D de la flota estan a cero).
+     */
+    public function test_an_aircraft_without_weights_is_not_capped(): void
+    {
+        $ctx = $this->setupFlight(['type' => 'A320', 'flight_time' => 300]);
+        DB::table('aircraft')->where('id', $ctx['aircraft']->id)->update(['zfw' => 0, 'dow' => 0]);
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0);
+        $this->addCargoFare($ctx['subfleet'], 'CGO', 2.8, 0.65);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
+
+        $this->assertNull($result['limits']['payload_kg']);
+        $this->assertNull($result['limits']['cargo_max_kg']);
+        $this->assertFalse($result['limits']['cargo_limited']);
+        $this->assertTrue($result['suggestion']['target_reached']);
+        $this->assertGreaterThan(0, $result['suggestion']['cargo']);
     }
 
     // ------------------------------------------------- operaciones no regulares

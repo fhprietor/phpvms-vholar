@@ -77,8 +77,14 @@ Campos que importan:
 | `simbrief.params` | Informativo (log, depuración); es lo que lleva dentro la URL |
 | `suggestion.pax` / `.cargo` | Cifra sugerida, si quieres mostrarla antes de abrir |
 | `suggestion.margin_pct` / `.target_reached` | `false` = ni con la capacidad del avión se llega al +20 % |
+| `limits.payload_kg` / `limits.cargo_max_kg` | Carga útil del avión y lo que queda para carga con ese pasaje (kilos) |
 | `notes[]` | Avisos ya redactados (`level`: `ok`/`warn`/`danger`/`info`) para pintar tal cual |
 | `applicable` | `false` en operaciones no regulares: **hay URL, pero sin `pax`/`cargo`** |
+
+Con `target_reached = false` **no** hay que subir la carga para cuadrar: `cargo`
+ya es el máximo que el avión puede llevarse (`limits.cargo_max_kg`, que es
+`MZFW − OEW − pasaje − equipaje`). Ese vuelo no cubre coste y SimBrief recortaría
+cualquier cifra mayor.
 
 ⚠️ **Ojo con dos nombres parecidos:** `route` (nivel superior) es
 `{"dpt": "...", "arr": "..."}`; la **ruta de navegación** va en

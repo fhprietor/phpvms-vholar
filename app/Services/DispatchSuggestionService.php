@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Contracts\Service;
 use App\Models\Aircraft;
 use App\Models\Enums\FareType;
+use App\Models\Enums\FlightType;
+use App\Models\Enums\FuelType;
 use App\Models\Flight;
 use App\Models\Subfleet;
 use App\Models\User;
 use App\Support\Math;
+use App\Support\Units\Mass;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -72,6 +75,17 @@ class DispatchSuggestionService extends Service
      * precio, asi que se aplica por POSICION.
      */
     private const DEFAULT_BAGGAGE_BY_CLASS = '10,23,46';
+
+    /**
+     * Libras por kilo.
+     *
+     * OJO CON LAS UNIDADES: los pesos del avion (`dow`, `zfw`, `mtow`, `mlw`) se
+     * guardan en LIBRAS y el modelo los expone como `Mass`; `cargo_capacity` de la
+     * subflota tambien va en libras pero SIN cast. Los pesos de pasajero y
+     * equipaje de los ajustes van en libras, y el equipaje por clase se calcula en
+     * KILOS. Aqui todo se convierte a kilos con `weightKg()` antes de operar.
+     */
+    private const LB_PER_KG = 2.20462;
 
     /**
      * LA marca de una operacion no regular es `flights.route_code`.
@@ -250,14 +264,22 @@ class DispatchSuggestionService extends Service
 
         // --- Coste por hora ---
         $blockHour = (float) ($subfleet?->cost_block_hour ?? 0);
-        $fuelPrice = (float) (setting('airports.default_jet_a_fuel_cost', 0.9) ?: 0.9);
+        // Precio del combustible con la MISMA regla que el libro
+        // (`PirepFinanceService::payFuelCosts()`): primero el del aeropuerto de
+        // salida, si no el de por defecto, y por tipo de combustible.
+        $fuelPrice = $this->fuelPrice($flight, $subfleet);
         $fuelLbHour = $this->fuelBurn($type);
         $fuelHour = $fuelLbHour * $fuelPrice;
 
         $pilotFixed = (float) ($flight->pilot_pay ?? 0);
         $pilotHour = $pilotFixed > 0 ? 0.0 : $this->pilotPayPerHour($user, $subfleet);
 
-        $fixedCost = $hours * ($blockHour + $fuelHour + $pilotHour) + $pilotFixed + self::FIXED_COST;
+        // Handling de los dos aeropuertos: es un coste fijo real de cada escala y
+        // antes no entraba (se usaba solo el fijo de 15 $), asi que el objetivo
+        // salia por debajo de lo que luego cobra el libro.
+        $handling = $this->groundHandlingCost($flight, $subfleet);
+
+        $fixedCost = $hours * ($blockHour + $fuelHour + $pilotHour) + $pilotFixed + self::FIXED_COST + $handling;
 
         // --- Tarifas: mismas que usara el PIREP ---
         [$paxFares, $cargoFare] = $this->resolveFares($flight, $subfleet);
@@ -279,6 +301,16 @@ class DispatchSuggestionService extends Service
         }
 
         // Si el avion no da para el objetivo con pasaje, se completa con carga.
+        // La carga va topada por el PESO: MZFW - OEW - pasaje - equipaje (y por la
+        // bodega de la subflota). Si con la cabina llena no cabe la carga que
+        // haria falta, se sugiere la maxima que quepa y el objetivo queda como no
+        // alcanzable: mejor que el piloto sepa que ese vuelo no cubre coste a que
+        // SimBrief le recorte la carga al generar.
+        $paxWeightKg = $this->paxWeightKg($flight);
+        $payloadKg = $this->payloadKg($aircraft);
+        $cargoLimit = $this->cargoLimitKg($payloadKg, $subfleet, $seatsMax, $paxWeightKg, $baggageAvg);
+        $cargoLimited = false;
+
         if (!$targetReached) {
             $pax = $seatsMax;
             [$paxRevenue, $paxCost] = $this->paxBalance($pax, $paxFares, $mix);
@@ -287,8 +319,16 @@ class DispatchSuggestionService extends Service
             if ($cargoFare !== null) {
                 $cargoUnitMargin = (float) $cargoFare->price - self::MARGIN * (float) $cargoFare->cost;
                 if ($cargoUnitMargin > 0) {
-                    $cargo = (int) max(0, ceil($needed / $cargoUnitMargin));
-                    $targetReached = true;
+                    $wanted = (int) max(0, ceil($needed / $cargoUnitMargin));
+
+                    if ($cargoLimit === null || $wanted <= $cargoLimit) {
+                        $cargo = $wanted;
+                        $targetReached = true;
+                    } else {
+                        // Lo maximo que cabe; no llega al objetivo.
+                        $cargo = (int) floor($cargoLimit);
+                        $cargoLimited = true;
+                    }
                 }
             }
         }
@@ -330,6 +370,11 @@ class DispatchSuggestionService extends Service
                 'penalty_pct'    => round($totalPenalty * 100.0, 1),
                 'elevation_pct'  => round($elevationPenalty * 100.0, 1),
                 'temperature_pct'=> round($tempPenalty * 100.0, 1),
+                // Peso: MZFW - OEW (kg) y lo que queda para carga con el pasaje
+                // sugerido. Null cuando no tenemos los pesos del avion.
+                'payload_kg'     => $payloadKg !== null ? (int) round($payloadKg) : null,
+                'cargo_max_kg'   => $cargoLimit !== null ? (int) floor($cargoLimit) : null,
+                'cargo_limited'  => $cargoLimited,
             ],
             'costs' => [
                 'block_hour'   => round($blockHour, 2),
@@ -338,6 +383,7 @@ class DispatchSuggestionService extends Service
                 'fuel_price'   => $fuelPrice,
                 'pilot_hour'   => round($pilotHour, 2),
                 'pilot_fixed'  => round($pilotFixed, 2),
+                'handling'     => round($handling, 2),
                 'fixed_total'  => round($fixedCost, 2),
                 'pax_unit'     => $paxFares->isNotEmpty() ? round($this->unitCost($paxFares, $mix), 2) : null,
                 'cargo_unit'   => $cargoFare !== null ? round((float) $cargoFare->cost, 2) : null,
@@ -357,6 +403,9 @@ class DispatchSuggestionService extends Service
                 // clases. SimBrief solo admite UN peso de equipaje, asi que se
                 // le manda este promedio (lo que importa es el peso total).
                 'baggage_avg_kg' => $baggageAvg !== null ? round($baggageAvg, 2) : null,
+                // Peso medio de pasajero (kg). Es el mismo que va en el `acdata`
+                // que se le manda a SimBrief (alli en libras).
+                'pax_weight_kg'  => round($paxWeightKg, 2),
             ],
             'suggestion' => [
                 'pax'            => $pax,
@@ -387,6 +436,10 @@ class DispatchSuggestionService extends Service
                 'pilotHour'      => $pilotHour,
                 'pilotFixed'     => $pilotFixed,
                 'blockHour'      => $blockHour,
+                'handling'       => $handling,
+                'payloadKg'      => $payloadKg,
+                'cargoMax'       => $cargoLimit,
+                'cargoLimited'   => $cargoLimited,
             ]),
         ];
     }
@@ -575,6 +628,149 @@ class DispatchSuggestionService extends Service
     }
 
     /**
+     * Precio del combustible ($ por libra), con la regla del libro: el del
+     * aeropuerto de salida si lo tiene, si no el de por defecto, y eligiendo
+     * entre Jet A, 100LL y MOGAS segun la subflota.
+     */
+    private function fuelPrice(Flight $flight, ?Subfleet $subfleet): float
+    {
+        $dep = $flight->dpt_airport;
+
+        [$airportCost, $defaultKey, $fallback] = match ($subfleet?->fuel_type) {
+            FuelType::LOW_LEAD => [$dep?->fuel_100ll_cost, 'airports.default_100ll_fuel_cost', 1.0],
+            FuelType::MOGAS    => [$dep?->fuel_mogas_cost, 'airports.default_mogas_fuel_cost', 1.0],
+            default            => [$dep?->fuel_jeta_cost, 'airports.default_jet_a_fuel_cost', 0.9],
+        };
+
+        if (filled($airportCost) && (float) $airportCost > 0) {
+            return (float) $airportCost;
+        }
+
+        return (float) (setting($defaultKey, $fallback) ?: $fallback);
+    }
+
+    /**
+     * Handling de salida + llegada, en dolares.
+     *
+     * Misma regla que `PirepFinanceService::getGroundHandlingCost()`: el coste del
+     * aeropuerto, si no esta el de por defecto, y el multiplicador de la subflota
+     * en porcentaje.
+     */
+    private function groundHandlingCost(Flight $flight, ?Subfleet $subfleet): float
+    {
+        $multiplier = $subfleet?->ground_handling_multiplier;
+        $total = 0.0;
+
+        foreach ([$flight->dpt_airport, $flight->arr_airport] as $airport) {
+            if ($airport === null) {
+                continue;
+            }
+
+            $cost = (float) ($airport->ground_handling_cost ?? 0);
+            if ($cost <= 0) {
+                $cost = (float) setting('airports.default_ground_handling_cost', 0);
+            }
+
+            if (filled($multiplier)) {
+                $cost = Math::applyAmountOrPercent($cost, $multiplier.'%');
+            }
+
+            $total += $cost;
+        }
+
+        return $total;
+    }
+
+    /**
+     * Peso medio de pasajero de la aerolinea, en KILOS.
+     *
+     * El ajuste esta en libras. Mismo criterio que
+     * `SimBriefUrlService::paxWeightLb()`, que es el que acaba en el `acdata`:
+     * si cambia uno hay que cambiar el otro (hay un test que los ata).
+     */
+    private function paxWeightKg(Flight $flight): float
+    {
+        $isCharter = $flight->flight_type === FlightType::CHARTER_PAX_ONLY;
+        $pounds = (float) setting(
+            $isCharter ? 'simbrief.charter_pax_weight' : 'simbrief.noncharter_pax_weight',
+            $isCharter ? 168 : 170
+        );
+
+        return $pounds > 0 ? $pounds / self::LB_PER_KG : 0.0;
+    }
+
+    /**
+     * Carga util maxima del avion (kg): MZFW - OEW. Null si no tenemos sus pesos
+     * (o valen cero), porque entonces no hay limite que valga mas que inventarlo.
+     */
+    private function payloadKg(?Aircraft $aircraft): ?float
+    {
+        if ($aircraft === null) {
+            return null;
+        }
+
+        $mzfw = $this->weightKg($aircraft->zfw);
+        $oew = $this->weightKg($aircraft->dow);
+
+        if ($mzfw === null || $oew === null || $mzfw <= $oew) {
+            return null;
+        }
+
+        return $mzfw - $oew;
+    }
+
+    /**
+     * Carga que cabe con `$pax` pasajeros, en kg: lo que queda de la carga util
+     * despues del pasaje y su equipaje, y nunca mas que la bodega de la subflota.
+     *
+     * Null si no hay datos de peso: sin datos no se topa (el sugerido se comporta
+     * como antes).
+     */
+    private function cargoLimitKg(
+        ?float $payloadKg,
+        ?Subfleet $subfleet,
+        int $pax,
+        float $paxWeightKg,
+        ?float $baggageKg
+    ): ?float {
+        if ($payloadKg === null) {
+            return null;
+        }
+
+        $limit = $payloadKg - $pax * ($paxWeightKg + ($baggageKg ?? 0.0));
+
+        // La bodega (`cargo_capacity`) tambien va en LIBRAS y sin cast.
+        $hold = (float) ($subfleet?->cargo_capacity ?? 0);
+        if ($hold > 0) {
+            $limit = min($limit, $hold / self::LB_PER_KG);
+        }
+
+        return max(0.0, $limit);
+    }
+
+    /**
+     * Un peso cualquiera del modelo, en kilos.
+     *
+     * El cast `MassCast` devuelve un objeto `Mass` (y su `toUnit('kg')` es
+     * fiable); si llegara un numero crudo, la columna esta en LIBRAS. Nunca se
+     * asume que un numero suelto son kilos.
+     */
+    private function weightKg(mixed $value): ?float
+    {
+        if ($value instanceof Mass) {
+            $kg = (float) $value->toUnit('kg');
+
+            return $kg > 0 ? $kg : null;
+        }
+
+        if (is_numeric($value) && (float) $value > 0) {
+            return (float) $value / self::LB_PER_KG;
+        }
+
+        return null;
+    }
+
+    /**
      * Temperatura del METAR de salida, en Celsius. Null si no hay dato.
      */
     private function metarTemperature(string $icao): ?float
@@ -707,6 +903,14 @@ class DispatchSuggestionService extends Service
             $notes[] = [
                 'level' => 'info',
                 'text'  => 'La subflota no tiene coste de hora de bloque configurado.',
+            ];
+        }
+
+        if ($ctx['cargoLimited']) {
+            $notes[] = [
+                'level' => 'warn',
+                'text'  => 'La carga va topada por el peso del avion: con '.$fmt($ctx['pax']).' pax solo caben '
+                    .$fmt($ctx['cargoMax']).' kg (carga util '.$fmt($ctx['payloadKg']).' kg).',
             ];
         }
 

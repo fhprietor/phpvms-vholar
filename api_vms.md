@@ -307,6 +307,11 @@ Respuesta (recortada):
       "acdata": "{\"paxwgt\":170,\"bagwgt\":30}"
     }
   },
+  "limits": {
+    "seats": 180, "seats_max": 175,
+    "payload_kg": 20883, "cargo_max_kg": 5477, "cargo_limited": false
+  },
+  "costs": { "fixed_total": 9416.0, "handling": 1400.0, "pilot_hour": 0.0 },
   "suggestion": { "pax": 70, "cargo": 0, "margin_pct": 20.4, "target_reached": true },
   "notes": [ { "level": "ok", "text": "Margen estimado: +20,4 %." } ]
 }
@@ -320,6 +325,16 @@ Notas:
 - `pax` y `cargo` solo aparecen cuando tienen valor. En operaciones no regulares
   (`route_code` CH, CA, PS o FR) no se sugiere carga: se devuelve la URL sin
   `pax`/`cargo`.
+- **El sugerido mira el PESO del avión**: `limits.payload_kg` es la carga útil
+  (MZFW − OEW, en kilos) y `limits.cargo_max_kg` lo que queda para carga con el
+  pasaje sugerido. Si el objetivo pedía más de lo que cabe, `cargo` se queda en
+  ese máximo, `cargo_limited` viene a `true` y `target_reached` a `false`: el
+  vuelo no cubre coste con ese avión. Antes se sugería la carga "de dinero" y
+  SimBrief la recortaba al generar.
+- **El coste incluye el handling de las dos escalas** (`costs.handling`, de
+  `airports.ground_handling_cost` con el respaldo del ajuste y el multiplicador
+  de la subflota) y el combustible se cobra al precio del aeropuerto de salida si
+  lo tiene (`costs.fuel_price`), igual que el libro del PIREP.
 - ⚠️ **`cargo` va en MILES de la unidad de `units`**, no en kg: con `units=kgs`,
   13.498 kg se mandan como `cargo=13.498`. Es el mismo convenio que
   `manualpayload` y `manualzfw` (el propio SimBrief divide esos tres campos entre

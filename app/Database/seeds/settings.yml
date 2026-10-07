@@ -124,6 +124,13 @@
   options: ''
   type: boolean
   description: 'Generate AI feedback for every new PIREP that carries ACARS telemetry. Requires a valid DeepSeek API key; without one the job silently does nothing'
+- key: general.sayintentions_va_api_key
+  name: 'SayIntentions VA-Link API Key'
+  group: general
+  value: ''
+  options: ''
+  type: text
+  description: 'VA-Link key (va_api_key) from the SayIntentions.AI VA Alliance. Pushes Vholar flight context with importVAData; it is the airline key, not the pilot api_key. Stored in clear text'
 - key: finance.revenue_estimate_enabled
   name: 'Estimate PIREP Revenue'
   group: finance
@@ -473,13 +480,6 @@
   options: ''
   type: boolean
   description: 'Only allow aircraft that are at the departure airport'
-- key: pireps.advanced_fuel
-  name: 'Advanced Fuel Calculations'
-  group: pireps
-  value: false
-  options: ''
-  type: boolean
-  description: 'Enables remaining fuel amounts to be considered for fuel expenses'
 - key: pireps.delete_cancelled_hours
   name: 'Delete cancelled PIREPs'
   group: pireps

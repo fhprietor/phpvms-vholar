@@ -11,8 +11,6 @@ use App\Models\Enums\ExpenseType;
 use App\Models\Enums\FareType;
 use App\Models\Enums\FuelType;
 use App\Models\Enums\PirepSource;
-use App\Models\Enums\PirepState;
-use App\Models\Enums\PirepStatus;
 use App\Models\Expense;
 use App\Models\Fare;
 use App\Models\Pirep;
@@ -204,35 +202,12 @@ class PirepFinanceService extends Service
             $fuel_cost = !empty($ap->fuel_jeta_cost) ? $ap->fuel_jeta_cost : setting('airports.default_jet_a_fuel_cost');
         }
 
-        if (setting('pireps.advanced_fuel', false)) {
-            // Reading second row by skip(1) to reach the previous accepted pirep. Current pirep is at the first row
-            // To get proper fuel values, we need to fetch current pirep and older ones only. Scenario: ReCalculating finances
-            $prev_flight = Pirep::where([
-                'aircraft_id' => $pirep->aircraft->id,
-                'state'       => PirepState::ACCEPTED,
-                'status'      => PirepStatus::ARRIVED,
-            ])
-                ->where('submitted_at', '<=', $pirep->submitted_at)
-                ->orderby('submitted_at', 'desc')
-                ->skip(1)
-                ->first();
-
-            if ($prev_flight) {
-                // If there is a pirep use its values to calculate the remaining fuel
-                // and calculate the uplifted fuel amount for this pirep
-                $fuel_amount = $pirep->block_fuel->internal() - ($prev_flight->block_fuel->internal() - $prev_flight->fuel_used->internal());
-                // Aircraft has more than enough fuel in its tanks, no uplift necessary
-                if ($fuel_amount < 0) {
-                    $fuel_amount = 0;
-                }
-            } else {
-                // No pirep found for aircraft, debit full block fuel
-                $fuel_amount = $pirep->block_fuel->internal();
-            }
-        } else {
-            // Setting is false, switch back to basic calculation
-            $fuel_amount = $pirep->fuel_used->internal();
-        }
+        // El coste va sobre el combustible QUEMADO (`fuel_used`), no sobre el
+        // repostado: es lo que consume el vuelo y lo que se puede estimar antes de
+        // volarlo. El antiguo modo `pireps.advanced_fuel` cobraba el repostaje
+        // (`block_fuel` menos el remanente del vuelo anterior), asi que el mismo
+        // vuelo costaba muy distinto segun lo que hubiera repostado otro antes.
+        $fuel_amount = $pirep->fuel_used->internal();
 
         $debit = Money::createFromAmount($fuel_amount * $fuel_cost);
         Log::info('Finance: Fuel cost, (fuel='.$fuel_amount.', cost='.$fuel_cost.') D='.$debit->getAmount());
