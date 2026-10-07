@@ -46,6 +46,7 @@ final class DispatchSuggestionServiceTest extends TestCase
         Setting::where('key', 'finance.revenue_estimate_enabled')->update(['value' => 1]);
         Setting::where('key', 'simbrief.baggage_by_class')->update(['value' => '10,23,46']);
         Setting::where('key', 'simbrief.noncharter_pax_weight')->update(['value' => 170]);
+        Setting::where('key', 'simbrief.cabin_load_pct')->update(['value' => 90]);
         Setting::where('key', 'airports.default_ground_handling_cost')->update(['value' => 0]);
     }
 
@@ -122,7 +123,11 @@ final class DispatchSuggestionServiceTest extends TestCase
 
     // --------------------------------------------------------------- carga
 
-    public function test_the_cabin_is_filled_first(): void
+    /**
+     * Sin tarifa de carga rentable no hay nada que ganar bajando plazas: la
+     * cabina va llena.
+     */
+    public function test_without_a_cargo_fare_the_cabin_goes_full(): void
     {
         $ctx = $this->setupFlight(['flight_time' => 60, 'block_hour' => 4829]);
         $this->addPassengerFare($ctx['flight'], 'Y', 180.0, 15.0);
@@ -154,14 +159,31 @@ final class DispatchSuggestionServiceTest extends TestCase
 
         $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
 
-        $this->assertSame(180, $result['suggestion']['pax'], 'la cabina sigue llena');
+        // Con tarifa de carga la cabina va al 90 % (162 de 180) y el resto del peso
+        // disponible se llena con carga, que por kilo paga mas que un asiento.
+        $this->assertSame(162, $result['suggestion']['pax']);
         $this->assertGreaterThan(0, $result['suggestion']['cargo']);
         $this->assertTrue($result['suggestion']['target_reached']);
 
         $this->assertStringContainsString(
-            'Cabina llena',
+            'Cabina al 90 %',
             implode(' | ', array_column($result['notes'], 'text'))
         );
+    }
+
+    public function test_the_cabin_load_is_configurable(): void
+    {
+        Setting::where('key', 'simbrief.cabin_load_pct')->update(['value' => 50]);
+
+        $ctx = $this->setupFlight();
+        $this->addPassengerFare($ctx['flight'], 'Y', 180.0, 15.0);
+        $this->addCargoFare($ctx['subfleet'], 'CGO', 2.8, 0.65);
+
+        $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
+
+        // 50 % de 180 plazas.
+        $this->assertSame(90, $result['suggestion']['pax']);
+        $this->assertSame(50, $result['suggestion']['cabin_pct']);
     }
 
     public function test_the_suggested_revenue_matches_the_pirep_income_estimator(): void
@@ -327,8 +349,9 @@ final class DispatchSuggestionServiceTest extends TestCase
         $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft']->fresh(), null, 15.0);
 
         $this->assertSame(20000, $result['limits']['payload_kg']);
-        // 180 pax x (170 lb = 77,11 kg + 10 kg de equipaje de la primera clase).
-        $this->assertEqualsWithDelta(4320, $result['limits']['cargo_max_kg'], 1);
+        // 162 pax (90 % de 180) x (170 lb = 77,11 kg + 10 kg de equipaje de la
+        // primera clase) = 14.112 kg, que dejan 5.888 kg para carga.
+        $this->assertEqualsWithDelta(5888, $result['limits']['cargo_max_kg'], 2);
         $this->assertSame((int) $result['limits']['cargo_max_kg'], $result['suggestion']['cargo']);
         $this->assertFalse($result['suggestion']['target_reached']);
         $this->assertTrue($result['limits']['cargo_limited']);
@@ -480,7 +503,7 @@ final class DispatchSuggestionServiceTest extends TestCase
 
         $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
 
-        $this->assertSame(180, $result['suggestion']['pax'], 'el pasaje va al maximo de plazas');
+        $this->assertSame(162, $result['suggestion']['pax'], 'la cabina va al 90 %');
         $this->assertGreaterThan(0, $result['suggestion']['cargo']);
         $this->assertTrue($result['suggestion']['target_reached']);
         $this->assertGreaterThanOrEqual(19.9, $result['suggestion']['margin_pct']);

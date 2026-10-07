@@ -438,6 +438,13 @@
   options: ''
   type: boolean
   description: 'When enabled, only phpVMS Airframes will be listed for flight planning (instead of combined list)'
+- key: simbrief.cabin_load_pct
+  name: 'Target cabin load (%)'
+  group: simbrief
+  value: 90
+  options: ''
+  type: number
+  description: 'Porcentaje de la cabina que se llena con pasaje; el resto del peso disponible va a carga. Ej: 90'
 - key: simbrief.baggage_by_class
   name: 'Baggage allowance per class (kg)'
   group: simbrief

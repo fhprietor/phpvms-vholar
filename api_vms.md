@@ -325,14 +325,17 @@ Notas:
 - `pax` y `cargo` solo aparecen cuando tienen valor. En operaciones no regulares
   (`route_code` CH, CA, PS o FR) no se sugiere carga: se devuelve la URL sin
   `pax`/`cargo`.
-- **El sugerido usa el avión entero**: la cabina va al máximo que permiten
-  elevación y temperatura (`limits.seats_max`) y la bodega se llena con **todo lo
-  que quepa** hasta el tope de peso: `limits.cargo_max_kg` = `MZFW − OEW − pasaje
+- **El sugerido llena la cabina y la bodega**: la cabina va al porcentaje
+  configurado (`simbrief.cabin_load_pct`, 90 % por defecto) de las plazas
+  disponibles tras el recorte por elevación y temperatura (`limits.seats_max`), y
+  la bodega se llena con **todo lo que quepa** hasta el tope de peso: `limits.cargo_max_kg` = `MZFW − OEW − pasaje
   − equipaje`, y nunca más que la bodega de la subflota. `cargo_limited` viene a
   `true` cuando la carga está en ese tope. Si con todo lleno no se llega al
   +20 %, `target_reached` viene a `false`. Cuando el avión **no tiene pesos
   cargados** no hay tope que valga y la carga se calcula solo para cubrir el
-  objetivo (`limits.payload_kg` y `cargo_max_kg` vienen a `null`).
+  objetivo (`limits.payload_kg` y `cargo_max_kg` vienen a `null`). Si el vuelo no
+  tiene tarifa de carga rentable, la cabina va llena: bajar plazas solo restaría.
+  `suggestion.cabin_pct` dice el porcentaje de cabina que se sugiere.
 - **El coste incluye el handling de las dos escalas** (`costs.handling`, de
   `airports.ground_handling_cost` con el respaldo del ajuste y el multiplicador
   de la subflota) y el combustible se cobra al precio del aeropuerto de salida si

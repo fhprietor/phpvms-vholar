@@ -81,8 +81,9 @@ Campos que importan:
 | `notes[]` | Avisos ya redactados (`level`: `ok`/`warn`/`danger`/`info`) para pintar tal cual |
 | `applicable` | `false` en operaciones no regulares: **hay URL, pero sin `pax`/`cargo`** |
 
-El sugerido llena el avión: la cabina al máximo y la bodega con todo lo que quepa
-hasta el tope de peso (`limits.cargo_max_kg` = `MZFW − OEW − pasaje − equipaje`, y
+El sugerido llena el avión: la cabina al porcentaje configurado
+(`simbrief.cabin_load_pct`, 90 % por defecto; `suggestion.cabin_pct`) y la bodega
+con todo lo que quepa hasta el tope de peso (`limits.cargo_max_kg` = `MZFW − OEW − pasaje − equipaje`, y
 la bodega de la subflota). Con `target_reached = false` **no** hay que subir la
 carga para cuadrar: ya va al tope y ese vuelo no cubre coste. Si el avión no tiene
 pesos cargados, `cargo_max_kg` viene a `null`: ahí la carga es solo la que cubre
