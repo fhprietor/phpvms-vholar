@@ -309,10 +309,10 @@ Respuesta (recortada):
   },
   "limits": {
     "seats": 180, "seats_max": 175,
-    "payload_kg": 20883, "cargo_max_kg": 5477, "cargo_limited": false
+    "payload_kg": 20883, "cargo_max_kg": 5477, "cargo_limited": true
   },
   "costs": { "fixed_total": 9416.0, "handling": 1400.0, "pilot_hour": 0.0 },
-  "suggestion": { "pax": 70, "cargo": 0, "margin_pct": 20.4, "target_reached": true },
+  "suggestion": { "pax": 175, "cargo": 5477, "margin_pct": 20.4, "target_reached": true },
   "notes": [ { "level": "ok", "text": "Margen estimado: +20,4 %." } ]
 }
 ```
@@ -325,12 +325,14 @@ Notas:
 - `pax` y `cargo` solo aparecen cuando tienen valor. En operaciones no regulares
   (`route_code` CH, CA, PS o FR) no se sugiere carga: se devuelve la URL sin
   `pax`/`cargo`.
-- **El sugerido mira el PESO del avión**: `limits.payload_kg` es la carga útil
-  (MZFW − OEW, en kilos) y `limits.cargo_max_kg` lo que queda para carga con el
-  pasaje sugerido. Si el objetivo pedía más de lo que cabe, `cargo` se queda en
-  ese máximo, `cargo_limited` viene a `true` y `target_reached` a `false`: el
-  vuelo no cubre coste con ese avión. Antes se sugería la carga "de dinero" y
-  SimBrief la recortaba al generar.
+- **El sugerido usa el avión entero**: la cabina va al máximo que permiten
+  elevación y temperatura (`limits.seats_max`) y la bodega se llena con **todo lo
+  que quepa** hasta el tope de peso: `limits.cargo_max_kg` = `MZFW − OEW − pasaje
+  − equipaje`, y nunca más que la bodega de la subflota. `cargo_limited` viene a
+  `true` cuando la carga está en ese tope. Si con todo lleno no se llega al
+  +20 %, `target_reached` viene a `false`. Cuando el avión **no tiene pesos
+  cargados** no hay tope que valga y la carga se calcula solo para cubrir el
+  objetivo (`limits.payload_kg` y `cargo_max_kg` vienen a `null`).
 - **El coste incluye el handling de las dos escalas** (`costs.handling`, de
   `airports.ground_handling_cost` con el respaldo del ajuste y el multiplicador
   de la subflota) y el combustible se cobra al precio del aeropuerto de salida si

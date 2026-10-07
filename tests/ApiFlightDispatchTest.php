@@ -127,10 +127,11 @@ final class ApiFlightDispatchTest extends TestCase
 
         $response->assertOk();
 
-        // 1 h de A320: coste fijo 1 x (4.829 + 5.080 lb/h x 0,9) + 15 = 9.416 ->
-        // el menor pasaje que cubre +20 % con una tarifa de 180 y coste 15 es 70.
-        $this->assertSame(70, $response->json('suggestion.pax'));
-        $this->assertSame('70', $response->json('simbrief.params.pax'));
+        // 1 h de A320: coste fijo 1 x (4.829 + 5.080 lb/h x 0,9) + 15 = 9.416. La
+        // cabina va llena (180 plazas) y con ella ya se cubre el +20 %, asi que no
+        // hay carga que anadir.
+        $this->assertSame(180, $response->json('suggestion.pax'));
+        $this->assertSame('180', $response->json('simbrief.params.pax'));
         $this->assertSame('A320', $response->json('simbrief.params.type'));
         $this->assertSame('HK6251', $response->json('simbrief.params.reg'));
         $this->assertSame('PILOTO DE PRUEBA', $response->json('simbrief.params.cpt'));

@@ -286,56 +286,39 @@ class DispatchSuggestionService extends Service
         $mix = $this->mixFor($type);
         $baggageAvg = $this->averageBaggageKg($paxFares, $mix);
 
-        // --- Menor PAX que cubre coste + 20 % ---
-        $pax = 0;
-        $cargo = 0;
-        $targetReached = false;
-
-        for ($n = 1; $n <= $seatsMax; $n++) {
-            [$revenue, $paxCost] = $this->paxBalance($n, $paxFares, $mix);
-            if ($revenue >= self::MARGIN * ($fixedCost + $paxCost)) {
-                $pax = $n;
-                $targetReached = true;
-                break;
-            }
-        }
-
-        // Si el avion no da para el objetivo con pasaje, se completa con carga.
-        // La carga va topada por el PESO: MZFW - OEW - pasaje - equipaje (y por la
-        // bodega de la subflota). Si con la cabina llena no cabe la carga que
-        // haria falta, se sugiere la maxima que quepa y el objetivo queda como no
-        // alcanzable: mejor que el piloto sepa que ese vuelo no cubre coste a que
-        // SimBrief le recorte la carga al generar.
+        // --- Cabina llena y bodega llena hasta el tope de peso ---
+        //
+        // Criterio de la aerolinea: usar el avion entero. La cabina va al maximo
+        // que permiten elevacion y temperatura, y la bodega se llena con TODO lo
+        // que quepa hasta el tope de peso (MZFW - OEW - pasaje - equipaje, y la
+        // bodega de la subflota). En un carguero (0 plazas) esto es llenar la
+        // bodega; el pasaje no se toca.
+        //
+        // Si el avion no tiene pesos cargados no hay tope que valga y se carga lo
+        // justo para cubrir el objetivo, que es lo unico calculable entonces.
         $paxWeightKg = $this->paxWeightKg($flight);
         $payloadKg = $this->payloadKg($aircraft);
-        $cargoLimit = $this->cargoLimitKg($payloadKg, $subfleet, $seatsMax, $paxWeightKg, $baggageAvg);
+        $pax = $seatsMax;
+        $cargo = 0;
         $cargoLimited = false;
 
-        if (!$targetReached) {
-            $pax = $seatsMax;
-            [$paxRevenue, $paxCost] = $this->paxBalance($pax, $paxFares, $mix);
-            $needed = self::MARGIN * ($fixedCost + $paxCost) - $paxRevenue;
+        [$paxRevenue, $paxCost] = $this->paxBalance($pax, $paxFares, $mix);
+        $cargoLimit = $this->cargoLimitKg($payloadKg, $subfleet, $pax, $paxWeightKg, $baggageAvg);
+        $needed = self::MARGIN * ($fixedCost + $paxCost) - $paxRevenue;
 
-            if ($cargoFare !== null) {
-                $cargoUnitMargin = (float) $cargoFare->price - self::MARGIN * (float) $cargoFare->cost;
-                if ($cargoUnitMargin > 0) {
-                    $wanted = (int) max(0, ceil($needed / $cargoUnitMargin));
-
-                    if ($cargoLimit === null || $wanted <= $cargoLimit) {
-                        $cargo = $wanted;
-                        $targetReached = true;
-                    } else {
-                        // Lo maximo que cabe; no llega al objetivo.
-                        $cargo = (int) floor($cargoLimit);
-                        $cargoLimited = true;
-                    }
-                }
+        if ($cargoLimit !== null) {
+            $cargo = (int) floor($cargoLimit);
+            $cargoLimited = $cargo > 0;
+        } elseif ($cargoFare !== null) {
+            $cargoUnitMargin = (float) $cargoFare->price - self::MARGIN * (float) $cargoFare->cost;
+            if ($needed > 0 && $cargoUnitMargin > 0) {
+                $cargo = (int) max(0, ceil($needed / $cargoUnitMargin));
             }
         }
 
-        [$paxRevenue, $paxCost] = $this->paxBalance($pax, $paxFares, $mix);
         $cargoRevenue = $cargoFare !== null ? $cargo * (float) $cargoFare->price : 0.0;
         $cargoCost = $cargoFare !== null ? $cargo * (float) $cargoFare->cost : 0.0;
+        $targetReached = ($paxRevenue + $cargoRevenue) >= self::MARGIN * ($fixedCost + $paxCost + $cargoCost);
 
         $revenue = $paxRevenue + $cargoRevenue;
         $cost = $fixedCost + $paxCost + $cargoCost;
@@ -906,11 +889,11 @@ class DispatchSuggestionService extends Service
             ];
         }
 
-        if ($ctx['cargoLimited']) {
+        if ($ctx['cargoLimited'] && !$ctx['targetReached']) {
             $notes[] = [
                 'level' => 'warn',
-                'text'  => 'La carga va topada por el peso del avion: con '.$fmt($ctx['pax']).' pax solo caben '
-                    .$fmt($ctx['cargoMax']).' kg (carga util '.$fmt($ctx['payloadKg']).' kg).',
+                'text'  => 'La carga va al tope de peso del avion ('.$fmt($ctx['cargoMax']).' kg con '
+                    .$fmt($ctx['pax']).' pax) y aun asi no se llega al objetivo.',
             ];
         }
 
@@ -923,8 +906,13 @@ class DispatchSuggestionService extends Service
         } elseif ($ctx['cargo'] > 0) {
             $notes[] = [
                 'level' => 'info',
-                'text'  => 'El pasaje va al maximo (' . $ctx['pax'] . ' plazas); el resto del objetivo se cubre con '
-                    .$fmt($ctx['cargo']).' kg de carga.',
+                'text'  => 'Cabina llena (' . $ctx['pax'] . ' plazas) y '.$fmt($ctx['cargo']).' kg de carga'
+                    .($ctx['cargoLimited'] ? ', el tope de peso del avion' : '').'.',
+            ];
+        } elseif ($ctx['targetReached'] && $ctx['pax'] > 0) {
+            $notes[] = [
+                'level' => 'info',
+                'text'  => 'Cabina llena ('.$ctx['pax'].' plazas): sin carga.',
             ];
         }
 

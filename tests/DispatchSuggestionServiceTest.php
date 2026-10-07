@@ -120,9 +120,9 @@ final class DispatchSuggestionServiceTest extends TestCase
         DB::table('subfleet_fare')->insert(['subfleet_id' => $subfleet->id, 'fare_id' => $id]);
     }
 
-    // --------------------------------------------------------------- minimo rentable
+    // --------------------------------------------------------------- carga
 
-    public function test_pax_is_the_smallest_load_that_covers_cost_plus_margin(): void
+    public function test_the_cabin_is_filled_first(): void
     {
         $ctx = $this->setupFlight(['flight_time' => 60, 'block_hour' => 4829]);
         $this->addPassengerFare($ctx['flight'], 'Y', 180.0, 15.0);
@@ -135,24 +135,33 @@ final class DispatchSuggestionServiceTest extends TestCase
         $this->assertEqualsWithDelta(9416.0, $result['costs']['fixed_total'], 0.01);
         $this->assertEqualsWithDelta(4572.0, $result['costs']['fuel_hour'], 0.01);
 
-        // 180n >= 1,2 x (9.416 + 15n) -> n >= 69,75 -> 70.
-        $this->assertSame(70, $result['suggestion']['pax']);
+        // La cabina va llena (180 plazas) y con eso sobra: 180 x 180 = 32.400 frente
+        // a un objetivo de 1,2 x (9.416 + 180 x 15) = 14.539. Sin carga.
+        $this->assertSame(180, $result['suggestion']['pax']);
         $this->assertSame(0, $result['suggestion']['cargo']);
         $this->assertTrue($result['suggestion']['target_reached']);
         $this->assertGreaterThanOrEqual(DispatchSuggestionService::MARGIN * 100 - 100, $result['suggestion']['margin_pct']);
     }
 
-    public function test_one_fewer_passenger_would_not_reach_the_target(): void
+    /**
+     * La carga es el complemento: entra solo cuando la cabina llena no llega.
+     */
+    public function test_the_cargo_appears_when_the_cabin_alone_does_not_cover(): void
     {
         $ctx = $this->setupFlight(['flight_time' => 60, 'block_hour' => 4829]);
-        $this->addPassengerFare($ctx['flight'], 'Y', 180.0, 15.0);
+        $this->addPassengerFare($ctx['flight'], 'Y', 60.0, 15.0);
+        $this->addCargoFare($ctx['subfleet'], 'CGO', 2.8, 0.65);
 
         $result = $this->service->suggest($ctx['flight']->fresh(), $ctx['aircraft'], null, 15.0);
-        $pax = $result['suggestion']['pax'];
 
-        $this->assertSame(70, $pax);
-        // 69 x 180 = 12.420 < 1,2 x (9.416 + 69 x 15) = 12.541,20.
-        $this->assertLessThan(1.2 * (9416.0 + 69 * 15.0), 69 * 180.0);
+        $this->assertSame(180, $result['suggestion']['pax'], 'la cabina sigue llena');
+        $this->assertGreaterThan(0, $result['suggestion']['cargo']);
+        $this->assertTrue($result['suggestion']['target_reached']);
+
+        $this->assertStringContainsString(
+            'Cabina llena',
+            implode(' | ', array_column($result['notes'], 'text'))
+        );
     }
 
     public function test_the_suggested_revenue_matches_the_pirep_income_estimator(): void
@@ -325,7 +334,7 @@ final class DispatchSuggestionServiceTest extends TestCase
         $this->assertTrue($result['limits']['cargo_limited']);
 
         $texts = implode(' | ', array_column($result['notes'], 'text'));
-        $this->assertStringContainsString('topada por el peso', $texts);
+        $this->assertStringContainsString('al tope de peso del avion', $texts);
     }
 
     /**
