@@ -3,9 +3,13 @@
 ## [Vholar] 2026-10-26 — Pasaporte del piloto (/passport)
 
 - Nueva pagina **/passport** (autenticada; enlace bajo el usuario, junto a Billetera y
-  Perfil): sellos de los aeropuertos internacionales que el piloto ha visitado, con bandera,
-  IATA, nombre y **fecha de la primera visita**, mas los que le faltan (plegados), el
-  progreso de sellos y de paises, y los **tours completados** como sellos conmemorativos.
+  Perfil): **paises visitados** como nivel principal (bandera + nombre, con el numero de
+  aeropuertos y de vuelos) y, al desplegar cada pais, sus **aeropuertos** (con primera
+  visita), los **tipos de avion usados** (con cuantas veces cada uno) y la **lista de
+  vuelos** (numero, ruta, fecha, tipo y matricula). Ademas: progreso de paises y de
+  aeropuertos, **paises pendientes** plegados y los **tours completados** como sellos.
+- Los nombres de pais salen de `intl` (`Locale::getDisplayRegion`) en el idioma activo, sin
+  mantener una lista propia; si `intl` no estuviera, se usa el codigo ISO.
 - **Sin tabla ni listener**: los sellos se calculan desde los PIREPs aceptados
   (`PassportService`). Ventajas: son **retroactivos** (todos los pilotos los tienen ya), no
   se pueden desincronizar con la contabilidad de vuelos y no hay migracion que mantener.
@@ -15,8 +19,9 @@
   visitado. (Primera version contaba tambien los PIREPs historicos y daba 413 destinos
   pendientes, casi todos inalcanzables por el import del CrewSystem.)
 - Banderas con `fi fi-{iso}`: `airports.country` ya viene en ISO-2, sin mapeo.
-- Verificado: VHR001 107/155 sellos y 41/50 paises; VHR055 147/183; VHR017 145/173; pagina
-  200 con 107 sellos ganados y 48 pendientes. Suite OK.
+- Verificado: VHR001 41/50 paises y 107/155 aeropuertos (182 vuelos internacionales, 20
+  aviones); pagina 200 con 41 tarjetas de pais, 41 tablas de vuelos y 73 chips de tipo de
+  avion. Suite OK.
 
 
 ## [Vholar] 2026-10-26 — Billetera del piloto (/wallet)

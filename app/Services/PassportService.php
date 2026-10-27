@@ -6,87 +6,152 @@ use App\Contracts\Service;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
- * Pasaporte del piloto: sellos de los aeropuertos internacionales que ha visitado.
+ * Pasaporte del piloto: paises visitados y, dentro de cada uno, los aeropuertos, los vuelos
+ * y los tipos de avion usados.
  *
- * No hay tabla de sellos ni listener: se CALCULA desde los PIREPs aceptados. Ventajas:
- * los sellos son retroactivos (todo el mundo los tiene ya), no se puede desincronizar con
- * la contabilidad de vuelos y no hay nada que mantener ni migrar.
+ * No hay tabla de sellos ni listener: se CALCULA desde los PIREPs aceptados. Asi es
+ * retroactivo (todo el mundo los tiene ya), no se desincroniza con los vuelos y no hay
+ * migracion que mantener.
  *
- * "Internacional" = aeropuerto cuyo pais no es el de la base (HOME_COUNTRY). El universo de
- * sellos posibles son los destinos de la aerolinea: los que aparecen en PIREPs aceptados o
- * en la programacion, para que el denominador no sea nunca menor que lo ya visitado.
+ * "Internacional" = aeropuerto cuyo pais no es la base (HOME_COUNTRY). El universo de sellos
+ * posibles son los destinos de la RED ACTIVA; los aeropuertos ya visitados fuera de la red se
+ * anaden igualmente, para que el denominador nunca quede por debajo de lo visitado.
  */
 class PassportService extends Service
 {
-    /** Pais base de la aerolinea. Los sellos son para el resto. */
+    /** Pais base de la aerolinea: los sellos son para el resto. */
     public const HOME_COUNTRY = 'CO';
 
-    /** Estado de PIREP aceptado (PirepState::ACCEPTED). */
+    /** PirepState::ACCEPTED */
     private const ACCEPTED = 2;
 
     /**
-     * Pasaporte del piloto: sellos, totales y tours completados.
-     *
      * @return array<string, mixed>
      */
     public function forUser(User $user): array
     {
-        $visited = $this->visited($user);
+        $visits = $this->visits($user);
         $universe = $this->universe();
 
-        $stamps = [];
-        foreach ($universe as $airport) {
-            $stamps[$airport->id] = [
-                'id'        => $airport->id,
-                'iata'      => $airport->iata ?: $airport->id,
-                'name'      => $airport->name,
-                'country'   => strtoupper((string) $airport->country),
-                'visited'   => isset($visited[$airport->id]),
-                'first_seen' => $visited[$airport->id]->first_seen ?? null,
-            ];
-        }
+        $flights = $this->flights($user)->groupBy('country');
 
-        // Un aeropuerto visitado que ya no este en la programacion tambien cuenta.
-        foreach ($visited as $id => $row) {
-            if (!isset($stamps[$id])) {
-                $stamps[$id] = [
-                    'id'        => $id,
-                    'iata'      => $row->iata ?: $id,
-                    'name'      => $row->name,
-                    'country'   => strtoupper((string) $row->country),
-                    'visited'   => true,
-                    'first_seen' => $row->first_seen,
-                ];
+        $countries = [];
+
+        foreach ($visits as $visit) {
+            $iso = strtoupper((string) $visit->country);
+
+            if (!isset($countries[$iso])) {
+                $countries[$iso] = $this->emptyCountry($iso);
+            }
+
+            $countries[$iso]['airports'][] = [
+                'iata'       => $visit->iata ?: $visit->id,
+                'name'       => $visit->name,
+                'first_seen' => $visit->first_seen,
+            ];
+
+            if ($countries[$iso]['first_seen'] === null || $visit->first_seen < $countries[$iso]['first_seen']) {
+                $countries[$iso]['first_seen'] = $visit->first_seen;
             }
         }
 
-        $stamps = array_values($stamps);
+        foreach ($flights as $iso => $rows) {
+            $iso = strtoupper((string) $iso);
 
-        $got = array_values(array_filter($stamps, fn ($s) => $s['visited']));
-        $missing = array_values(array_filter($stamps, fn ($s) => !$s['visited']));
+            if (!isset($countries[$iso])) {
+                $countries[$iso] = $this->emptyCountry($iso);
+            }
 
-        usort($got, fn ($a, $b) => strcmp((string) $b['first_seen'], (string) $a['first_seen']));
-        usort($missing, fn ($a, $b) => strcmp($a['country'].$a['iata'], $b['country'].$b['iata']));
+            foreach ($rows as $row) {
+                $type = $row->aircraft_type ?: '—';
+
+                $countries[$iso]['flights'][] = [
+                    'number'     => $row->flight_number,
+                    'dpt'        => $row->dpt_airport_id,
+                    'arr'        => $row->arr_airport_id,
+                    'date'       => $row->submitted_at,
+                    'type'       => $type,
+                    'reg'        => $row->registration,
+                ];
+
+                $countries[$iso]['types'][$type] = ($countries[$iso]['types'][$type] ?? 0) + 1;
+            }
+        }
+
+        foreach ($countries as &$country) {
+            usort($country['airports'], fn ($a, $b) => strcmp((string) $b['first_seen'], (string) $a['first_seen']));
+            arsort($country['types']);
+            $country['total_flights'] = count($country['flights']);
+        }
+        unset($country);
+
+        uasort($countries, fn ($a, $b) => strcmp($a['name'], $b['name']));
+
+        $visitedIsos = array_keys($countries);
+        $allIsos = array_unique(array_merge($visitedIsos, $universe->pluck('country')->map(fn ($c) => strtoupper((string) $c))->all()));
+
+        $missing = [];
+        foreach (array_diff($allIsos, $visitedIsos) as $iso) {
+            $missing[$iso] = $this->countryName((string) $iso);
+        }
+        asort($missing);
 
         return [
-            'stamps'   => $got,
-            'missing'  => $missing,
-            'visited'  => count($got),
-            'total'    => count($stamps),
-            'countries' => count(array_unique(array_column($got, 'country'))),
-            'countries_total' => count(array_unique(array_column($stamps, 'country'))),
-            'tours'    => $this->completedTours($user),
+            'countries'         => array_values($countries),
+            'missing'           => $missing,
+            'visited_airports'  => count($visits),
+            'total_airports'    => $this->totalAirports($visits, $universe),
+            'countries_visited' => count($countries),
+            'countries_total'   => count($allIsos),
+            'tours'             => $this->completedTours($user),
+        ];
+    }
+
+    /**
+     * Nombre del pais en el idioma activo (intl); si no esta, el codigo ISO.
+     */
+    public function countryName(string $iso): string
+    {
+        try {
+            if (class_exists(\Locale::class)) {
+                $name = \Locale::getDisplayRegion('-'.strtoupper($iso), app()->getLocale());
+
+                if (is_string($name) && $name !== '' && strtoupper($name) !== strtoupper($iso)) {
+                    return $name;
+                }
+            }
+        } catch (\Throwable $e) {
+            // sin intl: se usa el codigo
+        }
+
+        return strtoupper($iso);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function emptyCountry(string $iso): array
+    {
+        return [
+            'country'       => $iso,
+            'name'          => $this->countryName($iso),
+            'airports'      => [],
+            'flights'       => [],
+            'types'         => [],
+            'first_seen'    => null,
+            'total_flights' => 0,
         ];
     }
 
     /**
      * Aeropuertos internacionales visitados, con la fecha de la primera visita.
      *
-     * @return Collection<string, object>
+     * @return Collection<int, object>
      */
-    private function visited(User $user): Collection
+    private function visits(User $user): Collection
     {
         return DB::table('pireps')
             ->join('airports', 'airports.id', '=', 'pireps.arr_airport_id')
@@ -96,17 +161,38 @@ class PassportService extends Service
             ->selectRaw('airports.id as id, airports.iata as iata, airports.name as name, airports.country as country')
             ->selectRaw('min(pireps.submitted_at) as first_seen')
             ->groupBy('airports.id', 'airports.iata', 'airports.name', 'airports.country')
-            ->get()
-            ->keyBy('id');
+            ->get();
     }
 
     /**
-     * Destinos internacionales de la aerolinea: los de la RED ACTIVA.
+     * Vuelos internacionales del piloto, con el tipo de avion (subflota) y la matricula.
      *
-     * No se usan los PIREPs para el universo: el import del CrewSystem trajo cientos de
-     * aeropuertos por los que ya no se vuela y el album mostraba 413 destinos "pendientes",
-     * casi todos inalcanzables. Los aeropuertos visitados que ya no esten en la red se anaden
-     * igualmente en forUser(), asi que el denominador nunca queda por debajo de lo visitado.
+     * @return Collection<int, object>
+     */
+    private function flights(User $user): Collection
+    {
+        return DB::table('pireps')
+            ->join('airports', 'airports.id', '=', 'pireps.arr_airport_id')
+            ->leftJoin('aircraft', 'aircraft.id', '=', 'pireps.aircraft_id')
+            ->leftJoin('subfleets', 'subfleets.id', '=', 'aircraft.subfleet_id')
+            ->where('pireps.user_id', $user->id)
+            ->where('pireps.state', self::ACCEPTED)
+            ->where('airports.country', '!=', self::HOME_COUNTRY)
+            ->orderByDesc('pireps.submitted_at')
+            ->get([
+                'pireps.flight_number',
+                'pireps.dpt_airport_id',
+                'pireps.arr_airport_id',
+                'pireps.submitted_at',
+                'airports.country',
+                'subfleets.type as aircraft_type',
+                'aircraft.registration',
+            ]);
+    }
+
+    /**
+     * Destinos internacionales de la RED ACTIVA (no los PIREPs historicos: el import del
+     * CrewSystem traia cientos de aeropuertos por los que ya no se vuela).
      */
     private function universe(): Collection
     {
@@ -117,19 +203,28 @@ class PassportService extends Service
                     ->whereColumn('flights.arr_airport_id', 'airports.id')
                     ->where('flights.active', 1);
             })
-            ->orderBy('airports.country')
-            ->orderBy('airports.iata')
-            ->get(['airports.id', 'airports.iata', 'airports.name', 'airports.country']);
+            ->get(['airports.id', 'airports.country']);
     }
 
     /**
-     * Tours completados por el piloto: ha volado todos los tramos del tour.
+     * Aeropuertos posibles: red activa + los visitados que ya no estan en ella.
+     */
+    private function totalAirports(Collection $visits, Collection $universe): int
+    {
+        return count(array_unique(array_merge(
+            $universe->pluck('id')->all(),
+            $visits->pluck('id')->all()
+        )));
+    }
+
+    /**
+     * Tours completados: todos los tramos volados por el piloto.
      *
      * @return array<int, array{code: string, legs: int}>
      */
     private function completedTours(User $user): array
     {
-        if (!\Illuminate\Support\Facades\Schema::hasTable('disposable_tour_flights')) {
+        if (!Schema::hasTable('disposable_tour_flights')) {
             return [];
         }
 
@@ -146,6 +241,7 @@ class PassportService extends Service
         }
 
         $out = [];
+
         foreach (DB::table('disposable_tours')->where('active', 1)->get() as $tour) {
             $legs = DB::table('disposable_tour_flights')->where('tour_id', $tour->id)->pluck('flight_id')->all();
 

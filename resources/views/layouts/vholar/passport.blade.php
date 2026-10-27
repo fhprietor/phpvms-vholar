@@ -10,19 +10,19 @@
 
   {{-- Totales --}}
   <div class="row g-3 mb-3">
-    <div class="col-4 col-md-3">
+    <div class="col-4">
       <div class="card h-100"><div class="card-body text-center">
-        <div class="fs-4 fw-bold">{{ $passport['visited'] }}/{{ $passport['total'] }}</div>
-        <div class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.stamps')</div>
-      </div></div>
-    </div>
-    <div class="col-4 col-md-3">
-      <div class="card h-100"><div class="card-body text-center">
-        <div class="fs-4 fw-bold">{{ $passport['countries'] }}/{{ $passport['countries_total'] }}</div>
+        <div class="fs-4 fw-bold">{{ $passport['countries_visited'] }}/{{ $passport['countries_total'] }}</div>
         <div class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.countries')</div>
       </div></div>
     </div>
-    <div class="col-4 col-md-3">
+    <div class="col-4">
+      <div class="card h-100"><div class="card-body text-center">
+        <div class="fs-4 fw-bold">{{ $passport['visited_airports'] }}/{{ $passport['total_airports'] }}</div>
+        <div class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.airports')</div>
+      </div></div>
+    </div>
+    <div class="col-4">
       <div class="card h-100"><div class="card-body text-center">
         <div class="fs-4 fw-bold">{{ count($passport['tours']) }}</div>
         <div class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.tours')</div>
@@ -31,90 +31,124 @@
   </div>
 
   <style>
-    .vh-stamp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 0.9rem; }
-    .vh-stamp {
-      position: relative; border: 2px dashed var(--vh-border, #3a3344); border-radius: 10px;
-      padding: 0.9rem 0.55rem; text-align: center; background: var(--vh-surface, rgba(255, 255, 255, 0.02));
-      transform: rotate(-1.2deg); transition: transform 0.15s ease, border-color 0.15s ease;
+    .vh-passport details > summary { cursor: pointer; list-style: none; }
+    .vh-passport details > summary::-webkit-details-marker { display: none; }
+    .vh-passport details[open] > summary { border-bottom: 1px solid var(--vh-border); }
+    .vh-passport details > summary .vh-caret { transition: transform 0.15s ease; }
+    .vh-passport details[open] > summary .vh-caret { transform: rotate(90deg); }
+    .vh-flag { font-size: 1.15rem; line-height: 1; }
+    .vh-chip {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.72rem;
+      background: var(--vh-surface-2, rgba(255, 255, 255, 0.06)); color: var(--vh-text);
     }
-    .vh-stamp:nth-child(3n) { transform: rotate(1.4deg); }
-    .vh-stamp:hover { transform: rotate(0deg) scale(1.03); }
-    .vh-stamp .vh-flag { font-size: 1.6rem; line-height: 1; }
-    .vh-stamp-iata { font-weight: 800; letter-spacing: 0.08em; font-size: 1.05rem; margin-top: 0.35rem; }
-    .vh-stamp-name { font-size: 0.72rem; color: var(--vh-text-muted); }
-    .vh-stamp-date { font-size: 0.68rem; color: var(--vh-text-muted); margin-top: 0.25rem; }
-    .vh-stamp.is-visited { border-color: var(--vh-accent, #b39ddb); }
-    .vh-stamp.is-visited .vh-stamp-iata { color: var(--vh-accent-lite, #DFC8F5); }
-    .vh-stamp.is-locked { opacity: 0.45; filter: grayscale(1); }
   </style>
 
-  {{-- Sellos ganados --}}
-  <div class="card mb-3">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <span><i class="bi bi-stamp"></i> @lang('vholar_passport.stamps')</span>
-      <span class="small" style="color: var(--vh-text-muted);">{{ $passport['visited'] }}</span>
-    </div>
-    <div class="card-body">
-      @if($passport['visited'] === 0)
-        <div class="text-center p-4">
-          <div class="fs-5 fw-semibold mb-1">@lang('vholar_passport.no_stamps')</div>
-          <div class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.no_stamps_hint')</div>
-        </div>
-      @else
-        <div class="vh-stamp-grid">
-          @foreach($passport['stamps'] as $stamp)
-            <div class="vh-stamp is-visited" title="{{ $stamp['name'] }}">
-              <div class="vh-flag"><span class="fi fi-{{ strtolower($stamp['country']) }}"></span></div>
-              <div class="vh-stamp-iata">{{ $stamp['iata'] }}</div>
-              <div class="vh-stamp-name">{{ \Illuminate\Support\Str::limit($stamp['name'], 24) }}</div>
-              <div class="vh-stamp-date">
-                @if($stamp['first_seen'])
-                  {{ \Illuminate\Support\Carbon::parse($stamp['first_seen'])->format('d M Y') }}
-                @endif
+  {{-- Países visitados --}}
+  @if($passport['countries_visited'] === 0)
+    <div class="card mb-3"><div class="card-body text-center p-4">
+      <div class="fs-5 fw-semibold mb-1">@lang('vholar_passport.no_stamps')</div>
+      <div class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.no_stamps_hint')</div>
+    </div></div>
+  @else
+    <div class="row g-3 vh-passport">
+      @foreach($passport['countries'] as $country)
+        <div class="col-lg-6">
+          <details class="card h-100">
+            <summary class="card-header d-flex align-items-center gap-2">
+              <i class="bi bi-chevron-right vh-caret" style="font-size: 0.7rem;"></i>
+              <span class="vh-flag"><span class="fi fi-{{ strtolower($country['country']) }}"></span></span>
+              <span class="fw-semibold">{{ $country['name'] }}</span>
+              <span class="small ms-auto" style="color: var(--vh-text-muted);">
+                {{ count($country['airports']) }} @lang('vholar_passport.airports')
+                · {{ $country['total_flights'] }} @lang('vholar_passport.flights')
+              </span>
+            </summary>
+            <div class="card-body">
+              @if($country['first_seen'])
+                <p class="small mb-2" style="color: var(--vh-text-muted);">
+                  @lang('vholar_passport.first_visit'): {{ \Illuminate\Support\Carbon::parse($country['first_seen'])->format('d M Y') }}
+                </p>
+              @endif
+
+              <p class="small fw-semibold mb-1">@lang('vholar_passport.airports')</p>
+              <div class="d-flex flex-wrap gap-1 mb-3">
+                @foreach($country['airports'] as $airport)
+                  <span class="vh-chip" title="{{ $airport['name'] }}">
+                    <strong>{{ $airport['iata'] }}</strong> {{ \Illuminate\Support\Str::limit($airport['name'], 22) }}
+                  </span>
+                @endforeach
+              </div>
+
+              <p class="small fw-semibold mb-1">@lang('vholar_passport.aircraft_types')</p>
+              <div class="d-flex flex-wrap gap-1 mb-3">
+                @foreach($country['types'] as $type => $count)
+                  <span class="vh-chip"><strong>{{ $type }}</strong> ×{{ $count }}</span>
+                @endforeach
+              </div>
+
+              <p class="small fw-semibold mb-1">@lang('vholar_passport.flights')</p>
+              <div class="table-responsive">
+                <table class="table table-sm mb-0" style="font-size: 0.78rem;">
+                  <thead>
+                    <tr>
+                      <th>@lang('vholar_passport.flight')</th>
+                      <th>@lang('vholar_passport.route')</th>
+                      <th class="text-nowrap">@lang('vholar_passport.date')</th>
+                      <th>@lang('vholar_passport.aircraft')</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($country['flights'] as $flight)
+                      <tr>
+                        <td class="fw-semibold">{{ $flight['number'] }}</td>
+                        <td>{{ $flight['dpt'] }} → {{ $flight['arr'] }}</td>
+                        <td class="text-nowrap" style="color: var(--vh-text-muted);">
+                          {{ \Illuminate\Support\Carbon::parse($flight['date'])->format('d M Y') }}
+                        </td>
+                        <td>
+                          {{ $flight['type'] }}
+                          @if($flight['reg'])<span style="color: var(--vh-text-muted);">· {{ $flight['reg'] }}</span>@endif
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
               </div>
             </div>
-          @endforeach
+          </details>
         </div>
-      @endif
+      @endforeach
     </div>
-  </div>
+  @endif
 
   {{-- Sellos de tour --}}
   @if(count($passport['tours']))
-    <div class="card mb-3">
+    <div class="card mt-3">
       <div class="card-header"><i class="bi bi-award"></i> @lang('vholar_passport.tours')</div>
-      <div class="card-body">
-        <div class="vh-stamp-grid">
-          @foreach($passport['tours'] as $tour)
-            <div class="vh-stamp is-visited" style="border-color: var(--vh-warning, #d4a24c)">
-              <div class="vh-flag"><i class="bi bi-award" style="color: var(--vh-warning, #d4a24c)"></i></div>
-              <div class="vh-stamp-iata" style="color: var(--vh-warning, #d4a24c)">{{ $tour['code'] }}</div>
-              <div class="vh-stamp-name">@lang('vholar_passport.tour_stamp')</div>
-              <div class="vh-stamp-date">{{ $tour['legs'] }} {{ trans_choice('common.legs', $tour['legs']) }}</div>
-            </div>
-          @endforeach
-        </div>
+      <div class="card-body d-flex flex-wrap gap-2">
+        @foreach($passport['tours'] as $tour)
+          <div class="vh-chip" style="border: 1px solid var(--vh-warning, #d4a24c); color: var(--vh-warning, #d4a24c);">
+            <i class="bi bi-award"></i> <strong>{{ $tour['code'] }}</strong> · {{ $tour['legs'] }} @lang('vholar_passport.legs')
+          </div>
+        @endforeach
       </div>
     </div>
   @endif
 
-  {{-- Pendientes, plegados --}}
+  {{-- Países pendientes --}}
   @if(count($passport['missing']))
-    <details class="card">
+    <details class="card mt-3">
       <summary class="card-header" style="cursor: pointer;">
-        <i class="bi bi-lock"></i> @lang('vholar_passport.missing_title')
+        <i class="bi bi-lock"></i> @lang('vholar_passport.missing_countries')
         <span class="small" style="color: var(--vh-text-muted);">({{ count($passport['missing']) }})</span>
       </summary>
       <div class="card-body">
-        <p class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.missing_hint')</p>
-        <div class="vh-stamp-grid">
-          @foreach($passport['missing'] as $stamp)
-            <div class="vh-stamp is-locked" title="{{ $stamp['name'] }}">
-              <div class="vh-flag"><span class="fi fi-{{ strtolower($stamp['country']) }}"></span></div>
-              <div class="vh-stamp-iata">{{ $stamp['iata'] }}</div>
-              <div class="vh-stamp-name">{{ \Illuminate\Support\Str::limit($stamp['name'], 24) }}</div>
-              <div class="vh-stamp-date">@lang('vholar_passport.not_visited')</div>
-            </div>
+        <p class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.missing_countries_hint')</p>
+        <div class="d-flex flex-wrap gap-2">
+          @foreach($passport['missing'] as $iso => $name)
+            <span class="vh-chip" style="opacity: 0.75;">
+              <span class="fi fi-{{ strtolower($iso) }}"></span> {{ $name }}
+            </span>
           @endforeach
         </div>
       </div>
