@@ -4,6 +4,8 @@ return [
     'latestnews' => [
         'news'        => 'Noticias',
         'nonewsfound' => 'Noticias no encontradas',
+        'read_more'   => 'Leer más',
+        'read_less'   => 'Leer menos',
     ],
 
     'livemap' => [
