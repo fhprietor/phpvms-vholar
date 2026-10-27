@@ -18,7 +18,7 @@
     </div>
     <div class="col-4">
       <div class="card h-100"><div class="card-body text-center">
-        <div class="fs-4 fw-bold">{{ $passport['visited_airports'] }}/{{ $passport['total_airports'] }}</div>
+        <div class="fs-4 fw-bold">{{ $passport['visited_airports'] }}</div>
         <div class="small" style="color: var(--vh-text-muted);">@lang('vholar_passport.airports')</div>
       </div></div>
     </div>

@@ -34,7 +34,6 @@ class PassportService extends Service
     public function forUser(User $user): array
     {
         $visits = $this->visits($user);
-        $universe = $this->universe();
 
         $flights = $this->flights($user)->groupBy('country');
 
@@ -90,8 +89,11 @@ class PassportService extends Service
 
         uasort($countries, fn ($a, $b) => strcmp($a['name'], $b['name']));
 
+        // El pasaporte se mide contra TODOS los paises del mundo (los que tienen aeropuerto en
+        // la base), no contra la red: la gracia es ir coleccionando paises.
         $visitedIsos = array_keys($countries);
-        $allIsos = array_unique(array_merge($visitedIsos, $universe->pluck('country')->map(fn ($c) => strtoupper((string) $c))->all()));
+        $worldIsos = $this->worldCountries();
+        $allIsos = array_unique(array_merge($worldIsos, $visitedIsos));
 
         $missing = [];
         foreach (array_diff($allIsos, $visitedIsos) as $iso) {
@@ -103,11 +105,30 @@ class PassportService extends Service
             'countries'         => array_values($countries),
             'missing'           => $missing,
             'visited_airports'  => count($visits),
-            'total_airports'    => $this->totalAirports($visits, $universe),
             'countries_visited' => count($countries),
             'countries_total'   => count($allIsos),
             'tours'             => $this->completedTours($user),
         ];
+    }
+
+    /**
+     * Paises del mundo: los codigos ISO-2 que aparecen en la tabla de aeropuertos.
+     *
+     * Se filtra por longitud 2 porque el import de aeropuertos dejo una fila con
+     * `country = "country"` (cabecera del CSV).
+     *
+     * @return array<int, string>
+     */
+    private function worldCountries(): array
+    {
+        return DB::table('airports')
+            ->whereRaw('char_length(country) = 2')
+            ->distinct()
+            ->pluck('country')
+            ->map(fn ($iso) => strtoupper((string) $iso))
+            ->unique()
+            ->values()
+            ->all();
     }
 
     /**
@@ -188,33 +209,6 @@ class PassportService extends Service
                 'subfleets.type as aircraft_type',
                 'aircraft.registration',
             ]);
-    }
-
-    /**
-     * Destinos internacionales de la RED ACTIVA (no los PIREPs historicos: el import del
-     * CrewSystem traia cientos de aeropuertos por los que ya no se vuela).
-     */
-    private function universe(): Collection
-    {
-        return DB::table('airports')
-            ->where('airports.country', '!=', self::HOME_COUNTRY)
-            ->whereExists(function ($sub) {
-                $sub->select(DB::raw(1))->from('flights')
-                    ->whereColumn('flights.arr_airport_id', 'airports.id')
-                    ->where('flights.active', 1);
-            })
-            ->get(['airports.id', 'airports.country']);
-    }
-
-    /**
-     * Aeropuertos posibles: red activa + los visitados que ya no estan en ella.
-     */
-    private function totalAirports(Collection $visits, Collection $universe): int
-    {
-        return count(array_unique(array_merge(
-            $universe->pluck('id')->all(),
-            $visits->pluck('id')->all()
-        )));
     }
 
     /**
