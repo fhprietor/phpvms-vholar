@@ -29,6 +29,44 @@ class PassportService extends Service
     private const ACCEPTED = 2;
 
     /**
+     * Idioma propio de cada pais (para el sello). Solo los que no son evidentes o cuyos
+     * alfabetos se ven: el resto cae al idioma de la aplicacion.
+     */
+    private const NATIVE_LANG = [
+        'CO' => 'es', 'MX' => 'es', 'AR' => 'es', 'CL' => 'es', 'PE' => 'es', 'EC' => 'es',
+        'VE' => 'es', 'PA' => 'es', 'CR' => 'es', 'GT' => 'es', 'SV' => 'es', 'HN' => 'es',
+        'NI' => 'es', 'DO' => 'es', 'PR' => 'es', 'CU' => 'es', 'BO' => 'es', 'PY' => 'es',
+        'UY' => 'es', 'ES' => 'es',
+        'BR' => 'pt', 'PT' => 'pt', 'FR' => 'fr', 'DE' => 'de', 'AT' => 'de', 'CH' => 'de',
+        'IT' => 'it', 'NL' => 'nl', 'BE' => 'nl', 'SE' => 'sv', 'NO' => 'no', 'DK' => 'da',
+        'FI' => 'fi', 'PL' => 'pl', 'CZ' => 'cs', 'RO' => 'ro', 'HU' => 'hu', 'GR' => 'el',
+        'TR' => 'tr', 'RU' => 'ru', 'UA' => 'uk', 'BG' => 'bg',
+        'EG' => 'ar', 'MA' => 'ar', 'DZ' => 'ar', 'TN' => 'ar', 'AE' => 'ar', 'SA' => 'ar',
+        'QA' => 'ar', 'KW' => 'ar', 'JO' => 'ar', 'LB' => 'ar', 'IL' => 'he', 'IR' => 'fa',
+        'KE' => 'sw', 'ZA' => 'en', 'NG' => 'en',
+        'CN' => 'zh', 'JP' => 'ja', 'KR' => 'ko', 'TH' => 'th', 'VN' => 'vi', 'MY' => 'ms',
+        'ID' => 'id', 'PH' => 'fil', 'IN' => 'hi',
+        'US' => 'en', 'CA' => 'en', 'GB' => 'en', 'IE' => 'en', 'AU' => 'en', 'NZ' => 'en',
+    ];
+
+    /** La palabra "inmigracion" en cada idioma, corta para que quepa en el sello. */
+    private const NATIVE_LABEL = [
+        'en'  => 'IMMIGRATION', 'es' => 'INMIGRACIÓN', 'pt' => 'IMIGRAÇÃO', 'fr' => 'IMMIGRATION',
+        'de'  => 'EINREISE', 'it' => 'IMMIGRAZIONE', 'nl' => 'IMMIGRATIE', 'sv' => 'INRESA',
+        'no'  => 'INNREISE', 'da' => 'INDREJSE', 'fi' => 'MAAHANM.', 'pl' => 'WJAZD',
+        'cs'  => 'VSTUP', 'ro' => 'INTRARE', 'hu' => 'BELÉPÉS', 'el' => 'ΕΛΕΓΧΟΣ',
+        'tr'  => 'GİRİŞ', 'ru' => 'ВЪЕЗД', 'uk' => "В'ЇЗД", 'bg' => 'ВЛИЗАНЕ',
+        'ar'  => 'الجوازات', 'he' => 'כניסה', 'fa' => 'ورود', 'sw' => 'UHAMIAJI',
+        'zh'  => '入境', 'ja' => '入国', 'ko' => '입국', 'th' => 'เข้าเมือง', 'vi' => 'NHẬP CẢNH',
+        'ms'  => 'IMIGRESEN', 'id' => 'IMIGRASI', 'fil' => 'IMMIGRATION', 'hi' => 'आगमन',
+    ];
+
+    /** Formas del sello y rotaciones/rotuladores: deterministas por pais. */
+    private const SHAPES = ['oval', 'circle', 'rect', 'round'];
+    private const ROTATIONS = [-7, 5, -4, 8];
+    private const INKS = ['--vh-accent', '--vh-danger', '--vh-warning'];
+
+    /**
      * @return array<string, mixed>
      */
     public function forUser(User $user): array
@@ -116,6 +154,28 @@ class PassportService extends Service
     }
 
     /**
+     * Nombre del pais en su propio idioma (intl), para el sello. Null si no hay dato.
+     */
+    private function nativeName(string $iso, ?string $lang): ?string
+    {
+        if (!$lang || !class_exists(\Locale::class)) {
+            return null;
+        }
+
+        try {
+            $name = \Locale::getDisplayRegion('-'.strtoupper($iso), $lang);
+
+            if (is_string($name) && $name !== '' && strtoupper($name) !== strtoupper($iso)) {
+                return $name;
+            }
+        } catch (\Throwable $e) {
+            // sin dato nativo
+        }
+
+        return null;
+    }
+
+    /**
      * Paises del mundo: los codigos ISO-2 que aparecen en la tabla de aeropuertos.
      *
      * Se filtra por longitud 2 porque el import de aeropuertos dejo una fila con
@@ -169,6 +229,12 @@ class PassportService extends Service
             'first_seen'    => null,
             'first_airport' => null,
             'total_flights' => 0,
+            'lang'          => self::NATIVE_LANG[$iso] ?? null,
+            'native_name'   => $this->nativeName($iso, self::NATIVE_LANG[$iso] ?? null),
+            'label'         => self::NATIVE_LABEL[self::NATIVE_LANG[$iso] ?? ''] ?? null,
+            'shape'         => self::SHAPES[crc32($iso.'shape') % 4],
+            'rotate'        => self::ROTATIONS[crc32($iso.'rotate') % 4],
+            'ink'           => self::INKS[crc32($iso.'ink') % 3],
         ];
     }
 

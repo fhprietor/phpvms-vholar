@@ -39,14 +39,20 @@
     .vh-flag { font-size: 1.15rem; line-height: 1; }
     /* Sello de inmigracion: doble anillo, borde perforado y un poco girado, como el de un
        pasaporte de verdad. Tinta con el acento del tema. */
+    /* El color llega por style="color: var(--vh-...)", y todo lo demas usa currentColor:
+       asi cada pais puede tener su tinta sin duplicar reglas. */
     .vh-visa {
-      float: right; width: 138px; height: 96px; margin: 0 0 10px 14px;
+      float: right; margin: 0 0 10px 14px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center; line-height: 1.05; color: var(--vh-accent, #b39ddb);
-      border: 2px dashed var(--vh-accent, #b39ddb); border-radius: 50%;
-      box-shadow: inset 0 0 0 3px var(--vh-surface, transparent), inset 0 0 0 4px var(--vh-accent, #b39ddb);
-      transform: rotate(-7deg); opacity: 0.9;
+      border: 2px dashed currentColor;
+      box-shadow: inset 0 0 0 3px var(--vh-surface, transparent), inset 0 0 0 4px currentColor;
+      opacity: 0.9; padding: 2px;
     }
+    .vh-visa--oval { width: 140px; height: 96px; border-radius: 50%; }
+    .vh-visa--circle { width: 118px; height: 118px; border-radius: 50%; }
+    .vh-visa--rect { width: 138px; height: 92px; border-radius: 3px; }
+    .vh-visa--round { width: 138px; height: 92px; border-radius: 16px; }
     .vh-visa .vh-visa-country { font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; }
     .vh-visa .vh-visa-port { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.06em; margin: 0.1rem 0; }
     .vh-visa .vh-visa-label { font-size: 0.46rem; letter-spacing: 0.14em; text-transform: uppercase; }
@@ -82,10 +88,13 @@
             </summary>
             <div class="card-body">
               {{-- Sello de inmigracion del pais (el hueco a la derecha es para el) --}}
-              <div class="vh-visa">
-                <div class="vh-visa-country">{{ \Illuminate\Support\Str::limit($country['name'], 16) }}</div>
+              <div class="vh-visa vh-visa--{{ $country['shape'] }}"
+                   style="transform: rotate({{ $country['rotate'] }}deg); color: var({{ $country['ink'] }});">
+                <div class="vh-visa-country">
+                  {{ $country['native_name'] ?? \Illuminate\Support\Str::limit($country['name'], 16) }}
+                </div>
                 <div class="vh-visa-port">{{ $country['first_airport'] ?: $country['country'] }}</div>
-                <div class="vh-visa-label">@lang('vholar_passport.stamp_entry')</div>
+                <div class="vh-visa-label">{{ $country['label'] ?? __('vholar_passport.stamp_entry') }}</div>
                 @if($country['first_seen'])
                   <div class="vh-visa-date">{{ \Illuminate\Support\Carbon::parse($country['first_seen'])->format('d M Y') }}</div>
                 @endif
