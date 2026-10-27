@@ -6,6 +6,7 @@ return [
     'subtitle'              => 'Países a los que has volado, con sus aeropuertos y sus aviones',
     'countries'             => 'Países',
     'airports'              => 'Aeropuertos',
+    'stamp_entry'           => 'INMIGRACIÓN',
     'flights'               => 'Vuelos',
     'aircraft_types'        => 'Tipos de avión usados',
     'first_visit'           => 'Primera visita',

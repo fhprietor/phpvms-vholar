@@ -37,6 +37,23 @@
     .vh-passport details > summary .vh-caret { transition: transform 0.15s ease; }
     .vh-passport details[open] > summary .vh-caret { transform: rotate(90deg); }
     .vh-flag { font-size: 1.15rem; line-height: 1; }
+    /* Sello de inmigracion: doble anillo, borde perforado y un poco girado, como el de un
+       pasaporte de verdad. Tinta con el acento del tema. */
+    .vh-visa {
+      float: right; width: 138px; height: 96px; margin: 0 0 10px 14px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; line-height: 1.05; color: var(--vh-accent, #b39ddb);
+      border: 2px dashed var(--vh-accent, #b39ddb); border-radius: 50%;
+      box-shadow: inset 0 0 0 3px var(--vh-surface, transparent), inset 0 0 0 4px var(--vh-accent, #b39ddb);
+      transform: rotate(-7deg); opacity: 0.9;
+    }
+    .vh-visa .vh-visa-country { font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .vh-visa .vh-visa-port { font-size: 1.05rem; font-weight: 800; letter-spacing: 0.06em; margin: 0.1rem 0; }
+    .vh-visa .vh-visa-label { font-size: 0.46rem; letter-spacing: 0.14em; text-transform: uppercase; }
+    .vh-visa .vh-visa-date { font-size: 0.56rem; margin-top: 0.1rem; }
+    @media (max-width: 575.98px) {
+      .vh-visa { float: none; margin: 0 auto 12px; }
+    }
     .vh-chip {
       display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.72rem;
       background: var(--vh-surface-2, rgba(255, 255, 255, 0.06)); color: var(--vh-text);
@@ -64,6 +81,16 @@
               </span>
             </summary>
             <div class="card-body">
+              {{-- Sello de inmigracion del pais (el hueco a la derecha es para el) --}}
+              <div class="vh-visa">
+                <div class="vh-visa-country">{{ \Illuminate\Support\Str::limit($country['name'], 16) }}</div>
+                <div class="vh-visa-port">{{ $country['first_airport'] ?: $country['country'] }}</div>
+                <div class="vh-visa-label">@lang('vholar_passport.stamp_entry')</div>
+                @if($country['first_seen'])
+                  <div class="vh-visa-date">{{ \Illuminate\Support\Carbon::parse($country['first_seen'])->format('d M Y') }}</div>
+                @endif
+              </div>
+
               @if($country['first_seen'])
                 <p class="small mb-2" style="color: var(--vh-text-muted);">
                   @lang('vholar_passport.first_visit'): {{ \Illuminate\Support\Carbon::parse($country['first_seen'])->format('d M Y') }}

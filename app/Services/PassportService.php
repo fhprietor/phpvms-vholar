@@ -84,6 +84,10 @@ class PassportService extends Service
             usort($country['airports'], fn ($a, $b) => strcmp((string) $b['first_seen'], (string) $a['first_seen']));
             arsort($country['types']);
             $country['total_flights'] = count($country['flights']);
+            // Puerto de entrada: el aeropuerto de la primera visita (el ultimo de la lista,
+            // que va ordenada de mas reciente a mas antigua).
+            $first = end($country['airports']);
+            $country['first_airport'] = is_array($first) ? $first['iata'] : null;
         }
         unset($country);
 
@@ -163,6 +167,7 @@ class PassportService extends Service
             'flights'       => [],
             'types'         => [],
             'first_seen'    => null,
+            'first_airport' => null,
             'total_flights' => 0,
         ];
     }

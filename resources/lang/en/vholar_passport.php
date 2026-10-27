@@ -6,6 +6,7 @@ return [
     'subtitle'              => 'Countries you have flown to, with their airports and aircraft',
     'countries'             => 'Countries',
     'airports'              => 'Airports',
+    'stamp_entry'           => 'IMMIGRATION',
     'flights'               => 'Flights',
     'aircraft_types'        => 'Aircraft types used',
     'first_visit'           => 'First visit',
