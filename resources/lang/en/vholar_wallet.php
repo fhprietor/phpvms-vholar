@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'nav'                  => 'Wallet',
+    'title'                => 'My wallet',
+    'subtitle'             => 'Money earned with your flights and spent on ground services',
+    'balance'              => 'Available balance',
+    'currency_note'        => 'in USD, taken from the airline ledger',
+    'received'             => 'Earned',
+    'spent'                => 'Spent',
+    'movements'            => 'Movements',
+    'monthly'              => 'Monthly balance (last 12 months)',
+    'actions'              => 'Spend from your wallet',
+    'action_jumpseat'      => 'Jumpseat',
+    'action_jumpseat_hint' => 'Travel to another airport',
+    'action_ferry'         => 'Aircraft ferry',
+    'action_ferry_hint'    => 'Move an aircraft for the airline',
+    'action_charter'       => 'Charter',
+    'action_charter_hint'  => 'Book a one off flight',
+    'action_market'        => 'Market',
+    'action_market_hint'   => 'Items and upgrades',
+    'history'              => 'Movements',
+    'date'                 => 'Date',
+    'concept'              => 'Concept',
+    'amount'               => 'Amount',
+    'empty'                => 'No movements yet: your first flight payment will show up here.',
+];

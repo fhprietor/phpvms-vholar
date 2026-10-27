@@ -1,5 +1,21 @@
 # Changelog
 
+## [Vholar] 2026-10-26 — Billetera del piloto (/wallet)
+
+- Nueva pagina **/wallet** (autenticada; enlace en el desplegable del usuario, junto a
+  Perfil): saldo disponible, total ingresado y gastado, grafico mensual de los ultimos 12
+  meses y los movimientos del diario del piloto paginados.
+- Seccion de **acciones** con acceso a las compras que ya existen y cobran al piloto:
+  jumpseat, ferry y charter (VmsOpenOps) y market (DisposableSpecial). Cada boton se pinta
+  solo si su ruta existe (`Route::has`), asi que desactivar un modulo no deja botones
+  muertos.
+- `WalletService`: lee el diario del piloto (`journals.type = USER`); **no mueve dinero**.
+  Los cobros siguen en los modulos, que ya comprueban el saldo (el market compara
+  `balance < amount` antes de comprar), para no tener dos sitios donde se mueve dinero.
+- Verificado con el piloto 1 (saldo 117.716,20, identico al del diario, y 211 movimientos) y
+  con un piloto sin diario (saldos a cero y estado vacio). Suite OK (583 tests).
+
+
 ## [Vholar] 2026-10-04 — Los graficos de utilidad pasan a /admin/finances (y /economics desaparece)
 
 - Los tres graficos (utilidad anual, mensual del año en curso y diaria del mes en curso),

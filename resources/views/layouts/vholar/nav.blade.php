@@ -103,6 +103,7 @@
                             <li><a class="dropdown-item" href="{{ url('/page/wallet') }}"><i class="bi bi-wallet2"></i> @lang('common.wallet')</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ route('frontend.profile.index') }}"><i class="bi bi-person"></i> @lang('common.profile')</a></li>
+                            <li><a class="dropdown-item" href="{{ route('vholar.wallet') }}"><i class="bi bi-wallet2"></i> @lang('vholar_wallet.nav')</a></li>
                             <li><a class="dropdown-item" href="{{ url('/dawards/user') }}"><i class="bi bi-award"></i> @lang('common.my_awards')</a></li>
                             <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.liveries.index') }}"><i class="bi bi-download"></i> @lang('common.liveries')</a></li>
                             <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.downloads.index') }}"><i class="bi bi-download"></i> {{ trans_choice('common.download', 2) }}</a></li>
@@ -121,6 +122,17 @@
                     @endcan
 
                 @endauth
+
+                {{-- ===== Instalar app (PWA) =====
+                     Oculto por defecto: lo muestra el JS del layout solo cuando el
+                     dispositivo puede instalar la app (Chromium) o cuando es iOS
+                     Safari, donde la instalacion es manual. Texto fijo, como
+                     "Jumpseat"/"Ferry" del menu de operaciones. --}}
+                <li class="nav-item d-none" id="vh-install-item">
+                    <a class="nav-link" href="#" id="vh-install-btn" role="button">
+                        <i class="bi bi-phone"></i> Instalar app
+                    </a>
+                </li>
 
                 {{-- ================= FECHA Y HORA UTC (FORMATO METAR) ================= --}}
                 <li class="nav-item ms-lg-2" id="utc-datetime" style="min-width: 100px;">

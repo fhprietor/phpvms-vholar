@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Vholar\DispatchSuggestionController;
 use App\Http\Controllers\Vholar\FleetGridController;
+use App\Http\Controllers\Vholar\WalletController;
 use App\Http\Controllers\Vholar\NetworkMapController;
 
 Route::middleware(['web'])->group(function () {
@@ -12,6 +13,7 @@ Route::middleware(['web'])->group(function () {
 });
 
 Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('wallet', [WalletController::class, 'index'])->name('vholar.wallet');
     Route::get('pilot-briefing', fn () => view('vholar::briefing'))->name('vholar.briefing');
 
     // Sugerido de PAX/carga del modal de despacho (SimBrief).

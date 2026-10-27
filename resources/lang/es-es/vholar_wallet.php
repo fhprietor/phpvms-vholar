@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'nav'                  => 'Billetera',
+    'title'                => 'Mi billetera',
+    'subtitle'             => 'Lo que ganas con tus vuelos y lo que gastas en servicios de tierra',
+    'balance'              => 'Saldo disponible',
+    'currency_note'        => 'en USD, tomado del libro de la aerolínea',
+    'received'             => 'Ingresado',
+    'spent'                => 'Gastado',
+    'movements'            => 'Movimientos',
+    'monthly'              => 'Balance mensual (últimos 12 meses)',
+    'actions'              => 'Gastar desde tu billetera',
+    'action_jumpseat'      => 'Jumpseat',
+    'action_jumpseat_hint' => 'Viaja a otro aeropuerto',
+    'action_ferry'         => 'Ferry de aeronave',
+    'action_ferry_hint'    => 'Traslada una aeronave para la aerolínea',
+    'action_charter'       => 'Chárter',
+    'action_charter_hint'  => 'Reserva un vuelo a medida',
+    'action_market'        => 'Market',
+    'action_market_hint'   => 'Artículos y mejoras',
+    'history'              => 'Movimientos',
+    'date'                 => 'Fecha',
+    'concept'              => 'Concepto',
+    'amount'               => 'Importe',
+    'empty'                => 'Aún no hay movimientos: el pago de tu primer vuelo aparecerá aquí.',
+];
