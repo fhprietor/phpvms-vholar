@@ -104,6 +104,7 @@
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ route('frontend.profile.index') }}"><i class="bi bi-person"></i> @lang('common.profile')</a></li>
                             <li><a class="dropdown-item" href="{{ route('vholar.wallet') }}"><i class="bi bi-wallet2"></i> @lang('vholar_wallet.nav')</a></li>
+                            <li><a class="dropdown-item" href="{{ route('vholar.passport') }}"><i class="bi bi-passport"></i> @lang('vholar_passport.nav')</a></li>
                             <li><a class="dropdown-item" href="{{ url('/dawards/user') }}"><i class="bi bi-award"></i> @lang('common.my_awards')</a></li>
                             <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.liveries.index') }}"><i class="bi bi-download"></i> @lang('common.liveries')</a></li>
                             <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.downloads.index') }}"><i class="bi bi-download"></i> {{ trans_choice('common.download', 2) }}</a></li>

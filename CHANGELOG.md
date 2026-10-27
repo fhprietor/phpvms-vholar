@@ -1,5 +1,24 @@
 # Changelog
 
+## [Vholar] 2026-10-26 — Pasaporte del piloto (/passport)
+
+- Nueva pagina **/passport** (autenticada; enlace bajo el usuario, junto a Billetera y
+  Perfil): sellos de los aeropuertos internacionales que el piloto ha visitado, con bandera,
+  IATA, nombre y **fecha de la primera visita**, mas los que le faltan (plegados), el
+  progreso de sellos y de paises, y los **tours completados** como sellos conmemorativos.
+- **Sin tabla ni listener**: los sellos se calculan desde los PIREPs aceptados
+  (`PassportService`). Ventajas: son **retroactivos** (todos los pilotos los tienen ya), no
+  se pueden desincronizar con la contabilidad de vuelos y no hay migracion que mantener.
+- "Internacional" = pais distinto de la base (`HOME_COUNTRY = 'CO'`). El universo de sellos
+  posibles son los destinos de la **red activa**; los aeropuertos ya visitados que no esten
+  en la red se anaden igualmente, asi que el denominador nunca queda por debajo de lo
+  visitado. (Primera version contaba tambien los PIREPs historicos y daba 413 destinos
+  pendientes, casi todos inalcanzables por el import del CrewSystem.)
+- Banderas con `fi fi-{iso}`: `airports.country` ya viene en ISO-2, sin mapeo.
+- Verificado: VHR001 107/155 sellos y 41/50 paises; VHR055 147/183; VHR017 145/173; pagina
+  200 con 107 sellos ganados y 48 pendientes. Suite OK.
+
+
 ## [Vholar] 2026-10-26 — Billetera del piloto (/wallet)
 
 - Nueva pagina **/wallet** (autenticada; enlace en el desplegable del usuario, junto a
