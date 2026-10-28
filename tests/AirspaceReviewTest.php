@@ -99,16 +99,8 @@ final class AirspaceReviewTest extends TestCase
     public function test_a_marked_pirep_stays_pending_even_if_the_rank_auto_approves(): void
     {
         $pirep = $this->filePirep(['restricted_airspace' => 'SKEZ']);
-        fwrite(STDERR, "\n[diag-mem] notes=".var_export($pirep->notes, true)." state=".$pirep->state."\n");
         $pirep->refresh();
 
-        fwrite(STDERR, sprintf(
-            "\n[diag] state=%s fields=%s violacion=%s notes=%s\n",
-            $pirep->state,
-            \App\Models\PirepFieldValue::where('pirep_id', $pirep->id)->count(),
-            var_export(app(\App\Services\AirspaceReviewService::class)->violationFor($pirep), true),
-            var_export($pirep->notes, true)
-        ));
 
         $this->assertSame(PirepState::PENDING, $pirep->state);
         $this->assertStringContainsString('Espacio restringido: SKEZ', (string) $pirep->notes);
