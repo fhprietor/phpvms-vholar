@@ -17,6 +17,7 @@ use App\Exceptions\AircraftPermissionDenied;
 use App\Exceptions\AirportNotFound;
 use App\Exceptions\PirepCancelNotAllowed;
 use App\Exceptions\PirepError;
+use App\Services\AirspaceReviewService;
 use App\Exceptions\UserNotAtAirport;
 use App\Models\Acars;
 use App\Models\Aircraft;
@@ -54,6 +55,7 @@ class PirepService extends Service
         private readonly AircraftRepository $aircraftRepo,
         private readonly FareService $fareSvc,
         private readonly FlightRepository $flightRepo,
+        private readonly FlightSequenceService $flightSequence,
         private readonly GeoService $geoSvc,
         private readonly PirepRepository $pirepRepo,
         private readonly SimBriefService $simBriefSvc,
@@ -146,6 +148,29 @@ class PirepService extends Service
         if (setting('pireps.only_aircraft_at_dpt_airport') && $aircraft->airport_id !== $pirep->dpt_airport_id) {
             throw new AircraftNotAtAirport($pirep->aircraft);
         }
+
+        // Ruta multietapa: se resuelve el tramo de este PIREP (por `flight_id` o,
+        // si viene vacio, por su identidad) y route_code/route_leg salen del
+        // VUELO, no del cliente. `vmsOpenAcars` no los envia y no hace falta que
+        // lo haga: el `flight_id` ya identifica el tramo. Si el cliente los manda
+        // (otro cliente, o una version nueva) y no coinciden con el vuelo, manda
+        // el vuelo; si no, el PIREP quedaria etiquetado con un tramo que no es y
+        // la secuencia se rompe (fue el caso de VHR902/C.1/L.1).
+        $leg = $this->flightSequence->legOfPirep($pirep);
+        if ($leg !== null) {
+            if (filled($leg->route_code)) {
+                $pirep->route_code = $leg->route_code;
+            }
+
+            if (filled($leg->route_leg)) {
+                $pirep->route_leg = (string) $leg->route_leg;
+            }
+        }
+
+        // Y si este PIREP es un tramo > 1, el piloto tiene que haber volado y
+        // tener ACEPTADO el tramo anterior. Va aqui, y no solo en el bid, porque
+        // el cliente ACARS puede prefilar directo, sin reserva.
+        $this->flightSequence->assertPreviousLegFlown($user, $leg);
 
         // Find if there's a duplicate, if so, let's work on that
         $dupe_pirep = $this->findDuplicate($pirep);
@@ -450,9 +475,23 @@ class PirepService extends Service
             $default_state = $pirep->state;
         }
 
+        // Espacio restringido: el cliente lo marca en los `fields` del PIREP y manda sobre la
+        // auto-aprobacion del rango. Se deja constancia en las notas para el revisor.
+        $airspace_violation = app(AirspaceReviewService::class)->violationFor($pirep);
+
+        if ($airspace_violation !== null) {
+            $line = app(AirspaceReviewService::class)->noteLine($airspace_violation);
+
+            if (!str_contains((string) $pirep->notes, $line)) {
+                $pirep->notes = trim(((string) $pirep->notes)."\n".$line);
+            }
+        }
+
         // If pirep is still at PENDING or DRAFT state decide the default behavior by looking at rank settings
         if ($pirep->state === PirepState::PENDING || $pirep->state === PirepState::DRAFT) {
-            if ($pirep->source === PirepSource::ACARS && $pirep->user->rank->auto_approve_acars) {
+            if ($airspace_violation !== null) {
+                $default_state = PirepState::PENDING;
+            } elseif ($pirep->source === PirepSource::ACARS && $pirep->user->rank->auto_approve_acars) {
                 $default_state = PirepState::ACCEPTED;
             } elseif ($pirep->source === PirepSource::MANUAL && $pirep->user->rank->auto_approve_manual) {
                 $default_state = PirepState::ACCEPTED;
@@ -466,6 +505,13 @@ class PirepService extends Service
             $pirep = $this->reject($pirep);
         } else {
             $pirep->state = $default_state;
+        }
+
+        // Garantia final: un PIREP marcado por espacio restringido nunca queda aceptado, ni
+        // siquiera si el rango lo auto-aprobo en otra ruta. La decision de arriba ya evita
+        // accept() (que moveria horas del piloto y posicion del avion); esto es la red.
+        if ($airspace_violation !== null && $pirep->state === PirepState::ACCEPTED) {
+            $pirep->state = PirepState::PENDING;
         }
 
         $pirep->save();
@@ -509,6 +555,27 @@ class PirepService extends Service
     public function delete(Pirep $pirep): void
     {
         $user_id = $pirep->user_id;
+
+        // Traza forense ANTES del forceDelete. Esta funcion borra de verdad: no
+        // deja la fila ni en `onlyTrashed`, asi que despues NO hay forma de saber
+        // que vuelo era. Sin esta linea, un PIREP purgado es indiagnosticable —
+        // que es justo lo que paso con los seis vuelos que el cliente registro
+        // como `filed` y en la base no aparecian por ningun lado.
+        //
+        // Se registra el piloto, el vuelo, la ruta, la fecha y el estado, que es
+        // lo minimo para reconstruir el caso. El estado ademas dice POR QUE se
+        // borro: el cron horario purga los cancelados (y, si se configura, los
+        // rechazados).
+        Log::info('PIREP deleted', [
+            'pirep_id'      => $pirep->id,
+            'pilot_id'      => optional($pirep->user)->pilot_id,
+            'flight_number' => $pirep->flight_number,
+            'dpt'           => $pirep->dpt_airport_id,
+            'arr'           => $pirep->arr_airport_id,
+            'state'         => $pirep->state,
+            'created_at'    => (string) $pirep->created_at,
+            'submitted_at'  => (string) $pirep->submitted_at,
+        ]);
 
         $w = ['pirep_id' => $pirep->id];
         PirepComment::where($w)->forceDelete();
@@ -631,6 +698,26 @@ class PirepService extends Service
         $pirep->refresh();
 
         $this->setPilotState($pilot, $pirep);
+
+        // Derivar el ingreso por tarifas ANTES de emitir PirepAccepted, porque
+        // el FinanceEventHandler rehace la contabilidad del PIREP al vuelo y
+        // PirepFinanceService::payFaresForPirep() acredita `count * price` por
+        // cada fila de pirep_fares. Si se escribieran despues del evento, el
+        // ingreso no se generaria.
+        //
+        // El cliente ACARS no envia el campo `fares`, asi que sin esto la tabla
+        // pirep_fares queda vacia y la aerolinea no registra ni un ingreso.
+        //
+        // Tolerante a fallos a proposito: un problema al derivar tarifas NUNCA
+        // puede impedir que un vuelo se acepte. Mismo criterio que el feedback
+        // de IA, que jamas puede romper el ciclo del PIREP.
+        try {
+            app(PirepRevenueService::class)->writeForAccept($pirep);
+        } catch (\Throwable $e) {
+            Log::error('PirepService: no se pudo derivar el ingreso del PIREP '
+                .$pirep->id.': '.$e->getMessage());
+        }
+
         event(new PirepAccepted($pirep));
         event(new ProcessAward($pirep->user));
 

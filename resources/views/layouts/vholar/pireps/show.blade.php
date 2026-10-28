@@ -2,6 +2,19 @@
 @section('title', trans_choice('common.pirep', 1).' '.$pirep->ident)
 
 @section('content')
+  @php $airspaceViolation = app(\App\Services\AirspaceReviewService::class)->violationFor($pirep); @endphp
+  @if($airspaceViolation)
+    <div class="card mb-3" style="border-color: var(--vh-warning); background: var(--vh-warning-soft);">
+      <div class="card-body d-flex align-items-center gap-2 py-2">
+        <i class="bi bi-exclamation-triangle-fill fs-5" style="color: var(--vh-warning)"></i>
+        <span>
+          <strong>Revisión obligatoria:</strong> {{ $airspaceViolation }} — espacio restringido.
+          El vuelo queda pendiente de aprobación del staff.
+        </span>
+      </div>
+    </div>
+  @endif
+
   <div class="row">
     <div class="col-sm-8">
       <h2>{{ $pirep->ident }} : {{ $pirep->dpt_airport_id }} to {{ $pirep->arr_airport_id }}</h2>
@@ -33,6 +46,22 @@
       @endif
     </div>
   </div>
+
+  {{-- ================================================================ --}}
+  {{-- ANALISIS DEL VUELO, A ANCHO COMPLETO, ENCIMA DEL BLOQUE DE DOS    --}}
+  {{-- COLUMNAS. Primero el dato medido del flare, despues la lectura    --}}
+  {{-- que hace la IA de el: el instructor cita el flare, asi que el     --}}
+  {{-- grafico se lee antes que el texto que lo comenta.                --}}
+  {{-- ================================================================ --}}
+  @include('components.pirep-flare-replay', ['flare' => $flareReplay ?? null])
+
+  @if(!empty($aiFeedback))
+  <div class="row">
+    <div class="col-12">
+      @include('components.pirep-ai-feedback', ['aiFeedback' => $aiFeedback])
+    </div>
+  </div>
+  @endif
 
   <div class="row">
     <div class="col-8">
@@ -160,9 +189,6 @@
         </div>
       </div>
       @endif
-
-      {{-- Análisis automático (IA) --}}
-      @include('components.pirep-ai-feedback', ['aiFeedback' => $aiFeedback])
 
 {{-- Analisis financiero del vuelo (mismo libro diario) --}}
 @include('components.pirep-financial-analysis')
@@ -372,10 +398,12 @@
         <span>{{ $pirep->route }}</span>
       </div>
 
+      @if($can_view_private ?? false)
       <div class="d-flex justify-content-between list-group-item">
         <span>{{ trans_choice('common.note', 2) }}</span>
         <span>{{ $pirep->notes }}</span>
       </div>
+      @endif
 
 <div class="d-flex justify-content-between list-group-item">
         <span>@lang('pireps.filedon')</span>
@@ -465,6 +493,10 @@
     </div>
   @endif
 {{-- ============================================================ --}}
+{{-- TRANSCRIPCION ATC (SayIntentions.AI, solo si el piloto la tiene) --}}
+{{-- ============================================================ --}}
+@include('components.pirep-atc-comms', ['atcComms' => $atcComms ?? null])
+{{-- ============================================================ --}}
 {{-- ALTITUDE PROFILE CHART (independiente de logData)          --}}
 {{-- ============================================================ --}}
 @if($altitudeProfile && $altitudeProfile->count() > 0)
@@ -535,7 +567,7 @@ new Chart(document.getElementById('altitudeChart'), {
 @endpush
 @endif {{-- /altitudeProfile --}}
 
-@if($pirep->comments->count() > 0)
+@if(($can_view_private ?? false) && $pirep->comments->count() > 0)
 <div class="separator"></div>
 <div class="row">
   <div class="col-12">

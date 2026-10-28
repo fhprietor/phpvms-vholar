@@ -258,7 +258,8 @@ Detalle de un vuelo.
 
 ### `GET /api/flights/{id}/briefing` _(api.auth)_
 
-Devuelve XML sin procesar del OFP de SimBrief (`application/xml`).
+Devuelve XML sin procesar del OFP de SimBrief (`application/xml`). Solo el
+piloto dueño del OFP o un administrador con permiso `pireps`.
 
 ### `GET /api/flights/{id}/route` _(api.auth)_
 
@@ -369,7 +370,10 @@ Notas:
 
 ### `GET /api/pireps/{pirep_id}`
 
-Sin autenticación. Detalle completo de un PIREP.
+Sin autenticación. Detalle completo de un PIREP. Las **notas del piloto**
+(`notes`) y las **observaciones del staff** (`comments`) solo se devuelven a su
+autor o a un administrador con permiso `pireps`; para el resto de llamantes se
+omiten (`comments` viaja como `[]`).
 
 ### `POST /api/pireps/prefile` _(api.auth)_
 
@@ -405,6 +409,18 @@ Prefila un nuevo PIREP (estado inicial).
 | `created_at` | No | date | |
 | `fares` | No | array | `[{id, count}]` |
 
+**Rutas multietapa (`route_code`/`route_leg`):** el servidor los **deriva del vuelo** (`flight_id`) y manda sobre lo que envíe el cliente, así que **el cliente no necesita enviarlos** (`vmsOpenAcars` no lo hace y está bien). El `flight_id` es la fuente de verdad del tramo: si no se envía, se usan los de la petición para emparejar el PIREP con su vuelo, y si tampoco vienen, el PIREP queda sin tramo (no se puede validar la secuencia). Regla de negocio asociada: un tramo > 1 exige un PIREP **aceptado** del tramo anterior (`previous-leg-not-flown`, 400).
+
+**Espacios restringidos (revision obligatoria):** si el vuelo invade un espacio restringido, el cliente lo marca en los **campos personalizados** del PIREP (`fields`), **nunca en `state`** (el servidor lo fija).
+
+| Campo (`fields`) | Valor | Uso |
+|---|---|---|
+| `restricted_airspace` | texto (p. ej. `SKEZ`, `SKCG zona de exclusion`) | **Recomendado** |
+| `restricted_zone` | texto | Alternativo |
+| `airspace_violation` | `1` o texto | Alternativo |
+
+Comportamiento del servidor al presentar el PIREP (`POST /api/pireps/{id}`): si alguno de esos campos llega con un valor distinto de vacio o `0`, el PIREP **no se auto-aprueba** aunque el rango del piloto tenga `auto_approve_acars`; queda en `state = 1` (PENDING) para revision del staff y se anade a `notes` la linea `[Revision obligatoria] Espacio restringido: <valor>`. El detalle del PIREP muestra un aviso. El texto para el revisor va en `notes`; el estado no lo manda el cliente.
+
 ### `POST /api/pireps/{pirep_id}` _(api.auth)_
 ### `PUT /api/pireps/{pirep_id}` _(api.auth)_
 ### `PATCH /api/pireps/{pirep_id}` _(api.auth)_
@@ -435,15 +451,16 @@ Finaliza y envía un PIREP. Autoría verificada.
 ### `PUT /api/pireps/{pirep_id}/cancel` _(api.auth)_
 ### `DELETE /api/pireps/{pirep_id}/cancel` _(api.auth)_
 
-Cancela un PIREP.
+Cancela un PIREP. Solo el autor del PIREP o un administrador con permiso
+`pireps`; cualquier otro piloto recibe `403`.
 
 ```json
 { "message": "PIREP {id} cancelled" }
 ```
 
-### `GET /api/pireps/{pirep_id}/comments`
+### `GET /api/pireps/{pirep_id}/comments` _(api.auth)_
 
-Comentarios de un PIREP (público).
+Comentarios de un PIREP. Solo el autor o un administrador con permiso `pireps`.
 
 ### `POST /api/pireps/{pirep_id}/comments` _(api.auth)_
 
@@ -464,11 +481,13 @@ Campos personalizados del PIREP (key-value object).
 
 ### `GET /api/pireps/{pirep_id}/finances` _(api.auth)_
 
-Transacciones financieras del PIREP.
+Transacciones financieras del PIREP. Solo el autor o un administrador con
+permiso `pireps`.
 
 ### `POST /api/pireps/{pirep_id}/finances/recalculate` _(api.auth)_
 
-Recalcula finanzas del PIREP.
+Recalcula finanzas del PIREP. Solo el autor o un administrador con permiso
+`pireps`.
 
 ### `GET /api/pireps/{pirep_id}/route` _(api.auth)_
 
@@ -666,7 +685,8 @@ Perfil del usuario autenticado.
 
 ### `GET /api/users/{id}` _(api.auth)_
 
-Perfil público de un usuario por ID.
+Perfil público de un usuario por ID. Solo el propio piloto del token o un
+administrador con permiso `users`; otro piloto recibe `403`.
 
 ### `GET /api/user/fleet` _(api.auth)_
 ### `GET /api/users/{id}/fleet` _(api.auth)_
@@ -685,7 +705,7 @@ PIREPs del usuario. Paginados por `created_at DESC`. Excluye cancelados por defe
 | `source_name` | string | Filtro por cliente productor, por **prefijo**. `source_name=vmsOpenACars` devuelve todas sus versiones (`vmsOpenACars/0.9.16`, etc.) |
 | `limit` | int | Tamaño de página. Por defecto `20` (`repository.pagination.limit`), sin tope máximo |
 | `page` | int | Número de página |
-| `id` | uuid | Piloto a consultar (`?id=3`); por defecto el dueño del token. Permite leer los PIREPs de otro piloto |
+| `id` | uuid | Piloto a consultar (`?id=3`); por defecto el dueño del token. Consultar a otro piloto exige un administrador con permiso `users`: en caso contrario devuelve `403` |
 
 **Response:** colección de `PirepResource` con `meta.pagination` (`current_page`, `per_page`, `total`, `last_page`).
 
