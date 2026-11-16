@@ -24,6 +24,7 @@ use App\Models\Aircraft;
 use App\Models\Enums\AcarsType;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\FlightType;
+use App\Models\Enums\PirepFieldSource;
 use App\Models\Enums\PirepSource;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
@@ -194,6 +195,21 @@ class PirepService extends Service
             if ($simbrief) {
                 $this->simBriefSvc->attachSimbriefToPirep($pirep, $simbrief, true);
             }
+        }
+
+        // Revision previa de la ruta: el cliente prefila ANTES de despegar, asi que este es
+        // el momento de avisar si el OFP de SimBrief cruza un area restringida. Nunca impide
+        // prefilar: se anade como campo del PIREP y viaja en la respuesta (route_warning).
+        try {
+            $routeWarning = app(AirspaceService::class)->warningForPirep($pirep);
+
+            if ($routeWarning !== null) {
+                $fields[] = ['name' => 'route_airspace', 'value' => $routeWarning['area'], 'source' => PirepFieldSource::ACARS];
+                $fields[] = ['name' => 'route_limits', 'value' => $routeWarning['limits'], 'source' => PirepFieldSource::ACARS];
+                $fields[] = ['name' => 'route_leg', 'value' => $routeWarning['leg'], 'source' => PirepFieldSource::ACARS];
+            }
+        } catch (\Throwable $e) {
+            Log::warning('prefile: revision de ruta fallo: '.$e->getMessage());
         }
 
         $this->updateCustomFields($pirep->id, $fields);
