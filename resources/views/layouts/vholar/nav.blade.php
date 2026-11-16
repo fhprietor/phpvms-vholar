@@ -2,8 +2,12 @@
     <div class="container-fluid">
 
         {{-- Logo --}}
-        <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="{{ public_asset('images/vholar_logoweb.png') }}" height="38" alt="Vholar">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
+            @if ($logo = brand()->logoUrl())
+                <img src="{{ $logo }}" height="38" alt="{{ brand()->name() }}">
+            @else
+                <span class="fw-semibold">{{ brand()->short_name ?: brand()->name() }}</span>
+            @endif
         </a>
 
         {{-- Mobile Toggle --}}
@@ -22,7 +26,9 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="operationsDropdown">
                         {{-- Publico: la pagina de tours no requiere sesion --}}
-                        <li><a class="dropdown-item" href="{{ url('/dtours') }}"><i class="bi bi-map"></i> @lang('common.tours')</a></li>
+                        @if (brand()->feature('tours'))
+                            <li><a class="dropdown-item" href="{{ url('/dtours') }}"><i class="bi bi-map"></i> @lang('common.tours')</a></li>
+                        @endif
                         @auth
                             <li><a class="dropdown-item" href="{{ url('/flights') }}"><i class="bi bi-airplane"></i> @lang('common.dispatch')</a></li>
                             <li><a class="dropdown-item" href="{{ url('/vmsopenops/charter/create') }}"><i class="bi bi-rocket"></i> @lang('common.charter')</a></li>
@@ -36,7 +42,9 @@
                         @endauth
                         <li><a class="dropdown-item" href="{{ url('/fleetgrid') }}"><i class="bi bi-airplane-engines"></i> @lang('common.fleet')</a></li>
                         <li><a class="dropdown-item" href="{{ url('/fleetmap') }}"><i class="bi bi-map"></i> @lang('common.fleet_map')</a></li>
-                        <li><a class="dropdown-item" href="{{ url('/networkmap') }}"><i class="bi bi-diagram-3"></i> @lang('vholar_network.nav')</a></li>
+                        @if (brand()->feature('network_map'))
+                            <li><a class="dropdown-item" href="{{ url('/networkmap') }}"><i class="bi bi-diagram-3"></i> @lang('vholar_network.nav')</a></li>
+                        @endif
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ route('frontend.livemap.index') }}"><i class="bi bi-globe"></i> @lang('common.livemap')</a></li>
                     </ul>
@@ -92,22 +100,41 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="pilotDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             @if (Auth::user()->avatar)
                                 <img src="{{ Auth::user()->avatar->url }}" class="rounded-circle" style="height:28px;width:28px;">
+                            @elseif ($mark = brand()->markUrl())
+                                <img src="{{ $mark }}" class="rounded-circle bg-white p-1" style="height:28px;width:28px;" alt="{{ brand()->name() }}">
                             @else
-                                <img src="{{ public_asset('images/vholar_logoweb.png') }}" class="rounded-circle bg-white p-1" style="height:28px;width:28px;">
+                                <i class="bi bi-person-circle fs-4"></i>
                             @endif
                             <span>{{ Auth::user()->ident }} ({{ Auth::user()->name_private }})</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="pilotDropdown">
                             <li><a class="dropdown-item" href="{{ url('/page/oma') }}"><i class="bi bi-file-text"></i> OM-A</a></li>
-                            <li><a class="dropdown-item" href="{{ route('vholar.briefing') }}"><i class="bi bi-journal-richtext"></i> Briefing del Piloto</a></li>
+                            @if (brand()->feature('briefing'))
+                                <li><a class="dropdown-item" href="{{ route('vholar.briefing') }}"><i class="bi bi-journal-richtext"></i> Briefing del Piloto</a></li>
+                            @endif
+                            @if (Route::has('vholar.learning.index'))
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('vholar.learning.index') }}">
+                                        <i class="bi bi-mortarboard"></i> {{ brand()->name() }} Learning
+                                    </a>
+                                </li>
+                            @endif
                             <li><a class="dropdown-item" href="{{ url('/page/wallet') }}"><i class="bi bi-wallet2"></i> @lang('common.wallet')</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ route('frontend.profile.index') }}"><i class="bi bi-person"></i> @lang('common.profile')</a></li>
-                            <li><a class="dropdown-item" href="{{ route('vholar.wallet') }}"><i class="bi bi-wallet2"></i> @lang('vholar_wallet.nav')</a></li>
-                            <li><a class="dropdown-item" href="{{ route('vholar.passport') }}"><i class="bi bi-passport"></i> @lang('vholar_passport.nav')</a></li>
+                            @if (brand()->feature('wallet'))
+                                <li><a class="dropdown-item" href="{{ route('vholar.wallet') }}"><i class="bi bi-wallet2"></i> @lang('vholar_wallet.nav')</a></li>
+                            @endif
+                            @if (brand()->feature('passport'))
+                                <li><a class="dropdown-item" href="{{ route('vholar.passport') }}"><i class="bi bi-passport"></i> @lang('vholar_passport.nav')</a></li>
+                            @endif
                             <li><a class="dropdown-item" href="{{ url('/dawards/user') }}"><i class="bi bi-award"></i> @lang('common.my_awards')</a></li>
-                            <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.liveries.index') }}"><i class="bi bi-download"></i> @lang('common.liveries')</a></li>
-                            <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.downloads.index') }}"><i class="bi bi-download"></i> {{ trans_choice('common.download', 2) }}</a></li>
+                            @if (Route::has('vmsopenfilemanager.liveries.index'))
+                                <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.liveries.index') }}"><i class="bi bi-download"></i> @lang('common.liveries')</a></li>
+                            @endif
+                            @if (Route::has('vmsopenfilemanager.downloads.index'))
+                                <li><a class="dropdown-item" href="{{ route('vmsopenfilemanager.downloads.index') }}"><i class="bi bi-download"></i> {{ trans_choice('common.download', 2) }}</a></li>
+                            @endif
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ url('/logout') }}"><i class="bi bi-box-arrow-right"></i> @lang('common.logout')</a></li>
                         </ul>
@@ -120,6 +147,16 @@
                                 <i class="bi bi-gear-fill"></i> @lang('common.administration')
                             </a>
                         </li>
+                    @else
+                        {{-- Rol de mantenimiento de liveries: no tiene admin-access,
+                             asi que solo se le enlaza su seccion. --}}
+                        @ability('admin', 'liveries')
+                            <li class="nav-item ms-lg-1">
+                                <a class="nav-link" href="{{ url('/admin/liveries') }}">
+                                    <i class="bi bi-gear-fill"></i> @lang('common.liveries')
+                                </a>
+                            </li>
+                        @endability
                     @endcan
 
                 @endauth
