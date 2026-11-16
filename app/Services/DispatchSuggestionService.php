@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Contracts\Service;
+use App\Helpers\FlightAnalysisHelper;
 use App\Models\Aircraft;
 use App\Models\Enums\FareType;
 use App\Models\Enums\FlightType;
 use App\Models\Enums\FuelType;
 use App\Models\Flight;
+use App\Models\Pirep;
+use App\Models\SimBrief;
 use App\Models\Subfleet;
 use App\Models\User;
 use App\Support\Math;
@@ -24,7 +27,7 @@ use Illuminate\Support\Facades\Log;
  * Cuando el piloto ya ha reservado un vuelo regular y abre el despacho, se le
  * ofrece la carga MINIMA que hace rentable el trayecto con un margen del 20 %
  * sobre el coste, teniendo en cuenta la elevacion y la temperatura del
- * aeropuerto de salida (que recortan plazas). Excluye charter (CH) y ferry (FR)
+ * aeropuerto de salida (que recortan plazas). Excluye charter (CH) y ferry (FE)
  * por sufijo del numero de vuelo.
  *
  * EL COSTE ES EL DEL LIBRO, NO UNA APROXIMACION
@@ -95,27 +98,31 @@ class DispatchSuggestionService extends Service
      * exactamente estos codigos y los guarda en `flights.route_code`, creando el
      * vuelo oculto (`active=0`, `visible=0`), su subflota y el bid del piloto:
      *
-     *   CH charter de pasaje | CA charter de carga | PS posicionamiento | FR ferry
+     *   CH charter de pasaje | CA charter de carga | PS posicionamiento | FE ferry
      *
      * El mismo campo se puede fijar a mano en el formulario de vuelos del admin.
      * De ahi venia el "sufijo" del traspaso: el formulario tambien forma el
      * callsign como `<user_id><codigo>` ("80CH", "80FR"), y los PIREPs de esas
      * operaciones acaban con numeros como "025CH".
      *
-     * El traspaso cerro CH y FR; CA y PS salen del MISMO formulario (charter de
+     * El traspaso cerro CH y FE; CA y PS salen del MISMO formulario (charter de
      * carga y posicionamiento en vacio) y quedan excluidos tambien por decision
      * del mantenedor: ninguna de las cuatro es una operacion comercial de pasaje
      * a la que aplicar el minimo rentable.
      */
-    private const EXCLUDED_ROUTE_CODES = ['CH', 'CA', 'PS', 'FR'];
+    // FR es el sufijo de ferry que usa el cliente (80FR) y FE la marca que dejo VmsOpenOps en
+    // algunos vuelos: se excluyen las dos, porque el test y la documentacion hablan de FR.
+    private const EXCLUDED_ROUTE_CODES = ['CH', 'CA', 'PS', 'FE', 'FR'];
 
     /**
      * Respaldo por sufijo para cuando el numero de vuelo no es un entero.
      * Hoy `flights.flight_number` es `int unsigned`, asi que no puede acabar en
-     * CH/FR: la comprobacion no salta, pero cubre el dia en que se ensanche la
+     * CH/FE: la comprobacion no salta, pero cubre el dia en que se ensanche la
      * columna o llegue un dato heredado.
      */
     private const SUFFIX_CHARTER = 'CH';
+    // El cliente usa el sufijo FR en el numero de vuelo (100FR); FE quedo como route_code
+    // heredado de VmsOpenOps y se sigue excluyendo por codigo.
     private const SUFFIX_FERRY = 'FR';
 
     /** ISA al nivel del mar, en grados Celsius. */
@@ -139,7 +146,7 @@ class DispatchSuggestionService extends Service
         'AT46' => 48, 'BE58' => 6, 'DHC6' => 19, 'A332' => 290, 'A330' => 290,
         'B772' => 320, 'B777' => 350,
         // Cargueros: sin plazas, todo va en bodega.
-        'A306' => 0, 'A30F' => 0, 'B77F' => 0,
+        'A306' => 0, 'A30F' => 0, 'B77F' => 0, 'A332F' => 0,
     ];
 
     /**
@@ -149,19 +156,28 @@ class DispatchSuggestionService extends Service
      * ACARS (type=2). Se usa la mediana y no la media porque hay logs con
      * `fuel_used = 0` que hunden el promedio.
      *
+     * B77W: 14.580 era la mediana historica y se quedo corta. Sobre 50 PIREPs la
+     * media real es 17.083 lb/h, y en los vuelos ultra-largos cargados (Sidney,
+     * 349 pax + 38 t) llega a 18.250. Con 14.580 el sugerido subestimaba el
+     * coste del combustible y las proyecciones de margen salian optimistas: el
+     * viaje a Sidney se proyecto en +24 % y salio en +10 %. Se usa la media
+     * medida, que es lo que de verdad se paga en el libro.
+     *
      * ESTIMADO: tipos sin telemetria fiable. En A333 el libro da una mediana de
      * 4.211 lb/h que es imposible para un fuselaje ancho (los PIREPs importados
      * traen el combustible mal), asi que se usa el valor de folleto. En A306
-     * solo hay una muestra.
+     * solo hay una muestra. A339 comprobado contra 122 PIREPs (10.327 medido vs
+     * 10.270 de la tabla: coincide). A359 solo tiene 5 muestras (10.956): se
+     * deja el valor de folleto, que es conservador.
      */
     private const FUEL_LB_PER_HOUR = [
         // --- Medidos (telemetria ACARS) ---
         'A20N' => 4120, 'A21N' => 3990, 'A319' => 4660, 'A320' => 5080, 'A321' => 5400,
         'B737' => 4260, 'B738' => 4920, 'B38M' => 4380, 'B77L' => 13030,
         'DHC6' => 447, 'BE58' => 122, 'DH8D' => 1410, 'AT46' => 1040,
-        'B77F' => 15370, 'B77W' => 14580, 'A339' => 10270,
+        'B77F' => 15370, 'B77W' => 17083, 'A339' => 10270,
         // --- Estimados (sin telemetria fiable) ---
-        'AT76' => 1300, 'A306' => 13000, 'A30F' => 13000, 'A332' => 11500,
+        'AT76' => 1300, 'A306' => 13000, 'A30F' => 13000, 'A332' => 11500, 'A332F' => 11500,
         'A330' => 11500, 'A333' => 11500, 'A359' => 12500, 'B763' => 11000,
         'B764' => 12000, 'B772' => 15000, 'B777' => 15000, 'B789' => 11000,
     ];
@@ -178,7 +194,8 @@ class DispatchSuggestionService extends Service
     private const FAMILY_NARROW = ['A20N', 'A21N', 'A319', 'A320', 'A321', 'B38M', 'B737', 'B738'];
 
     public function __construct(
-        private readonly AirportService $airportSvc
+        private readonly AirportService $airportSvc,
+        private readonly FlightSequenceService $flightSequence
     ) {}
 
     /**
@@ -218,7 +235,7 @@ class DispatchSuggestionService extends Service
                 'reason' => 'charter_or_ferry',
                 'notes'  => [[
                     'level' => 'info',
-                    'text'  => 'Operacion no regular ('.($routeCode ?: 'CH/FR').'): sin sugerido de carga.',
+                    'text'  => 'Operacion no regular ('.($routeCode ?: 'CH/FE').'): sin sugerido de carga.',
                 ]],
             ];
         }
@@ -302,18 +319,40 @@ class DispatchSuggestionService extends Service
             ? (float) $cargoFare->price - self::MARGIN * (float) $cargoFare->cost
             : 0.0;
 
-        $pax = $cargoUnitMargin > 0 ? $this->cabinPax($seatsMax) : $seatsMax;
+        // --- Continuacion de una ruta multietapa (escala tecnica) ---
+        //
+        // El pasaje y la carga ya estan a bordo desde el tramo anterior: no se
+        // optimizan contra el objetivo de ESTE tramo, se conservan tal cual (y
+        // solo se recortan si no caben en el avion). Sin esto, un tramo con
+        // tarifa TECH (precio 0) sugeria cabina al 90 % y bodega llena para
+        // cubrir un objetivo que ese tramo no tiene: el piloto despegaba con un
+        // avion distinto al que llego a la escala.
+        $carried = $this->carriedPayload($flight, $user);
 
-        [$paxRevenue, $paxCost] = $this->paxBalance($pax, $paxFares, $mix);
-        $cargoLimit = $this->cargoLimitKg($payloadKg, $subfleet, $pax, $paxWeightKg, $baggageAvg);
-        $needed = self::MARGIN * ($fixedCost + $paxCost) - $paxRevenue;
+        if ($carried !== null) {
+            $pax = $carried['pax'];
+            [$paxRevenue, $paxCost] = $this->paxBalance($pax, $paxFares, $mix);
+            $cargoLimit = $this->cargoLimitKg($payloadKg, $subfleet, $pax, $paxWeightKg, $baggageAvg);
 
-        if ($cargoLimit !== null) {
-            $cargo = (int) floor($cargoLimit);
-            $cargoLimited = $cargo > 0;
-        } elseif ($cargoFare !== null && $needed > 0 && $cargoUnitMargin > 0) {
-            // Sin pesos del avion no hay tope: la carga justa para el objetivo.
-            $cargo = (int) max(0, ceil($needed / $cargoUnitMargin));
+            $cargo = (int) round($carried['cargo']);
+            if ($cargoLimit !== null && $cargo > (int) floor($cargoLimit)) {
+                $cargo = (int) floor($cargoLimit);
+                $cargoLimited = $cargo > 0;
+            }
+        } else {
+            $pax = $cargoUnitMargin > 0 ? $this->cabinPax($seatsMax) : $seatsMax;
+
+            [$paxRevenue, $paxCost] = $this->paxBalance($pax, $paxFares, $mix);
+            $cargoLimit = $this->cargoLimitKg($payloadKg, $subfleet, $pax, $paxWeightKg, $baggageAvg);
+            $needed = self::MARGIN * ($fixedCost + $paxCost) - $paxRevenue;
+
+            if ($cargoLimit !== null) {
+                $cargo = (int) floor($cargoLimit);
+                $cargoLimited = $cargo > 0;
+            } elseif ($cargoFare !== null && $needed > 0 && $cargoUnitMargin > 0) {
+                // Sin pesos del avion no hay tope: la carga justa para el objetivo.
+                $cargo = (int) max(0, ceil($needed / $cargoUnitMargin));
+            }
         }
 
         $cargoRevenue = $cargoFare !== null ? $cargo * (float) $cargoFare->price : 0.0;
@@ -324,9 +363,17 @@ class DispatchSuggestionService extends Service
         $cost = $fixedCost + $paxCost + $cargoCost;
         $marginPct = $cost > 0 ? round(($revenue / $cost - 1.0) * 100.0, 1) : null;
 
+        // En un tramo de continuacion el objetivo de margen no aplica: el
+        // trayecto se cobra en el tramo donde se vende.
+        if ($carried !== null) {
+            $reason = 'carried_over';
+        } else {
+            $reason = $targetReached ? 'ok' : 'target_unreachable';
+        }
+
         return [
             'applicable'    => true,
-            'reason'        => $targetReached ? 'ok' : 'target_unreachable',
+            'reason'        => $reason,
             'flight_id'     => $flight->id,
             'flight_number' => $number,
             'route_code'    => $routeCode ?: null,
@@ -400,6 +447,10 @@ class DispatchSuggestionService extends Service
                 'target'         => round(self::MARGIN * $cost, 2),
                 'margin_pct'     => $marginPct,
                 'target_reached' => $targetReached,
+                // Continuacion de ruta: el payload viene del tramo anterior y el
+                // ingreso del tramo es el de su propia tarifa (TECH).
+                'carried'      => $carried !== null,
+                'carried_from' => $carried['from'] ?? null,
             ],
             'notes' => $this->buildNotes([
                 'number'         => $number,
@@ -425,6 +476,9 @@ class DispatchSuggestionService extends Service
                 'payloadKg'      => $payloadKg,
                 'cargoMax'       => $cargoLimit,
                 'cargoLimited'   => $cargoLimited,
+                'carried'        => $carried !== null,
+                'carriedFrom'    => $carried['from'] ?? null,
+                'fareCodes'      => $paxFares->pluck('code')->implode('/'),
             ]),
         ];
     }
@@ -516,10 +570,146 @@ class DispatchSuggestionService extends Service
             $paxFares = $subfleetRows->where('type', FareType::PASSENGER)->sortBy('price')->values();
         }
 
+        // Carga: la misma regla que el PIREP. Si el vuelo enlaza su propia tarifa
+        // de carga, manda esa (TECC a 0 apaga la bodega; XPS vende Express) y no
+        // se completa con la de la subflota.
+        $flightCargo = $flightRows->where('type', FareType::CARGO)->sortBy('price')->values();
+        if ($flightCargo->isNotEmpty()) {
+            return [$paxFares, $flightCargo->firstWhere('code', 'CGO') ?? $flightCargo->first()];
+        }
+
         $cargoRows = $subfleetRows->where('type', FareType::CARGO);
         $cargoFare = $cargoRows->firstWhere('code', 'CGO') ?? $cargoRows->sortBy('price')->first();
 
         return [$paxFares, $cargoFare];
+    }
+
+    /**
+     * Pasaje y carga que el avion lleva desde el tramo anterior de la ruta.
+     *
+     * Solo aplica a los tramos de continuacion (`route_leg > 1`) de una ruta
+     * multietapa, que en esta aerolinea son las escalas tecnicas. El pasajero y la
+     * carga no bajan del avion en la escala, asi que el despacho del tramo
+     * siguiente tiene que salir con los MISMOS numeros con los que llego.
+     *
+     * FUENTES, en orden:
+     *   1. El PIREP ACEPTADO del tramo anterior del piloto: `operations.payload`
+     *      del log ACARS ("PAX n ... CARGO n"). Es lo que de verdad volo.
+     *   2. El OFP de SimBrief de ese tramo: el que quedo pegado al PIREP
+     *      (`pirep_id`) si ya se volo, o el del vuelo (`flight_id`) si aun no.
+     *      Se leen `weights.pax_count` y `weights.cargo` (convertido de libras si
+     *      el OFP va en libras).
+     *   3. Lo que el PIREP FACTURO (`pirep_fares`): suma de pasajeros y de carga.
+     *      Es el respaldo cuando el cliente no escribio la linea de payload y no
+     *      hay OFP. Sin el, el tramo de continuacion se despachaba al MAXIMO del
+     *      avion y ese payload volaba gratis (TECC a 0): paso en el VHR906, donde
+     *      el tramo que factura registro 258 pax / 2,8 t y el tecnico llevo 349
+     *      pax / 38 t sin cobrar.
+     *
+     * Devuelve null si no hay tramo anterior o si no hay dato que conservar: en ese
+     * caso el sugerido se calcula como siempre.
+     *
+     * @return array{pax: int, cargo: float, from: string}|null
+     */
+    private function carriedPayload(Flight $flight, ?User $user): ?array
+    {
+        if ($user === null) {
+            return null;
+        }
+
+        $previous = $this->flightSequence->previousLegOf($flight);
+        if ($previous === null) {
+            return null;
+        }
+
+        // 1) PIREP aceptado del tramo anterior (dato real del log).
+        $pirep = $this->flightSequence->acceptedPirepOf($user, $previous);
+        if ($pirep !== null) {
+            $payload = FlightAnalysisHelper::parseLogData($pirep)['operations']['payload'] ?? [];
+            if (isset($payload['pax']) || isset($payload['cargo'])) {
+                return [
+                    'pax'   => (int) ($payload['pax'] ?? 0),
+                    // El log da la carga en kg, la misma unidad que el sugerido.
+                    'cargo' => (float) ($payload['cargo'] ?? 0),
+                    'from'  => $previous->ident,
+                ];
+            }
+
+            // Log sin linea de payload: vale el OFP que quedo pegado al PIREP.
+            $brief = SimBrief::where('pirep_id', $pirep->id)
+                ->orderByDesc('created_at')
+                ->first();
+
+            $weights = $brief?->xml?->weights;
+            if ($weights !== null) {
+                return $this->carriedFromWeights($weights, $brief, $previous);
+            }
+
+            // 2) Ni log ni OFP: lo que el PIREP facturo.
+            return $this->carriedFromBilledFares($pirep, $previous);
+        }
+
+        // 3) Tramo anterior despachado pero todavia no volado.
+        $brief = SimBrief::where('user_id', $user->id)
+            ->where('flight_id', $previous->id)
+            ->orderByDesc('created_at')
+            ->first();
+
+        $weights = $brief?->xml?->weights;
+        if ($weights === null) {
+            return null;
+        }
+
+        return $this->carriedFromWeights($weights, $brief, $previous);
+    }
+
+    /**
+     * Pasaje y carga leidos del OFP de SimBrief de un tramo.
+     *
+     * @return array{pax: int, cargo: float, from: string}
+     */
+    private function carriedFromWeights($weights, SimBrief $brief, Flight $previous): array
+    {
+        $cargo = (float) ($weights->cargo ?? 0);
+        $units = strtolower((string) ($brief->xml->params->units ?? 'kgs'));
+        if ($units === 'lbs') {
+            $cargo /= 2.2046226218;
+        }
+
+        return [
+            'pax'   => (int) ($weights->pax_count ?? 0),
+            'cargo' => $cargo,
+            'from'  => $previous->ident,
+        ];
+    }
+
+    /**
+     * Pasaje y carga que el tramo anterior FACTURO, sumando `pirep_fares`.
+     *
+     * Ultimo respaldo cuando no hay telemetria ni OFP. Devuelve null si el PIREP
+     * no tiene tarifas o si no llevaba nada.
+     *
+     * @return array{pax: int, cargo: float, from: string}|null
+     */
+    private function carriedFromBilledFares(Pirep $pirep, Flight $previous): ?array
+    {
+        $fares = $pirep->fares;
+        if ($fares->isEmpty()) {
+            return null;
+        }
+
+        $pax = (int) $fares->where('type', FareType::PASSENGER)->sum('count');
+        $cargo = (float) $fares->where('type', FareType::CARGO)->sum('count');
+
+        if ($pax === 0 && $cargo <= 0.0) {
+            return null;
+        }
+
+        return [
+            'pax'   => $pax,
+            'cargo' => $cargo,
+            'from'  => $previous->ident,
+        ];
     }
 
     /**
@@ -855,6 +1045,22 @@ class DispatchSuggestionService extends Service
         // Convenio es-CO, el mismo que usa el modal al pintar el titulo.
         $fmt = static fn ($value, int $decimals = 0): string => number_format((float) $value, $decimals, ',', '.');
 
+        // Tramo de continuacion: el payload viene del tramo anterior y el ingreso,
+        // de la tarifa de ESTE tramo (TECH). No se habla de objetivo, de recorte de
+        // plazas ni de margen: aqui no se vende nada, el trayecto se cobro en el
+        // tramo de salida.
+        if (!empty($ctx['carried'])) {
+            $fareCodes = trim((string) $ctx['fareCodes']) !== '' ? $ctx['fareCodes'] : 'sin tarifa';
+
+            return [[
+                'level' => 'info',
+                'text'  => 'Tramo de continuacion: se conservan '.$fmt($ctx['pax']).' pax y '
+                    .$fmt($ctx['cargo']).' kg de carga del tramo anterior ('.$ctx['carriedFrom'].'). '
+                    .'La tarifa de este tramo es '.$fareCodes
+                    .($ctx['cargoLimited'] ? '; la carga se recorto al tope de peso del avion' : '').'.',
+            ]];
+        }
+
         $recorte = $ctx['elevationPct'] + $ctx['temperaturePct'];
         if ($recorte > 0.05) {
             $parts = [];
@@ -869,6 +1075,13 @@ class DispatchSuggestionService extends Service
                 'level' => 'warn',
                 'text'  => 'Rendimiento: plazas recortadas de '.$ctx['seats'].' a '.$ctx['seatsMax']
                     .' por '.implode(' y ', $parts).'.',
+            ];
+        }
+
+        if ($ctx['tempSource'] === 'unavailable') {
+            $notes[] = [
+                'level' => 'info',
+                'text'  => 'Sin METAR de salida: el recorte solo tiene en cuenta la elevacion.',
             ];
         }
 

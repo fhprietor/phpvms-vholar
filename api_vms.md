@@ -421,6 +421,8 @@ Prefila un nuevo PIREP (estado inicial).
 
 Comportamiento del servidor al presentar el PIREP (`POST /api/pireps/{id}`): si alguno de esos campos llega con un valor distinto de vacio o `0`, el PIREP **no se auto-aprueba** aunque el rango del piloto tenga `auto_approve_acars`; queda en `state = 1` (PENDING) para revision del staff y se anade a `notes` la linea `[Revision obligatoria] Espacio restringido: <valor>`. El detalle del PIREP muestra un aviso. El texto para el revisor va en `notes`; el estado no lo manda el cliente.
 
+**Tambien se detecta sin los campos**: si el PIREP trae en sus `notes` la marca del cliente (`AIRSPACE VIOLATION: RESTRICTED ...` o `PROHIBITED ...`) o en el log su propia linea `PIREP enviado a REVISION ... invasion de espacio aereo: RESTRICTED ...`, el servidor lo trata igual y lo deja en revision. Un area **DANGER** no fuerza revision: es advertencia, no incumplimiento.
+
 ### `POST /api/pireps/{pirep_id}` _(api.auth)_
 ### `PUT /api/pireps/{pirep_id}` _(api.auth)_
 ### `PATCH /api/pireps/{pirep_id}` _(api.auth)_

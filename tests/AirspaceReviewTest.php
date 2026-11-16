@@ -137,4 +137,34 @@ final class AirspaceReviewTest extends TestCase
             $this->assertStringNotContainsString('Espacio restringido', (string) $pirep->notes);
         }
     }
+    public function test_a_violation_in_the_notes_triggers_the_review(): void
+    {
+        $pirep = \App\Models\Pirep::factory()->create([
+            'notes' => 'vmsOpenAcars Report - Total: 292 min | AIRSPACE VIOLATION: RESTRICTED SKR11',
+        ]);
+
+        $this->assertSame('SKR11', app(\App\Services\AirspaceReviewService::class)->violationFor($pirep));
+    }
+
+    public function test_a_danger_note_does_not_trigger_the_review(): void
+    {
+        $pirep = \App\Models\Pirep::factory()->create([
+            'notes' => 'vmsOpenAcars Report | AIRSPACE VIOLATION: DANGER SVD2522 - LA ORCHILA',
+        ]);
+
+        $this->assertNull(app(\App\Services\AirspaceReviewService::class)->violationFor($pirep));
+    }
+
+    public function test_the_clients_own_review_line_in_the_log_triggers_it(): void
+    {
+        $pirep = \App\Models\Pirep::factory()->create(['notes' => null]);
+
+        \App\Models\Acars::create([
+            'pirep_id' => $pirep->id,
+            'type'     => \App\Models\Enums\AcarsType::LOG,
+            'log'      => '⚠️ PIREP enviado a REVISIÓN — invasión de espacio aéreo: RESTRICTED SKR11',
+        ]);
+
+        $this->assertSame('SKR11', app(\App\Services\AirspaceReviewService::class)->violationFor($pirep));
+    }
 }

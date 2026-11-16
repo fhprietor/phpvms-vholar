@@ -52,6 +52,35 @@ class AirspaceReviewService extends Service
             }
         }
 
+        // El cliente NO manda los campos: escribe la incidencia en las NOTAS del PIREP
+        // ("... | AIRSPACE VIOLATION: RESTRICTED SKR11"). Se lee de ahi para no perderla.
+        if (preg_match('/AIRSPACE\s+VIOLATION:\s*(RESTRICTED|PROHIBITED)\s+([^|\n]+)/iu', (string) $pirep->notes, $m)) {
+            return trim($m[2]);
+        }
+
+        // Y como ultimo recurso, su propia linea de "PIREP enviado a REVISION" en el log.
+        return $this->violationFromLog($pirep);
+    }
+
+    /**
+     * Busca en el log del ACARS la linea con la que el cliente dice que lo manda a revision.
+     * Solo RESTRICTED/PROHIBITED: un area DANGER es advertencia, no incumplimiento.
+     */
+    private function violationFromLog(Pirep $pirep): ?string
+    {
+        $lines = \App\Models\Acars::where('pirep_id', $pirep->id)
+            ->where('type', \App\Models\Enums\AcarsType::LOG)
+            ->where(function ($q) {
+                $q->where('log', 'like', '%REVISI%')->orWhere('log', 'like', '%REVIEW%');
+            })
+            ->pluck('log');
+
+        foreach ($lines as $line) {
+            if (preg_match('/(?:enviado|sent)\s+a\s+(?:REVISI[OÓ]N|REVIEW)[^\n]*?(?:invasi[oó]n|airspace\s+violation)[^\n]*?:\s*(RESTRICTED|PROHIBITED)\s+([^\n]+)/iu', (string) $line, $m)) {
+                return trim($m[2]);
+            }
+        }
+
         return null;
     }
 
