@@ -26,7 +26,7 @@ Un **XP acumulado** como segunda moneda de progreso, en paralelo a las horas:
 ## Fórmula propuesta (por vuelo)
 
 ```
-base      = block_time_min x 1                     (60 XP/hora de bloque)
+base      = block_time_min x 1,5                   (90 XP/hora de bloque: la asintota del OM-A)
 calidad   = (score ?? 80) / 80                     (media actual 80,5 -> factor ~1)
 acars     = bonificaciones x 5 - penalizaciones x 5
 aterrizaje= -60..-200 fpm: +10 | -200..-400: +5 | >-600: 0 | mas duro: -5
@@ -37,17 +37,32 @@ XP vuelo  = min(300, base x calidad + acars + aterrizaje + eje + extras)
 
 Un vuelo de 2 h sale a ~120 XP. Un piloto de 1.000 h ronda los 60.000 XP.
 
-Escala de referencia (a ajustar):
+### La escala NO se inventa: está en el OM-A
 
-| Rango | Horas | XP | Typerating | XP | Horas en la familia |
-|---|---:|---:|---|---:|---:|
-| Cadet | 0 | 0 | A320 Series | 2.000 | 25 |
-| Junior FO | 30 | 1.500 | B737s | 2.000 | 25 |
-| Senior FO | 200 | 12.000 | B767 | 8.000 | 40 |
-| Captain | 500 | 30.000 | A330 | 12.000 | 50 |
-| Senior Captain | 1.000 | 60.000 | B777 | 20.000 | 60 |
-| CFI | 2.000 | 120.000 | A350 | 20.000 | 60 |
-| TRI/TRE | 3.000 | 180.000 | Cargo | 25.000 | 40 |
+El OM-A (Rev. 6, 2025-07-25, §4) fija **horas y XP** juntos. Esta es la escala real:
+
+| Rango | Horas | XP (OM-A) | Habilitaciones |
+|---|---:|---:|---|
+| Cadet | 0 | **0** | Bimotores categoría L (MTOW 5.700 kg) |
+| Junior First Officer | 30 | **6.000** | Según filial (ATR42/72, DHC8, A319/320, B737) |
+| Senior First Officer | 200 | **28.000** | Según filial + **solo una** de tipo pesado (H) |
+| Captain | 500 | **50.000** | Las de SFO + **dos** de tipo pesado |
+| Senior Captain | 1.000 | **90.000** | **Todas** las de la flota según filial |
+| CFI | 2.000 | **180.000** | Todas. Requiere SPP IVAO + exámenes |
+| TRI/TRE | 3.000 | *(no figura)* | Todas. Requiere CP IVAO + examen y entrevista |
+
+**Lo que esto cambia**: los typeratings **no** llevan un XP propio; van **atados al rango**
+("solo una de tipo pesado" en SFO, "dos" en Captain, "todas" en Senior Captain). Es una
+puerta por rango, no una tabla paralela.
+
+**Y el XP no es una puntuación de calidad**: es un **contador de carrera** que se gana sobre
+todo con horas, y los escalones que no cuadran con las horas corresponden a la **formación**
+del OM-A (retroalimentación escrita en JFO, exámenes y sesión práctica en Captain, SPP/CP de
+IVAO en CFI/TRE). Por eso 30 h piden 6.000 XP (200/h) y 2.000 h piden 180.000 (90/h): las
+primeras horas valen más porque la formación suma.
+
+Base de cálculo que replica la escala: **90 XP por hora de vuelo** (la asíntota de CFI:
+180.000/2.000) **más los bonus de formación** hasta cuadrar cada escalón.
 
 ## Modelo de datos
 
@@ -102,11 +117,17 @@ No hay dato que importar. Dos pasos:
 4. Puerta de XP en `calculatePilotRank` + la homologación automática + notificación.
 5. Perfil, tablero y top de admin.
 
-## Decisiones que necesito
+## Decisiones que necesito (ya con el OM-A como base)
 
-1. **Escala**: ¿1 XP por minuto de bloque (60/h) te parece, o prefieres otra?
-2. **Umbrales de rango**: ¿los de la tabla o los ajustamos a la plantilla actual (47 pilotos,
-   top en 3.000 h)?
-3. **Homologación**: ¿XP + horas de familia (mi recomendación) o solo XP?
-4. **Restricción de tipos**: ¿se enciende `restrict_aircraft_to_typerating` con el XP, o sigue
-   apagado y el typerating es solo prestigio?
+1. **Formación**: el OM-A dice que el XP sube con los exámenes/sesiones, pero no cuánto. Mi
+   calibración para cuadrar los escalones: 3.300 XP al superar JFO, 6.700 al SFO, 5.000 al
+   Captain. ¿Te parece, o prefieres otro reparto?
+2. **TRE/TRI**: el OM-A no le pone XP (solo 3.000 h + examen + entrevista). ¿Lo dejamos
+   **solo por horas y exámenes** (recomendado) o le ponemos un XP sobre 180.000?
+3. **Habilitaciones**: el OM-A las ata al **rango** ("una de tipo pesado" en SFO...). ¿Lo
+   implementamos así (el rango abre tipos) o mantenemos los typeratings como dato aparte que
+   el admin asigna a mano?
+4. **Homologación de horas**: el OM-A permite homologar horas por experiencia real, rango PP
+   de IVAO o FS3 con +1.000 h. ¿Eso suma **horas** (y por tanto XP) o solo horas?
+5. **Restricción de tipos**: ¿encendemos `restrict_aircraft_to_typerating` cuando el rango no
+   habilita el tipo, o sigue apagado?
