@@ -17,7 +17,6 @@ use App\Exceptions\AircraftPermissionDenied;
 use App\Exceptions\AirportNotFound;
 use App\Exceptions\PirepCancelNotAllowed;
 use App\Exceptions\PirepError;
-use App\Services\AirspaceReviewService;
 use App\Exceptions\UserNotAtAirport;
 use App\Models\Acars;
 use App\Models\Aircraft;
@@ -74,6 +73,7 @@ class PirepService extends Service
      */
     public function prefile(User $user, array $attrs, array $fields = [], array $fares = []): Pirep
     {
+        $attrs = $this->normalizeAttributes($attrs);
         $attrs['user_id'] = $user->id;
         $attrs['state'] = PirepState::IN_PROGRESS;
 
@@ -198,10 +198,21 @@ class PirepService extends Service
         }
 
         // Revision previa de la ruta: el cliente prefila ANTES de despegar, asi que este es
-        // el momento de avisar si el OFP de SimBrief cruza un area restringida. Nunca impide
-        // prefilar: se anade como campo del PIREP y viaja en la respuesta (route_warning).
+        // el momento de avisar si el plan cruza un area restringida. El cliente manda su
+        // propio navlog (`route_navlog` v1, con altitud por punto); si no viene, se intenta
+        // el OFP de SimBrief. Nunca impide prefilar: se anade como campo del PIREP y viaja
+        // en la respuesta (route_warning).
         try {
-            $routeWarning = app(AirspaceService::class)->warningForPirep($pirep);
+            $routeNavlog = $attrs['route_navlog'] ?? null;
+            $navlogVersion = isset($attrs['route_navlog_version'])
+                ? (int) $attrs['route_navlog_version']
+                : null;
+
+            $routeWarning = app(AirspaceService::class)->warningForPirep(
+                $pirep,
+                is_string($routeNavlog) ? $routeNavlog : null,
+                $navlogVersion
+            );
 
             if ($routeWarning !== null) {
                 $fields[] = ['name' => 'route_airspace', 'value' => $routeWarning['area'], 'source' => PirepFieldSource::ACARS];
@@ -278,6 +289,7 @@ class PirepService extends Service
      */
     public function update(string $pirep_id, array $attrs, array $fields = [], array $fares = []): Pirep
     {
+        $attrs = $this->normalizeAttributes($attrs);
         $pirep = $this->pirepRepo->update($attrs, $pirep_id);
         $this->updateCustomFields($pirep_id, $fields);
         $this->fareSvc->saveToPirep($pirep, $fares);
@@ -295,6 +307,8 @@ class PirepService extends Service
      */
     public function file(Pirep $pirep, array $attrs = [], array $fields = [], array $fares = []): Pirep
     {
+        $attrs = $this->normalizeAttributes($attrs);
+
         if (empty($fields)) {
             $fields = [];
         }
@@ -627,6 +641,47 @@ class PirepService extends Service
                 ['value' => $fv['value'], 'source' => $fv['source']]
             );
         }
+    }
+
+    /**
+     * Normaliza atributos que llegan "como se leen en cabina".
+     *
+     * `level` llega como "FL340" desde vmsOpenAcars y la columna guarda pies: se convierte a
+     * 34000. Un valor que no se puede interpretar se descarta, porque romper el guardado por
+     * un campo informativo es peor que perderlo.
+     *
+     * @param  array<string, mixed> $attrs
+     * @return array<string, mixed>
+     */
+    private function normalizeAttributes(array $attrs): array
+    {
+        if (!array_key_exists('level', $attrs)) {
+            return $attrs;
+        }
+
+        $level = $attrs['level'];
+
+        if ($level === null || $level === '') {
+            unset($attrs['level']);
+
+            return $attrs;
+        }
+
+        if (!is_string($level)) {
+            return $attrs;
+        }
+
+        $text = trim($level);
+
+        if (preg_match('/^FL\s*(\d{2,3})$/i', $text, $m)) {
+            $attrs['level'] = (int) $m[1] * 100;
+        } elseif (is_numeric($text)) {
+            $attrs['level'] = (float) $text;
+        } else {
+            unset($attrs['level']);
+        }
+
+        return $attrs;
     }
 
     /**

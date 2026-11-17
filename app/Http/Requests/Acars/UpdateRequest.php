@@ -32,7 +32,7 @@ class UpdateRequest extends FormRequest
             'flight_time'         => 'sometimes|integer',
             'flight_type'         => 'nullable',
             'planned_flight_time' => 'sometimes|integer',
-            'level'               => 'sometimes|numeric',
+            'level'               => ['sometimes', 'regex:/^\s*(FL\s*\d{2,3}|\d+(\.\d+)?)\s*$/i'],
             'zfw'                 => 'sometimes|numeric',
             'fuel_used'           => 'sometimes|numeric',
             'block_fuel'          => 'sometimes|numeric',

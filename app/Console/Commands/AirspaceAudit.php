@@ -41,6 +41,10 @@ class AirspaceAudit extends Command
 
     private array $cells = [];      // "lat,lon" => [nombres]
 
+    // Consultas hechas por AirspaceService (centro + radio); el audit NO las usa para buscar,
+    // pero las conserva al guardar para no tirar la cache del prefile.
+    private array $coverage = [];
+
     private int $apiCalls = 0;
 
     private int $apiErrors = 0;
@@ -413,6 +417,7 @@ class AirspaceAudit extends Command
 
         $this->areas = $data['areas'] ?? [];
         $this->cells = $data['cells'] ?? [];
+        $this->coverage = $data['coverage'] ?? [];
     }
 
     private function saveCache(): void
@@ -421,6 +426,7 @@ class AirspaceAudit extends Command
             'updated_at' => now()->toIso8601String(),
             'areas'      => $this->areas,
             'cells'      => $this->cells,
+            'coverage'   => $this->coverage,
         ], JSON_UNESCAPED_UNICODE));
     }
 }

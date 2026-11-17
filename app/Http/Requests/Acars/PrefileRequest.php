@@ -18,7 +18,7 @@ class PrefileRequest extends FormRequest
             'source_name'         => 'required',
             'alt_airport_id'      => 'sometimes',
             'status'              => 'sometimes',
-            'level'               => 'nullable|numeric',
+            'level'               => ['nullable', 'regex:/^\s*(FL\s*\d{2,3}|\d+(\.\d+)?)\s*$/i'],
             'flight_type'         => 'sometimes',
             'route_code'          => 'sometimes',
             'route_leg'           => 'sometimes',
@@ -35,6 +35,11 @@ class PrefileRequest extends FormRequest
             'block_off_time'      => 'sometimes|date',
             'block_on_time'       => 'sometimes|date',
             'created_at'          => 'sometimes|date',
+
+            // Revision previa de ruta: navlog compacto del cliente y su version. Ver
+            // docs/vmsopenacars/REVISION-RUTA-PREVUELO.md.
+            'route_navlog'         => 'sometimes|nullable|string|max:60000',
+            'route_navlog_version' => 'sometimes|integer',
 
             // See if the fare objects are included and formatted properly
             'fares'         => 'nullable|array',

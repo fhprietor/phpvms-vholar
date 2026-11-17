@@ -390,7 +390,7 @@ Prefila un nuevo PIREP (estado inicial).
 | `source_name` | Sí | string | Ej: `manual`, `acars` |
 | `alt_airport_id` | No | string | |
 | `status` | No | enum | |
-| `level` | No | numeric | Nivel de vuelo |
+| `level` | No | numeric o string | Nivel de vuelo; acepta `34000` o `FL340` |
 | `flight_type` | No | enum | |
 | `route_code` | No | string | |
 | `route_leg` | No | string | |
@@ -402,6 +402,8 @@ Prefila un nuevo PIREP (estado inicial).
 | `zfw` | No | numeric | Zero Fuel Weight |
 | `block_fuel` | No | numeric | |
 | `route` | No | string | |
+| `route_navlog` | No | string | Navlog compacto `IDENT,lat,lon,alt;…` (ver abajo) |
+| `route_navlog_version` | No | integer | Solo se interpreta la `1` |
 | `notes` | No | string | |
 | `score` | No | integer | |
 | `block_off_time` | No | date | |
@@ -422,6 +424,27 @@ Prefila un nuevo PIREP (estado inicial).
 Comportamiento del servidor al presentar el PIREP (`POST /api/pireps/{id}`): si alguno de esos campos llega con un valor distinto de vacio o `0`, el PIREP **no se auto-aprueba** aunque el rango del piloto tenga `auto_approve_acars`; queda en `state = 1` (PENDING) para revision del staff y se anade a `notes` la linea `[Revision obligatoria] Espacio restringido: <valor>`. El detalle del PIREP muestra un aviso. El texto para el revisor va en `notes`; el estado no lo manda el cliente.
 
 **Tambien se detecta sin los campos**: si el PIREP trae en sus `notes` la marca del cliente (`AIRSPACE VIOLATION: RESTRICTED ...` o `PROHIBITED ...`) o en el log su propia linea `PIREP enviado a REVISION ... invasion de espacio aereo: RESTRICTED ...`, el servidor lo trata igual y lo deja en revision. Un area **DANGER** no fuerza revision: es advertencia, no incumplimiento.
+
+**Revisión previa de la ruta (en el prefile):** el cliente puede mandar su propio navlog con la altitud de cada punto:
+
+```
+route_navlog:         "DE14L,4.692706,-74.124725,9900;BO907,4.784872,-74.065556,9900;…"
+route_navlog_version: 1
+```
+
+Cada punto es `IDENT,lat,lon,alt` (pies) y los puntos se separan con `;`. El servidor cruza la
+ruta **por segmentos** contra las áreas `Restricted`/`Prohibited` de NavData y **usa la
+altitud**: solo avisa si el punto de cruce está dentro de `lower_limit`..`upper_limit` (un área
+GND–3000 ft MSL no se marca a 11.500 ft). Si no viene `route_navlog` se intenta el OFP de
+`simbrief_id`, y si tampoco hay, no hay aviso. La respuesta incluye:
+
+```json
+"route_warning": { "area": "SKR11 / BARRANQUILLA", "limits": "GND–FL999", "leg": "GIKPU–PADUD", "action": "revisar_ruta" }
+```
+
+`route_warning` es `null` si la ruta está limpia. El campo `fields.route_ack` (p. ej. `"1"`)
+se guarda **tal cual** en el PIREP: es la constancia de que el piloto fue advertido y pulsó
+«he revisado la ruta»; no cambia el estado. El prefile **nunca** falla por esta comprobación.
 
 ### `POST /api/pireps/{pirep_id}` _(api.auth)_
 ### `PUT /api/pireps/{pirep_id}` _(api.auth)_

@@ -32,7 +32,7 @@ class FileRequest extends FormRequest
             'route_leg'           => 'sometimes',
             'planned_distance'    => 'sometimes|numeric',
             'planned_flight_time' => 'sometimes|integer',
-            'level'               => 'sometimes|numeric',
+            'level'               => ['sometimes', 'regex:/^\s*(FL\s*\d{2,3}|\d+(\.\d+)?)\s*$/i'],
             'zfw'                 => 'sometimes|numeric',
             'block_fuel'          => 'sometimes|numeric',
             'route'               => 'sometimes',
